@@ -189,24 +189,14 @@
   }
 
   /* Animated Gradient Background */
-  .animated-gradient {
-  position: relative;
-  /* Gentle animated gradient background */
-  background: linear-gradient(120deg, #23244d 0%, #497ea6 60%, #c0caff 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 16s ease-in-out infinite;
-  /* Pattern overlay using SVG as a data URI */
-}
-
 .animated-gradient::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.14;
-  /* Subtle dot pattern overlay  */
-  background: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='24' cy='24' r='2' fill='%23ffffff' fill-opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.10;
+  background: url("data:image/svg+xml,%3Csvg width='48' height='48' viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='24' cy='24' r='2' fill='%23133272' fill-opacity='0.5'/%3E%3C/svg%3E"); /* subtle blue dots */
   mix-blend-mode: lighten;
 }
   /* Glow Effect */
