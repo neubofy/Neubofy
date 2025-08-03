@@ -1,0 +1,15 @@
+const Creations = () => {
+  return (
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4 py-20">
+        <h1 className="text-4xl font-bold text-center mb-8">Our Creations</h1>
+        <p className="text-xl text-center text-muted-foreground mb-12">
+          See what Neubofy can build for you
+        </p>
+        {/* Content will be added */}
+      </div>
+    </div>
+  );
+};
+
+export default Creations;
