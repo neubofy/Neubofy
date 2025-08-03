@@ -190,7 +190,14 @@
 
   /* Animated Gradient Background */
   .animated-gradient {
-    background: var(--gradient-hero);
+    background:
+  repeating-linear-gradient(
+    135deg,
+    #2b32b2 0 120px,
+    #1488cc 120px 240px,
+    #fc00ff 240px 360px
+  ),
+  linear-gradient(-45deg, #2b32b2, #1488cc, #fc00ff, #e100ff 90%);
     background-size: 400% 400%;
     animation: gradientShift 8s ease infinite;
   }
