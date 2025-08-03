@@ -190,13 +190,8 @@
 
   /* Animated Gradient Background */
   .animated-gradient {
-  background:
-    repeating-linear-gradient(
-      135deg,
-      #23244d 0 120px,
-      #287ba7 120px 240px,
-      #d6a8ed 240px 360px
-    ),
+  background: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='32' y='32' width='4' height='4' fill='%23ffffff' fill-opacity='0.09'/%3E%3C/svg%3E");
+
     linear-gradient(-45deg, #22243e, #497ea6 50%, #c0caff 100%);
   background-size: 400% 400%;
   animation: gradientShift 8s ease infinite;
