@@ -1,42 +1,57 @@
 import { Bot, Shield, Zap, Users, Brain, Target } from "lucide-react";
+import studentMentor from "@/assets/student-mentor-mockup.jpg";
+import inventoryAI from "@/assets/inventory-ai-mockup.jpg";
+import contentCreator from "@/assets/content-creator-mockup.jpg";
 
 const FeaturesSection = () => {
   const features = [
     {
       icon: Bot,
       title: "Student Mentor AI",
-      description: "Personalized AI mentorship for academic success and career guidance.",
-      gradient: "from-primary to-primary-glow"
+      description: "Personalized AI mentorship for academic success and career guidance with smart study plans.",
+      gradient: "from-primary to-primary-glow",
+      mockup: studentMentor,
+      alt: "Student Mentor AI interface showing personalized study plans and progress tracking"
     },
     {
       icon: Zap,
       title: "Productivity Automation",
-      description: "Streamline workflows and eliminate repetitive tasks with smart automation.",
-      gradient: "from-secondary to-secondary-glow"
+      description: "Streamline workflows and eliminate repetitive tasks with intelligent automation systems.",
+      gradient: "from-secondary to-secondary-glow",
+      mockup: contentCreator,
+      alt: "Productivity automation dashboard with workflow management and task automation"
     },
     {
       icon: Target,
-      title: "Business Inventory",
-      description: "AI-powered inventory management and business optimization tools.",
-      gradient: "from-tertiary to-tertiary-glow"
+      title: "Business Inventory AI",
+      description: "AI-powered inventory management with predictive analytics and automated optimization.",
+      gradient: "from-tertiary to-tertiary-glow",
+      mockup: inventoryAI,
+      alt: "Business inventory management system with AI analytics and automation features"
     },
     {
       icon: Brain,
       title: "AI Content Tools",
-      description: "Generate, optimize, and manage content with advanced AI capabilities.",
-      gradient: "from-primary to-secondary"
+      description: "Generate, optimize, and manage content with advanced AI writing and creative capabilities.",
+      gradient: "from-primary to-secondary",
+      mockup: contentCreator,
+      alt: "AI content creation interface with text generation and editing tools"
     },
     {
       icon: Shield,
-      title: "Privacy First",
-      description: "Your data stays yours. Only you and your AI have access to your information.",
-      gradient: "from-secondary to-tertiary"
+      title: "Privacy First Design",
+      description: "Your data stays yours. Zero-knowledge architecture ensures complete privacy and security.",
+      gradient: "from-secondary to-tertiary",
+      mockup: studentMentor,
+      alt: "Privacy-focused security dashboard showing data protection features"
     },
     {
       icon: Users,
       title: "Custom Solutions",
-      description: "Tailored automation solutions for your specific needs and industry.",
-      gradient: "from-tertiary to-primary"
+      description: "Tailored automation solutions designed specifically for your industry and workflow needs.",
+      gradient: "from-tertiary to-primary",
+      mockup: inventoryAI,
+      alt: "Custom solution interface showing personalized automation workflows"
     }
   ];
 
@@ -46,7 +61,7 @@ const FeaturesSection = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">
-            <span className="gradient-text">How We Help</span>
+            <span className="gradient-text">How We Help You Succeed</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Discover the power of AI automation across every aspect of your work and life
@@ -60,12 +75,22 @@ const FeaturesSection = () => {
             return (
               <div
                 key={index}
-                className="glass-card p-8 rounded-2xl hover:shadow-elevated transition-all duration-500 group glow-effect animate-fade-in"
+                className="glass-card p-6 rounded-2xl hover:shadow-elevated transition-all duration-500 group glow-effect animate-fade-in overflow-hidden"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  <IconComponent className="w-8 h-8 text-white" />
+                {/* Feature Image */}
+                <div className="relative mb-6 rounded-xl overflow-hidden">
+                  <img 
+                    src={feature.mockup} 
+                    alt={feature.alt}
+                    className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  <div className={`absolute top-4 left-4 w-12 h-12 rounded-xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="w-6 h-6 text-white" />
+                  </div>
                 </div>
+                
                 <h3 className="text-xl font-bold mb-4 group-hover:text-primary transition-colors">
                   {feature.title}
                 </h3>

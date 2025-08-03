@@ -1,13 +1,244 @@
+import { useState } from "react";
+import { Mail, MessageCircle, Phone, Send, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { useToast } from "@/hooks/use-toast";
+
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    whatsapp: "",
+    message: "",
+    consent: false
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.consent) {
+      toast({
+        title: "Consent Required",
+        description: "Please agree to be contacted about Neubofy's solutions.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsSubmitting(false);
+    setIsSubmitted(true);
+    
+    toast({
+      title: "Message Sent Successfully!",
+      description: "We'll get back to you within 24 hours.",
+    });
+
+    // Reset form after 3 seconds
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({ name: "", email: "", whatsapp: "", message: "", consent: false });
+    }, 3000);
+  };
+
+  const handleInputChange = (field: string, value: string | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-20">
-        <h1 className="text-4xl font-bold text-center mb-8">Contact Us</h1>
-        <p className="text-xl text-center text-muted-foreground mb-12">
-          Let's build something amazing together
-        </p>
-        {/* Contact form will be added */}
+    <div className="min-h-screen animated-gradient">
+      <Navbar />
+      
+      <div className="container mx-auto px-4 py-32">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 gradient-text">
+            Let's Build Something Amazing
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Ready to transform your productivity with custom AI automation? 
+            Let's discuss how Neubofy can help you achieve your goals.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
+          {/* Contact Form */}
+          <div className="glass-card p-8 rounded-3xl shadow-elevated">
+            {!isSubmitted ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-semibold mb-2">
+                    Your Name *
+                  </label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
+                    placeholder="Enter your full name"
+                    required
+                    className="bg-background/50 border-primary/20 focus:border-primary"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-semibold mb-2">
+                    Email Address *
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    placeholder="your.email@example.com"
+                    required
+                    className="bg-background/50 border-primary/20 focus:border-primary"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="whatsapp" className="block text-sm font-semibold mb-2">
+                    WhatsApp Number
+                  </label>
+                  <Input
+                    id="whatsapp"
+                    value={formData.whatsapp}
+                    onChange={(e) => handleInputChange("whatsapp", e.target.value)}
+                    placeholder="+91 XXXXX XXXXX"
+                    className="bg-background/50 border-primary/20 focus:border-primary"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-semibold mb-2">
+                    Message *
+                  </label>
+                  <Textarea
+                    id="message"
+                    value={formData.message}
+                    onChange={(e) => handleInputChange("message", e.target.value)}
+                    placeholder="Tell us about your project, goals, or any questions you have..."
+                    required
+                    rows={5}
+                    className="bg-background/50 border-primary/20 focus:border-primary resize-none"
+                  />
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="consent"
+                    checked={formData.consent}
+                    onCheckedChange={(checked) => handleInputChange("consent", checked as boolean)}
+                    className="mt-1"
+                  />
+                  <label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed">
+                    I agree to be contacted about Neubofy's solutions and understand that my information will be handled according to the privacy policy.
+                  </label>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !formData.name || !formData.email || !formData.message || !formData.consent}
+                  className="btn-hero w-full text-lg py-4 group"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-3"></div>
+                      Sending Message...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform" />
+                      Send Message
+                    </>
+                  )}
+                </Button>
+              </form>
+            ) : (
+              <div className="text-center py-12 animate-scale-in">
+                <div className="w-20 h-20 bg-gradient-button rounded-full flex items-center justify-center mx-auto mb-6 pulse-glow">
+                  <CheckCircle className="w-10 h-10 text-primary-foreground" />
+                </div>
+                <h3 className="text-2xl font-bold gradient-text mb-4">Message Sent Successfully!</h3>
+                <p className="text-muted-foreground">
+                  Thank you for reaching out. We'll get back to you within 24 hours.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Contact Information */}
+          <div className="space-y-8">
+            <div className="glass-card p-8 rounded-2xl">
+              <h3 className="text-2xl font-bold gradient-text mb-6">Get In Touch Directly</h3>
+              
+              <div className="space-y-6">
+                <a 
+                  href="mailto:neubofie@gmail.com"
+                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-primary/10 transition-colors group"
+                >
+                  <div className="w-12 h-12 bg-gradient-button rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Mail className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <div className="font-semibold">Email Us</div>
+                    <div className="text-muted-foreground">neubofie@gmail.com</div>
+                  </div>
+                </a>
+
+                <a 
+                  href="https://wa.me/919287457489"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-secondary/10 transition-colors group"
+                >
+                  <div className="w-12 h-12 bg-gradient-accent rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <MessageCircle className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-semibold">WhatsApp</div>
+                    <div className="text-muted-foreground">+91 9287457489</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            {/* Response Time */}
+            <div className="glass-card p-6 rounded-2xl">
+              <h4 className="font-bold mb-4">What to Expect</h4>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  Response within 24 hours
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  Free consultation call
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  Custom solution proposal
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  100% privacy guaranteed
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
