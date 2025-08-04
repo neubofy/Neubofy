@@ -6,7 +6,7 @@ import CaseStudiesSection from "@/components/CaseStudiesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
-import ScrollToTop from "@/components/ScrollToTop";
+import GoToTop from "@/components/GoToTop";
 
 const Index = () => {
   return (
@@ -19,7 +19,7 @@ const Index = () => {
       <TestimonialsSection />
       <CTASection />
       <Footer />
-      <ScrollToTop />
+      <GoToTop />
     </div>
   );
 };

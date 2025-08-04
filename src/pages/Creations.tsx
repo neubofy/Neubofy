@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import studentMentor from "@/assets/student-mentor-mockup.jpg";
 import inventoryAI from "@/assets/inventory-ai-mockup.jpg";
 import contentCreator from "@/assets/content-creator-mockup.jpg";
+import GoToTop from "@/components/GoToTop";
 
 const Creations = () => {
   // This would typically come from a CMS or config file for easy updates
@@ -254,6 +255,7 @@ const Creations = () => {
       </div>
 
       <Footer />
+      <GoToTop />
     </div>
   );
 };

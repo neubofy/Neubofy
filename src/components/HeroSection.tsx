@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import ParallaxBackground from "./ParallaxBackground";
 import heroDashboard from "@/assets/hero-dashboard-mockup.jpg";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 
 const HeroSection = () => {
   const { elementRef, isVisible } = useScrollAnimation();
+  const { elementRef: observerRef, isIntersecting } = useIntersectionObserver();
 
   return (
     <ParallaxBackground>

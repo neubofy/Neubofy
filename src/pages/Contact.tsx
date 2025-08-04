@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
+import GoToTop from "@/components/GoToTop";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -296,6 +297,7 @@ const Contact = () => {
       </div>
 
       <Footer />
+      <GoToTop />
     </div>
   );
 };

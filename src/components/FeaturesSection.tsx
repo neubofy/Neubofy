@@ -2,8 +2,11 @@ import { Bot, Shield, Zap, Users, Brain, Target } from "lucide-react";
 import studentMentor from "@/assets/student-mentor-mockup.jpg";
 import inventoryAI from "@/assets/inventory-ai-mockup.jpg";
 import contentCreator from "@/assets/content-creator-mockup.jpg";
+import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 
 const FeaturesSection = () => {
+  const { elementRef, isIntersecting } = useIntersectionObserver();
+
   const features = [
     {
       icon: Bot,
@@ -58,9 +61,13 @@ const FeaturesSection = () => {
   return (
     <section className="py-24 relative">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">
+        <div 
+          ref={elementRef}
+          className={`text-center mb-16 ${
+            isIntersecting ? 'animate-fade-in-up' : 'opacity-0'
+          }`}
+        >
+          <h2 className="text-4xl md:text-6xl font-display font-bold mb-6 gradient-text">
             <span className="gradient-text">How We Help You Succeed</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -75,8 +82,9 @@ const FeaturesSection = () => {
             return (
               <div
                 key={index}
-                className="glass-card p-6 rounded-2xl hover-lift transition-all duration-500 group glow-effect animate-fade-in overflow-hidden"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className={`glass-card p-6 rounded-2xl hover-lift transition-all duration-500 group glow-effect animate-fade-in overflow-hidden ${
+                  isIntersecting ? `animate-fade-in-up stagger-${index + 1}` : 'opacity-0'
+                }`}
               >
                 {/* Feature Image */}
                 <div className="relative mb-6 rounded-xl overflow-hidden">

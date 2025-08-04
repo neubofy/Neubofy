@@ -10,33 +10,54 @@ import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
+import ScrollProgress from "./components/ScrollProgress";
+import GoToTop from "./components/GoToTop";
 
 const queryClient = new QueryClient();
 
-// Component to handle scroll to top
+// Component to handle scroll to top on route change
 const ScrollToTopOnRouteChange = () => {
-  const { pathname } = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
-    // Scroll to top on route change
+    // Smooth scroll to top when route changes
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "smooth"
+      behavior: 'smooth'
     });
-  }, [pathname]);
+  }, [location.pathname]);
 
-  return null; // This component doesn't render anything
+  return null;
 };
 
-const App = () => (
-  <div className="min-h-screen transition-transform duration-300 ease-in-out hover:shadow-2xl hover:bg-blue-900/30">
+function App() {
+  useEffect(() => {
+    // Add smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    // Preload critical images
+    const preloadImages = () => {
+      const images = [
+        '/src/assets/founder-avatar.jpg',
+        '/src/assets/hero-dashboard-mockup.jpg'
+      ];
+      
+      images.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
+
+    preloadImages();
+  }, []);
+
+  return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
         <BrowserRouter>
           <ScrollToTopOnRouteChange />
+          <ScrollProgress />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/creations" element={<Creations />} />
@@ -45,10 +66,13 @@ const App = () => (
             <Route path="/blog" element={<Blog />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <GoToTop />
+          <Toaster />
+          <Sonner />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-  </div>
-);
+  );
+}
 
 export default App;

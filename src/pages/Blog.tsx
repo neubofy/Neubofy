@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import GoToTop from "@/components/GoToTop";
 
 const Blog = () => {
   // This would typically come from a CMS or markdown files for easy updates
@@ -251,6 +252,7 @@ const Blog = () => {
       </div>
 
       <Footer />
+      <GoToTop />
     </div>
   );
 };

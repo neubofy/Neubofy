@@ -2,6 +2,7 @@ import { Heart, Shield, Zap, Users, Award, Calendar, Instagram, Twitter, Faceboo
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import founderAvatar from "@/assets/founder-avatar.jpg";
+import GoToTop from "@/components/GoToTop";
 
 // Custom WhatsApp Icon Component
 const WhatsAppIcon = () => (
@@ -290,6 +291,7 @@ const About = () => {
       </div>
 
       <Footer />
+      <GoToTop />
     </div>
   );
 };
