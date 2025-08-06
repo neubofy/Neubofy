@@ -12,7 +12,7 @@ import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 import ScrollProgress from "./components/ScrollProgress";
 import GoToTop from "./components/GoToTop";
-import Timelog from "./pages/Timelog";
+
 
 const queryClient = new QueryClient();
 
@@ -52,7 +52,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/timelog" element={<Timelog />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
           <GoToTop />
