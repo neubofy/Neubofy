@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 const GROQ_API_KEY = "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";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const SYSTEM_PROMPT = "You are Neubofy AI, an assistant for Neubofy. Always reply as Neubofy, use Neubofy branding in your responses, and be helpful, concise, and friendly. Never mention any other brand.";
+const SYSTEM_PROMPT = "You are Neubofy AI, an assistant for Neubofy. Reply with concise, direct, and user-specific answers. Do not repeat that you are Neubofy AI in every response. Only mention Neubofy if contextually needed. Never mention any other brand. Always keep answers short, clear, and to the point.";
 
 // Neubofy knowledge base for updates, onboarding, and services
 const NEUBOFY_KB = [
@@ -68,8 +68,8 @@ const GeminiChatbot = () => {
             { role: "user", content: userMessage }
           ],
           stream: false,
-          max_tokens: 120,
-          temperature: 0.3
+          max_tokens: 80,
+          temperature: 0.2
         },
         {
           headers: {
