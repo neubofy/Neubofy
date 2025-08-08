@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 // ...existing code...
 import ScrollProgress from "./components/ScrollProgress";
 import GoToTop from "./components/GoToTop";
+import GeminiChatbot from "./components/GeminiChatbot";
 
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <GoToTop />
+          <GeminiChatbot />
           <Toaster />
           <Sonner />
         </BrowserRouter>
