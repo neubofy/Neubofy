@@ -1,7 +1,7 @@
 {
-  "name": "Neubofy AI Studio",
+  "name": "Neubofy",
   "short_name": "Neubofy",
-  "description": "Neubofy AI Studio Web App",
+  "description": "Custom AI automation tools that actually adapt you.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
