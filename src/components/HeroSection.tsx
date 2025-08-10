@@ -1,3 +1,4 @@
+
 import { ArrowRight, Sparkles, Zap, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -5,6 +6,7 @@ import ParallaxBackground from "./ParallaxBackground";
 import heroDashboard from "@/assets/hero-dashboard-mockup.jpg";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
   const { elementRef, isVisible } = useScrollAnimation();
@@ -15,72 +17,130 @@ const HeroSection = () => {
       <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-tertiary/10 rounded-full blur-2xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0 }}
+            className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse-slow"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse-slow"
+            style={{ animationDelay: '1s' }}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="absolute top-1/2 left-1/2 w-32 h-32 bg-tertiary/10 rounded-full blur-2xl animate-pulse-slow"
+            style={{ animationDelay: '2s' }}
+          />
         </div>
 
-        <div 
+        <motion.div
           ref={elementRef}
-          className={`text-center transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
+          className="text-center"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, ease: 'easeOut' }}
         >
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 glass-card px-6 py-3 rounded-full mb-8 animate-fade-in pulse-glow">
+          <motion.div
+            className="inline-flex items-center gap-2 glass-card px-6 py-3 rounded-full mb-8 animate-fade-in pulse-glow"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             <Shield className="w-5 h-5 text-primary" />
             <span className="text-sm font-semibold">100% Privacy-First AI Platform</span>
-          </div>
+          </motion.div>
 
           {/* Main Headline - Updated messaging */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-8 animate-fade-in"
+            initial={{ opacity: 0, y: 40 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             <span className="gradient-text">Custom AI Automations</span>
             <br />
             <span className="text-foreground">That Actually</span>
             <br />
             <span className="gradient-text">Adapt to You</span>
-          </h1>
+          </motion.h1>
 
           {/* Enhanced Value Proposition */}
-          <div className="max-w-4xl mx-auto mb-8 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <motion.div
+            className="max-w-4xl mx-auto mb-8 animate-fade-in"
+            initial={{ opacity: 0, y: 40 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             <p className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
               We build custom AI automations and secure tools for students, professionals, and businesses—<span className="gradient-text font-bold">no code needed.</span>
             </p>
             <p className="text-xl text-muted-foreground">
               AI that actually adapts to your life, all with <strong className="text-primary">100% privacy</strong> guaranteed.
             </p>
-          </div>
+          </motion.div>
 
           {/* Enhanced CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fade-in"
+            initial={{ opacity: 0, y: 40 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
             <Link to="/creations">
-              <Button className="btn-hero text-xl px-10 py-5 group hover:scale-105 pulse-glow">
+              <motion.button
+                className="btn-hero text-xl px-10 py-5 group hover:scale-105 pulse-glow focus:outline-none focus:ring-2 focus:ring-primary/50"
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.97 }}
+                type="button"
+              >
                 <Sparkles className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform" />
                 See Our Creations
                 <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
-              </Button>
+              </motion.button>
             </Link>
             <Link to="/contact">
-              <Button className="btn-outline-glow text-xl px-10 py-5 group">
+              <motion.button
+                className="btn-outline-glow text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.97 }}
+                type="button"
+              >
                 <Zap className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" />
                 Get Free Consultation
-              </Button>
+              </motion.button>
             </Link>
-          </div>
+          </motion.div>
 
           {/* Hero Dashboard Mockup */}
-          <div className="relative animate-fade-in" style={{ animationDelay: "0.8s" }}>
+          <motion.div
+            className="relative animate-fade-in"
+            initial={{ opacity: 0, y: 40 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
             <div className="glass-card p-4 md:p-8 rounded-3xl shadow-elevated max-w-6xl mx-auto glow-effect">
-              <img 
-                src={heroDashboard} 
+              <img
+                src={heroDashboard}
                 alt="Neubofy AI Dashboard - Custom automation interface showing analytics, workflows, and AI chat features"
                 className="w-full h-auto rounded-2xl shadow-card"
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Enhanced Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-8 mt-16 animate-fade-in" style={{ animationDelay: "1s" }}>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-4 gap-8 mt-16 animate-fade-in"
+            initial={{ opacity: 0, y: 40 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.7 }}
+          >
             <div className="text-center group">
               <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">100%</div>
               <div className="text-muted-foreground font-medium">Privacy Focused</div>
@@ -97,8 +157,8 @@ const HeroSection = () => {
               <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">No Code</div>
               <div className="text-muted-foreground font-medium">Required</div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
     </ParallaxBackground>
   );

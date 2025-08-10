@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
@@ -69,6 +70,8 @@ const GeminiChatbot = () => {
   const [loading, setLoading] = useState(false);
   const [sessionContext, setSessionContext] = useState<{ name?: string; company?: string }>({});
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const [greeted, setGreeted] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -127,16 +130,88 @@ const GeminiChatbot = () => {
     setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
   };
 
+
+  // On hover, toggle notification: if closed, show latest reply; if open, close. When opened, scroll chat to latest.
+  const handleChatButtonHover = async () => {
+    if (notification) {
+      setNotification(null);
+      return;
+    }
+    // Find the latest assistant reply
+    const latestReply = messages.find(m => m.role === "assistant");
+    if (latestReply) {
+      setNotification(latestReply.content);
+      setTimeout(() => setNotification(null), 4000);
+    } else if (!greeted) {
+      setGreeted(true);
+      // Add 'Hi' as user message
+      setMessages(msgs => [msgs[0], { role: "user", content: "Hi" }, ...msgs.slice(1)]);
+      // Prepare context for AI
+      const contextString =
+        `Current page route: ${location.pathname}\nAbout Neubofy: Neubofy is an AI automation platform for productivity, innovation, and secure business solutions.` +
+        (sessionContext.name ? ` The user's name is ${sessionContext.name}.` : "") +
+        (sessionContext.company ? ` The user's company is ${sessionContext.company}.` : "");
+      const userMessage = `${contextString}\nUser: Hi`;
+      try {
+        const res = await axios.post(
+          GROQ_API_URL,
+          {
+            model: "llama3-8b-8192",
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              { role: "user", content: userMessage }
+            ],
+            stream: false,
+            max_tokens: 100,
+            temperature: 0.2
+          },
+          {
+            headers: {
+              "Authorization": `Bearer ${GROQ_API_KEY}`,
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        let reply = res.data.choices?.[0]?.message?.content || "Hello! How can I help you today?";
+        reply = reply.replace(/\n{2,}/g, "\n").split("\n").map(p => `<p>${p.trim().replace(/<a /g, "<a class='neubofy-link' ")}</p>`).join("");
+        setMessages(msgs => [msgs[0], { role: "user", content: "Hi" }, { role: "assistant", content: reply }, ...msgs.slice(1)]);
+        setNotification(reply);
+        setTimeout(() => setNotification(null), 4000);
+      } catch {
+        setNotification("Hello! How can I help you today?");
+        setTimeout(() => setNotification(null), 4000);
+      }
+    }
+  };
+
+  // When chat opens, scroll to latest message
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    }
+  }, [open, messages]);
+
   return (
     <>
       {/* Floating Button */}
       <button
         className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-white text-3xl hover:scale-110 transition-all"
         onClick={() => setOpen(!open)}
+        onMouseEnter={handleChatButtonHover}
         aria-label="Open AI Chatbot"
       >
         💬
       </button>
+      {/* Notification (like WhatsApp) */}
+      {notification && (
+        <div className="fixed bottom-28 right-8 z-[60] bg-white border border-cyan-200 shadow-xl rounded-xl px-5 py-4 max-w-xs animate-fade-in-up" style={{ minWidth: 220 }}>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="inline-block w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-purple-500 text-white flex items-center justify-center text-lg">🤖</span>
+            <span className="font-semibold text-cyan-700">Neubofy AI</span>
+          </div>
+          <div className="text-gray-800 text-sm" dangerouslySetInnerHTML={{ __html: notification }} />
+        </div>
+      )}
 
       {/* Chat Window */}
       {open && (
@@ -172,22 +247,21 @@ const GeminiChatbot = () => {
               if (msg.role === "user") {
                 const answer = arr[i + 1]?.role === "assistant" ? arr[i + 1] : null;
                 acc.push(
-                  <div key={i} className="mb-4">
-                    <div className="text-right mb-1">
-                      <span className="inline-block px-3 py-2 rounded-lg bg-cyan-200 text-gray-900 font-semibold">
+                  <div key={i} className="mb-5 flex flex-col gap-1 animate-fade-in-up">
+                    {/* User message */}
+                    <div className="flex justify-end items-end gap-2">
+                      <span className="inline-block px-4 py-2 rounded-2xl bg-cyan-200 text-gray-900 font-semibold max-w-[70%] text-right shadow-md">
                         {msg.content}
                       </span>
                     </div>
+                    {/* AI answer */}
                     {answer ? (
-                      <div className="text-left">
-                        <span
-                          className="inline-block px-3 py-2 rounded-lg bg-purple-100 text-purple-900"
-                          dangerouslySetInnerHTML={{ __html: answer.content }}
-                        />
+                      <div className="flex justify-start items-end gap-2 mt-2">
+                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100 text-purple-900 max-w-[70%] shadow-md animate-fade-in-up" dangerouslySetInnerHTML={{ __html: answer.content }} />
                       </div>
                     ) : loading && i === 0 ? (
-                      <div className="text-left">
-                        <span className="inline-block px-3 py-2 rounded-lg bg-purple-100 text-purple-900 italic">Thinking...</span>
+                      <div className="flex justify-start items-end gap-2 mt-2">
+                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100 text-purple-900 italic shadow-md animate-pulse">Thinking...</span>
                       </div>
                     ) : null}
                   </div>

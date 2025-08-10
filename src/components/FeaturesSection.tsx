@@ -1,8 +1,10 @@
+
 import { Bot, Shield, Zap, Users, Brain, Target } from "lucide-react";
 import studentMentor from "@/assets/student-mentor-mockup.jpg";
 import inventoryAI from "@/assets/inventory-ai-mockup.jpg";
 import contentCreator from "@/assets/content-creator-mockup.jpg";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import { motion } from "framer-motion";
 
 const FeaturesSection = () => {
   const { elementRef, isIntersecting } = useIntersectionObserver();
@@ -61,11 +63,17 @@ const FeaturesSection = () => {
   return (
     <section className="py-24 relative">
       <div className="container mx-auto px-4">
-        <div 
-          ref={elementRef}
-          className={`text-center mb-16 ${
-            isIntersecting ? 'animate-fade-in-up' : 'opacity-0'
-          }`}
+        <motion.div
+          ref={(node) => {
+            if (node) {
+              // Assign to both the motion div and the custom observer
+              (elementRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            }
+          }}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isIntersecting ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, ease: 'easeOut' }}
         >
           <h2 className="text-4xl md:text-6xl font-display font-bold mb-6 gradient-text">
             <span className="gradient-text">How We Help You Succeed</span>
@@ -73,23 +81,44 @@ const FeaturesSection = () => {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Discover the power of AI automation across every aspect of your work and life
           </p>
-        </div>
+        </motion.div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          animate={isIntersecting ? "visible" : "hidden"}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.15
+              }
+            }
+          }}
+        >
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
-              <div
+              <motion.div
                 key={index}
-                className={`glass-card p-6 rounded-2xl hover-lift transition-all duration-500 group glow-effect animate-fade-in overflow-hidden ${
-                  isIntersecting ? `animate-fade-in-up stagger-${index + 1}` : 'opacity-0'
-                }`}
+                className="glass-card p-6 rounded-2xl hover-lift transition-all duration-500 group glow-effect overflow-hidden"
+                variants={{
+                  hidden: { opacity: 0, y: 40 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                whileHover={{ scale: 1.04, boxShadow: "0 8px 32px rgba(80,80,200,0.10)" }}
               >
                 {/* Feature Image */}
-                <div className="relative mb-6 rounded-xl overflow-hidden">
-                  <img 
-                    src={feature.mockup} 
+                <motion.div
+                  className="relative mb-6 rounded-xl overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.7, delay: 0.2 }}
+                >
+                  <img
+                    src={feature.mockup}
                     alt={feature.alt}
                     className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
@@ -97,18 +126,18 @@ const FeaturesSection = () => {
                   <div className={`absolute top-4 left-4 w-12 h-12 rounded-xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <IconComponent className="w-6 h-6 text-white" />
                   </div>
-                </div>
-                
+                </motion.div>
+
                 <h3 className="text-xl font-bold mb-4 group-hover:text-primary transition-colors">
                   {feature.title}
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
