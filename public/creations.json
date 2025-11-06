@@ -5,11 +5,13 @@
       "name": "AI Study Mentor",
       "shortDescription": "Personalized AI-powered study companion that adapts to your learning style.",
       "detailDescription": "AI Study Mentor is a personalized learning assistant that creates adaptive study plans, tracks progress, and provides actionable insights. It helps students stay organized and motivated while optimizing their study time.",
-      "thumbnailUrl": "/src/assets/student-mentor-mockup.jpg",
+      "thumbnailUrl": "https://picsum.photos/seed/mentor-thumb/800/1000",
       "imageUrls": [
-        "/src/assets/student-mentor-mockup.jpg",
-        "/src/assets/hero-dashboard-mockup.jpg",
-        "/src/assets/content-creator-mockup.jpg"
+        "https://picsum.photos/seed/mentor-1/800/1000",
+        "https://picsum.photos/seed/mentor-2/800/1000",
+        "https://picsum.photos/seed/mentor-3/800/1000",
+        "https://picsum.photos/seed/mentor-4/800/1000",
+        "https://picsum.photos/seed/mentor-5/800/1000"
       ],
       "mainUrl": "https://example.com/ai-study-mentor",
       "publishedAt": "2024-10-15",
@@ -20,11 +22,13 @@
       "name": "SmartInventory Pro",
       "shortDescription": "AI-powered inventory management with forecasting and automated reordering.",
       "detailDescription": "SmartInventory Pro uses predictive analytics to forecast demand, optimize stock levels, and automate reorders, helping businesses reduce waste and avoid stockouts.",
-      "thumbnailUrl": "/src/assets/inventory-ai-mockup.jpg",
+      "thumbnailUrl": "https://picsum.photos/seed/inventory-thumb/800/1000",
       "imageUrls": [
-        "/src/assets/inventory-ai-mockup.jpg",
-        "/src/assets/hero-dashboard-mockup.jpg",
-        "/src/assets/content-creator-mockup.jpg"
+        "https://picsum.photos/seed/inventory-1/800/1000",
+        "https://picsum.photos/seed/inventory-2/800/1000",
+        "https://picsum.photos/seed/inventory-3/800/1000",
+        "https://picsum.photos/seed/inventory-4/800/1000",
+        "https://picsum.photos/seed/inventory-5/800/1000"
       ],
       "mainUrl": "https://example.com/smart-inventory-pro",
       "publishedAt": "2024-11-01",
@@ -35,11 +39,13 @@
       "name": "ContentCraft AI",
       "shortDescription": "Generate, edit, and optimize content while preserving your brand voice.",
       "detailDescription": "ContentCraft AI helps teams create high-quality content across formats, ensuring consistency, SEO optimization, and streamlined workflows.",
-      "thumbnailUrl": "/src/assets/content-creator-mockup.jpg",
+      "thumbnailUrl": "https://picsum.photos/seed/content-thumb/800/1000",
       "imageUrls": [
-        "/src/assets/content-creator-mockup.jpg",
-        "/src/assets/hero-dashboard-mockup.jpg",
-        "/src/assets/student-mentor-mockup.jpg"
+        "https://picsum.photos/seed/content-1/800/1000",
+        "https://picsum.photos/seed/content-2/800/1000",
+        "https://picsum.photos/seed/content-3/800/1000",
+        "https://picsum.photos/seed/content-4/800/1000",
+        "https://picsum.photos/seed/content-5/800/1000"
       ],
       "mainUrl": "https://example.com/contentcraft-ai",
       "publishedAt": "2024-12-05",
