@@ -1,0 +1,51 @@
+{
+  "creations": [
+    {
+      "slug": "ai-study-mentor",
+      "name": "AI Study Mentor",
+      "shortDescription": "Personalized AI-powered study companion that adapts to your learning style.",
+      "detailDescription": "AI Study Mentor is a personalized learning assistant that creates adaptive study plans, tracks progress, and provides actionable insights. It helps students stay organized and motivated while optimizing their study time.",
+      "thumbnailUrl": "/src/assets/student-mentor-mockup.jpg",
+      "imageUrls": [
+        "/src/assets/student-mentor-mockup.jpg",
+        "/src/assets/hero-dashboard-mockup.jpg",
+        "/src/assets/content-creator-mockup.jpg"
+      ],
+      "mainUrl": "https://example.com/ai-study-mentor",
+      "publishedAt": "2024-10-15",
+      "status": "Live"
+    },
+    {
+      "slug": "smart-inventory-pro",
+      "name": "SmartInventory Pro",
+      "shortDescription": "AI-powered inventory management with forecasting and automated reordering.",
+      "detailDescription": "SmartInventory Pro uses predictive analytics to forecast demand, optimize stock levels, and automate reorders, helping businesses reduce waste and avoid stockouts.",
+      "thumbnailUrl": "/src/assets/inventory-ai-mockup.jpg",
+      "imageUrls": [
+        "/src/assets/inventory-ai-mockup.jpg",
+        "/src/assets/hero-dashboard-mockup.jpg",
+        "/src/assets/content-creator-mockup.jpg"
+      ],
+      "mainUrl": "https://example.com/smart-inventory-pro",
+      "publishedAt": "2024-11-01",
+      "status": "Live"
+    },
+    {
+      "slug": "contentcraft-ai",
+      "name": "ContentCraft AI",
+      "shortDescription": "Generate, edit, and optimize content while preserving your brand voice.",
+      "detailDescription": "ContentCraft AI helps teams create high-quality content across formats, ensuring consistency, SEO optimization, and streamlined workflows.",
+      "thumbnailUrl": "/src/assets/content-creator-mockup.jpg",
+      "imageUrls": [
+        "/src/assets/content-creator-mockup.jpg",
+        "/src/assets/hero-dashboard-mockup.jpg",
+        "/src/assets/student-mentor-mockup.jpg"
+      ],
+      "mainUrl": "https://example.com/contentcraft-ai",
+      "publishedAt": "2024-12-05",
+      "status": "Live"
+    }
+  ]
+}
+
+
