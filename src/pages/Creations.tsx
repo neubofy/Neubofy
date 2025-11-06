@@ -143,6 +143,11 @@ const Creations = () => {
                       src={creation.thumbnailUrl}
                       alt={`${creation.name} - ${creation.shortDescription}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        const t = e.currentTarget as HTMLImageElement;
+                        if (t.src.includes('/placeholder.svg')) return;
+                        t.src = '/placeholder.svg';
+                      }}
                       loading="lazy"
                     />
                   </AspectRatio>

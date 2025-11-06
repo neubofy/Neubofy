@@ -141,7 +141,17 @@ const CreationDetail = () => {
                     <CarouselItem key={idx} className="basis-11/12 md:basis-1/2 lg:basis-1/3">
                       <div className="rounded-xl overflow-hidden glass-card cursor-pointer" onClick={() => carouselApi?.scrollTo(idx)}>
                         <AspectRatio ratio={4/5}>
-                          <img src={url} alt={`${item.name} image ${idx+1}`} className="w-full h-full object-cover" loading="lazy" />
+                          <img
+                            src={url}
+                            alt={`${item.name} image ${idx+1}`}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            onError={(e) => {
+                              const t = e.currentTarget as HTMLImageElement;
+                              if (t.src.includes('/placeholder.svg')) return;
+                              t.src = '/placeholder.svg';
+                            }}
+                          />
                         </AspectRatio>
                       </div>
                     </CarouselItem>
