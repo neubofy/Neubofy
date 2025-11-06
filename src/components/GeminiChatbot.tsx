@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "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";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const SYSTEM_PROMPT = `You are Neubofy AI, an assistant for Neubofy. Reply concisely and directly to user queries, but if a question requires a detailed answer, you may use up to 200 words. Only mention Neubofy if contextually needed. Never mention any other brand. Always provide direct links to Neubofy pages using <a> tags with class 'neubofy-link'. Pages: Home(/), About(/about), Creations(/creations), Blog(/blog), Contact(/contact).`;
 
@@ -38,15 +38,21 @@ const NEUBOFY_KB = [
     answer: "Return to the <a href='/' class='neubofy-link'>Neubofy Home</a> page for an overview of our platform."
   },
   {
-    keywords: ["Founder", "entrepreneur", "brand maker"],
-    answer: "Pawan Washudev is founder of Neubofy. He is a one many army and full tech hunter , he has profound knowledge in AI and tech."
+    keywords: [
+      "founder", "creator", "who made", "who founded", "who created", "who is behind", "who built", "owner", "developed by", "origin", "about the founder", "neubofy founder", "neubofy creator", "pawan washudev"
+    ],
+    answer: "Neubofy was founded by Pawan Washudev, an AI generalist and technology innovator."
   }
 ];
 
+function normalize(str) {
+  return str.toLowerCase().replace(/[^a-z0-9\s]/gi, "");
+}
+
 function getKbAnswer(query) {
-  const lower = query.toLowerCase();
+  const lower = normalize(query);
   for (const item of NEUBOFY_KB) {
-    if (item.keywords.some(k => lower.includes(k))) {
+    if (item.keywords.some(k => lower.includes(normalize(k)))) {
       return item.answer;
     }
   }
@@ -106,7 +112,7 @@ const GeminiChatbot = () => {
       const res = await axios.post(
         GROQ_API_URL,
         {
-          model: "llama3-8b-8192",
+          model: "llama-3.1-8b-instant",
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: userMessage }
@@ -203,11 +209,21 @@ const GeminiChatbot = () => {
     }
   }, [open, messages]);
 
+  // Add these icons at the top
+  const USER_AVATAR = "👤";
+  const BOT_AVATAR = "🤖";
+
+  // Add clear chat function
+  const handleClearChat = () => {
+    setMessages([{ role: "system", content: SYSTEM_PROMPT }]);
+    setInput("");
+  };
+
   return (
     <>
       {/* Floating Button */}
       <button
-        className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-white text-3xl hover:scale-110 transition-all"
+        className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full shadow-2xl w-16 h-16 flex items-center justify-center text-white text-3xl hover:scale-110 transition-all border-4 border-white/40 backdrop-blur-lg"
         onClick={() => setOpen(!open)}
         onMouseEnter={handleChatButtonHover}
         aria-label="Open AI Chatbot"
@@ -216,28 +232,41 @@ const GeminiChatbot = () => {
       </button>
       {/* Notification (like WhatsApp) */}
       {notification && (
-        <div className="fixed bottom-28 right-8 z-[60] bg-white border border-cyan-200 shadow-xl rounded-xl px-5 py-4 max-w-xs animate-fade-in-up" style={{ minWidth: 220 }}>
+        <div className="fixed bottom-28 right-8 z-[60] bg-white/80 border backdrop-blur-md border-cyan-200 shadow-2xl rounded-xl px-5 py-4 max-w-xs animate-fade-in-up" style={{ minWidth: 220 }}>
           <div className="flex items-center gap-2 mb-1">
-            <span className="inline-block w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-purple-500 text-white flex items-center justify-center text-lg">🤖</span>
+            <span className="inline-block w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-purple-500 text-white flex items-center justify-center text-lg">{BOT_AVATAR}</span>
             <span className="font-semibold text-cyan-700">Neubofy AI</span>
           </div>
           <div className="text-gray-800 text-sm" dangerouslySetInnerHTML={{ __html: notification }} />
         </div>
       )}
 
+      {/* Clear Chat button minimally above input, right-aligned */}
+      {open && (
+        <div className="fixed bottom-[calc(24px+72px)] right-8 z-50 flex justify-end w-[92vw] max-w-md pr-3">
+          <button
+            onClick={handleClearChat}
+            className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-full border border-gray-200 shadow-sm transition font-semibold"
+            style={{marginBottom:'-12px'}}
+          >Clear chat</button>
+        </div>
+      )}
+
       {/* Chat Window */}
       {open && (
         <div
-          className="fixed bottom-24 right-8 z-50 w-80 max-w-[95vw] bg-white rounded-2xl shadow-2xl border border-cyan-200 flex flex-col"
-          style={{ minHeight: 400, maxHeight: 500 }}
-          onWheel={e => { e.stopPropagation(); e.currentTarget.scrollTop += e.deltaY; }}
+          className="fixed bottom-24 right-8 z-50 w-[92vw] max-w-md bg-white/60 rounded-3xl shadow-2xl border border-cyan-200 flex flex-col backdrop-blur-2xl"
+          style={{ minHeight: 420, maxHeight: 540 }}
         >
-          <div className="p-4 bg-gradient-to-r from-cyan-400 to-purple-400 text-white rounded-t-2xl font-bold flex justify-between items-center">
-            Neubofy AI Chatbot
-            <button onClick={() => setOpen(false)} className="text-white text-xl font-bold">&times;</button>
+          <div className="p-4 bg-gradient-to-br from-cyan-400/80 to-purple-500/80 text-white rounded-t-3xl font-bold flex justify-between items-center shadow-md">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{BOT_AVATAR}</span>
+              <span>Neubofy AI Chatbot</span>
+            </div>
+            <button onClick={() => setOpen(false)} className="text-white text-xl font-bold hover:scale-125 transition">&times;</button>
           </div>
           <div
-            className="flex-1 overflow-y-auto p-3 bg-gray-50 flex flex-col"
+            className="flex-1 overflow-y-auto p-4 bg-white/50 flex flex-col gap-2"
             style={{ fontSize: 15, scrollBehavior: 'smooth' }}
             ref={chatEndRef}
             onWheel={e => { e.stopPropagation(); e.currentTarget.scrollTop += e.deltaY; }}
@@ -261,19 +290,31 @@ const GeminiChatbot = () => {
                 acc.push(
                   <div key={i} className="mb-5 flex flex-col gap-1 animate-fade-in-up">
                     {/* User message */}
-                    <div className="flex justify-end items-end gap-2">
-                      <span className="inline-block px-4 py-2 rounded-2xl bg-cyan-200 text-gray-900 font-semibold max-w-[70%] text-right shadow-md">
-                        {msg.content}
-                      </span>
+                    <div className="flex justify-end items-end gap-2 w-full">
+                      <span className="text-lg select-none">{USER_AVATAR}</span>
+                      <span className="inline-block px-4 py-2 rounded-2xl bg-cyan-200/90 text-gray-900 font-semibold max-w-[70%] text-right shadow-md">{msg.content}</span>
                     </div>
                     {/* AI answer */}
                     {answer ? (
-                      <div className="flex justify-start items-end gap-2 mt-2">
-                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100 text-purple-900 max-w-[70%] shadow-md animate-fade-in-up" dangerouslySetInnerHTML={{ __html: answer.content }} />
+                      <div className="flex justify-start items-end gap-2 mt-2 w-full">
+                        <span className="text-lg select-none">{BOT_AVATAR}</span>
+                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100/90 text-purple-900 max-w-[70%] shadow-md animate-fade-in-up" dangerouslySetInnerHTML={{ __html: answer.content }} />
+                        {/* Copy-to-clipboard icon */}
+                        <button
+                          className="ml-1 p-1 rounded hover:bg-cyan-100/80 text-cyan-600"
+                          title="Copy reply"
+                          onClick={() => navigator.clipboard.writeText(
+                            // Strip HTML tags from content for copying
+                            answer.content.replace(/<[^>]+>/g, '')
+                          )}
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg>
+                        </button>
                       </div>
                     ) : loading && i === 0 ? (
-                      <div className="flex justify-start items-end gap-2 mt-2">
-                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100 text-purple-900 italic shadow-md animate-pulse">Thinking...</span>
+                      <div className="flex justify-start items-end gap-2 mt-2 w-full">
+                        <span className="text-lg select-none">{BOT_AVATAR}</span>
+                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100/90 text-purple-900 italic shadow-md animate-pulse">Thinking...</span>
                       </div>
                     ) : null}
                   </div>
@@ -284,21 +325,24 @@ const GeminiChatbot = () => {
             {loading && <div className="text-gray-400 italic">Thinking...</div>}
           </div>
           <form
-            className="flex border-t border-gray-200 bg-gradient-to-r from-cyan-50 to-purple-50 animate-fade-in"
+            className="flex border-t border-gray-200 bg-gradient-to-r from-cyan-50/80 to-purple-50/80 animate-fade-in backdrop-blur"
             onSubmit={e => { e.preventDefault(); sendMessage(); }}
           >
             <input
-              className="flex-1 p-3 border-none outline-none rounded-bl-2xl text-gray-900 placeholder:text-gray-400 bg-white focus:bg-cyan-50 transition-colors duration-300 shadow-inner animate-pulse"
-              placeholder="Ask anything..."
+              className="flex-1 p-4 border-none outline-none rounded-bl-3xl text-gray-900 placeholder:text-gray-400 bg-white/90 focus:bg-cyan-50 transition-colors duration-300 shadow-inner text-base sm:text-lg"
+              placeholder="Ask anything about Neubofy…"
               value={input}
               onChange={e => setInput(e.target.value)}
               disabled={loading}
-              style={{ fontWeight: 500, fontSize: 16 }}
+              style={{ fontWeight: 500 }}
+              autoFocus
             />
             <button
               type="submit"
-              className="px-4 text-cyan-600 font-bold hover:text-purple-600 transition transform hover:scale-125 animate-bounce"
-              disabled={loading}
+              className="px-5 text-2xl sm:text-3xl text-cyan-600 font-bold transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/80 bg-white/80 rounded-br-3xl shadow-lg hover:shadow-cyan-500/30 hover:text-purple-600 hover:bg-white/90 active:scale-95"
+              disabled={loading || !input.trim()}
+              aria-label="Send"
+              style={{boxShadow: '0 0 10px #67e8f9, 0 0 20px #a5b4fc55'}}
             >
               ➤
             </button>
