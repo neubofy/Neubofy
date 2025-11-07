@@ -1,0 +1,92 @@
+{
+  "slug": "google-ai-agents-intensive-2025-kaggle",
+  "name": "Google AI Agents Intensive 2025: Free 5-Day Course with Kaggle",
+  "shortDescription": "Learn to build, evaluate, and deploy AI agents in this free intensive course by Google and Kaggle. Register now for November 10-14, 2025.",
+  "thumbnailUrl": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1400&q=80&auto=format&fit=crop",
+  "publishedAt": "2025-11-08",
+  "tags": ["AI", "Google", "Kaggle", "Education", "Machine Learning"],
+  "author": "Neubofy Team",
+  "readTime": "7 min read",
+  "category": "Technology",
+  "featured": true,
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "Google and Kaggle have launched an exciting opportunity for students and AI enthusiasts worldwide: the 5-Day AI Agents Intensive Course. This free, hands-on program runs from November 10-14, 2025, and is designed to help you master AI agents—the next frontier of artificial intelligence. Whether you're a beginner or looking to advance your expertise, this course offers world-class learning from Google's own AI researchers and engineers."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80&auto=format&fit=crop",
+      "caption": "AI and machine learning technology concept"
+    },
+    {
+      "type": "paragraph",
+      "text": "This intensive program is the successor to Google's highly successful GenAI Intensive course, which attracted over 280,000 learners earlier in 2025. The new AI Agents Intensive takes things to the next level by focusing specifically on building intelligent, autonomous systems. The curriculum covers everything from foundational agent concepts to sophisticated multi-agent architectures, blending deep theoretical knowledge with practical hands-on codelabs."
+    },
+    {
+      "type": "paragraph",
+      "text": "Day 1 focuses on Introduction to Agents and Agentic Architectures, where you'll explore the foundational concepts of AI agents, their defining characteristics, and how agentic architectures differ from traditional LLM applications. You'll understand what makes agents intelligent and autonomous, setting the groundwork for building real-world systems."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80&auto=format&fit=crop",
+      "caption": "Data analytics and AI architecture dashboard"
+    },
+    {
+      "type": "paragraph",
+      "text": "Day 2 dives into Agent Tools and Interoperability with MCP (Model Context Protocol). This session teaches you how AI agents can take action by leveraging external functionalities and APIs. You'll explore the ease of discovering and using tools offered by MCP, enabling your agents to interact with real-world systems and databases effectively."
+    },
+    {
+      "type": "paragraph",
+      "text": "Day 3 covers Context Engineering, including Sessions and Memory Management. Here, you'll learn to build AI agents that can remember past interactions and maintain context across conversations. Implementing both short-term and long-term memory will enable you to create robust agents capable of handling complex, multi-turn tasks—a critical skill for production-ready systems."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80&auto=format&fit=crop",
+      "caption": "Code development and programming workspace"
+    },
+    {
+      "type": "paragraph",
+      "text": "Day 4 is all about Agent Quality: Observability, Logging, Tracing, Evaluation, and Metrics. You'll master the critical disciplines of building reliable AI agents through comprehensive evaluation strategies. This session covers observability tools, logging practices, tracing techniques, and key performance metrics to optimize your agent's behavior and troubleshoot issues efficiently."
+    },
+    {
+      "type": "paragraph",
+      "text": "Day 5 teaches you how to move from Prototype to Production. Learn to deploy and scale AI agents for real-world use, going beyond local testing environments. This final session covers deployment best practices, including how to create truly multi-agent systems using the Agent2Agent (A2A) Protocol, ensuring your agents can collaborate and scale effectively."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80&auto=format&fit=crop",
+      "caption": "Team collaboration and learning environment"
+    },
+    {
+      "type": "paragraph",
+      "text": "The course includes live discussions on Discord and YouTube livestreams with Google experts, allowing you to ask questions and engage directly with the instructors. You'll also complete hands-on codelabs on Kaggle, including exercises on function calling, SQL chatbot integration using Gemini 2.0's Live API, and building LangGraph agents for real-world applications like café ordering systems."
+    },
+    {
+      "type": "paragraph",
+      "text": "One of the most exciting aspects is the capstone project. By the end of the course, you'll apply your new skills to build your own AI agent project. The best projects have a chance to win prizes and be featured on Google's and Kaggle's official social channels. Participants have until December 7, 2025, to complete and submit their capstone projects for evaluation."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80&auto=format&fit=crop",
+      "caption": "Student learning and writing notes"
+    },
+    {
+      "type": "paragraph",
+      "text": "To get started, you'll need to sign up for a Kaggle account (with phone verification), create an AI Studio account to generate an API key, and join the Kaggle Discord server to connect with fellow learners. The course is completely free with no registration fees, and participants can earn a Google-certified completion certificate along with potential swags and badges."
+    },
+    {
+      "type": "paragraph",
+      "text": "How to apply: Visit the official registration page at https://rsvp.withgoogle.com/events/google-ai-agents-intensive_2025/home and sign up before the course begins on November 10, 2025. Spaces are limited, so early registration is recommended. This is your chance to learn from the best in the industry and build the future of intelligent, autonomous AI systems."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&q=80&auto=format&fit=crop",
+      "caption": "Professional certification and achievement"
+    },
+    {
+      "type": "paragraph",
+      "text": "Whether you're a student, developer, or AI enthusiast looking to stay ahead in the rapidly evolving field of artificial intelligence, this intensive course offers unparalleled value. With guidance from world-leading experts at Google, comprehensive curriculum covering agent architecture to production deployment, and opportunities to win prizes and recognition, the AI Agents Intensive 2025 is an opportunity you don't want to miss. Register today and join thousands of learners mastering the next frontier of AI technology."
+    }
+  ]
+}
