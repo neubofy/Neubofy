@@ -1,0 +1,36 @@
+[
+  {
+    "slug": "how-to-build-a-privacy-first-ai",
+    "name": "How to Build a Privacy-First AI",
+    "shortDescription": "A practical guide to designing AI systems that respect user privacy from day one.",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1504805572947-34fad45aed93?w=800&q=80&auto=format&fit=crop",
+    "publishedAt": "2025-01-08",
+    "tags": ["Privacy", "AI"],
+    "author": "Neubofy Team",
+    "readTime": "6 min read",
+    "category": "Technology",
+    "featured": true
+  },
+  {
+    "slug": "student-advantage-in-ai-innovation",
+    "name": "The Student Advantage in AI Innovation",
+    "shortDescription": "How being a student founder can accelerate creative problem solving in AI.",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&auto=format&fit=crop",
+    "publishedAt": "2024-12-28",
+    "tags": ["Student", "Innovation"],
+    "author": "Neubofy Team",
+    "readTime": "5 min read",
+    "category": "Innovation"
+  },
+  {
+    "slug": "privacy-by-design-checklist",
+    "name": "Privacy-by-Design Checklist",
+    "shortDescription": "A quick checklist to help you enforce privacy at every step of building an AI product.",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=800&q=80&auto=format&fit=crop",
+    "publishedAt": "2025-02-02",
+    "tags": ["Privacy", "Checklist"],
+    "author": "Neubofy Team",
+    "readTime": "4 min read",
+    "category": "Technology"
+  }
+]
