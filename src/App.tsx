@@ -11,8 +11,8 @@ const CreationDetail = lazy(() => import("./pages/CreationDetail"));
 const Contact = lazy(() => import("./pages/Contact"));
 const About = lazy(() => import("./pages/About"));
 const Blog = lazy(() => import("./pages/Blog"));
+const BlogDetail = lazy(() => import("./pages/BlogDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-// ...existing code...
 import ScrollProgress from "./components/ScrollProgress";
 import GoToTop from "./components/GoToTop";
 import GeminiChatbot from "./components/GeminiChatbot";
@@ -59,7 +59,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
-            {/* more routes can be added here */}
+            <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

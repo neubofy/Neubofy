@@ -1,0 +1,14 @@
+{
+"slug": "my-new-post",
+"name": "Pawan Washudev",
+"shortDescription": "One-line summary",
+"thumbnailUrl": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+"publishedAt": "2025-11-07",
+"tags": ["Tag1","Tag2"],
+"author": "Author Name",
+"content": [
+{ "type": "paragraph", "text": "pawanwashudev" },
+{ "type": "image", "src": "/src/assets/content-creator-mockup.jpg", "caption": "Figure 1" },
+{ "type": "paragraph", "text": "More content after the image." }
+]
+}

@@ -1,0 +1,24 @@
+{
+  "slug": "how-to-build-a-privacy-first-ai",
+  "name": "How to Build a Privacy-First AI",
+  "shortDescription": "A practical guide to designing AI systems that respect user privacy from day one.",
+  "detailDescription": "This article walks through architecture decisions, data minimization techniques, and deployment practices for privacy-first AI systems.",
+  "thumbnailUrl": "/src/assets/hero-dashboard-mockup.jpg",
+  "imageUrls": [
+    "/src/assets/hero-dashboard-mockup.jpg",
+    "/src/assets/founder-avatar.jpg"
+  ],
+  "content": [
+    { "type": "paragraph", "text": "Designing privacy-first AI starts with minimizing the data you collect. Collect only what's necessary and prefer derived features over raw personal data whenever possible." },
+    { "type": "image", "src": "/src/assets/hero-dashboard-mockup.jpg", "caption": "High level architecture diagram" },
+    { "type": "paragraph", "text": "Use techniques like differential privacy, federated learning, and local inference to keep sensitive data on-device. Strong access controls and encryption in transit and at rest are essential." },
+    { "type": "image", "src": "/src/assets/founder-avatar.jpg", "caption": "Team working on privacy design" },
+    { "type": "paragraph", "text": "Finally, make privacy a user-facing feature: give users control to delete data and explain what you store and why." }
+  ],
+  "publishedAt": "2025-01-08",
+  "tags": ["Privacy", "AI", "Architecture"],
+  "author": "Neubofy Team",
+  "readTime": "6 min read",
+  "category": "Technology",
+  "featured": true
+}

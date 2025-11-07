@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Calendar, User, ArrowRight, Tag, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,75 +6,41 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import GoToTop from "@/components/GoToTop";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useNavigate } from "react-router-dom";
 
 const Blog = () => {
-  // This would typically come from a CMS or markdown files for easy updates
-  const [blogPosts] = useState([
-    {
-      id: 1,
-      title: "The Future of AI Automation: A Student's Perspective",
-      excerpt: "Exploring how young innovators are reshaping the AI automation landscape with fresh perspectives and bold ideas that challenge traditional approaches.",
-      author: "Neubofy Team",
-      date: "2025-01-08",
-      readTime: "5 min read",
-      tags: ["AI", "Innovation", "Future"],
-      thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop",
-      featured: true,
-      category: "Innovation"
-    },
-    {
-      id: 2,
-      title: "Building Privacy-First AI: Why It Matters",
-      excerpt: "Deep dive into zero-knowledge architecture and why privacy should be the foundation of every AI system, not an afterthought.",
-      author: "Neubofy Team",
-      date: "2025-01-05",
-      readTime: "7 min read",
-      tags: ["Privacy", "Security", "AI"],
-      thumbnail: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=400&fit=crop",
-      featured: false,
-      category: "Technology"
-    },
-    {
-      id: 3,
-      title: "From Student to CEO: Lessons in AI Entrepreneurship",
-      excerpt: "The journey of building an AI company while still in high school, challenges faced, and insights gained along the way.",
-      author: "Neubofy Founder",
-      date: "2025-01-03",
-      readTime: "6 min read",
-      tags: ["Entrepreneurship", "Student", "Journey"],
-      thumbnail: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop",
-      featured: true,
-      category: "Entrepreneurship"
-    },
-    {
-      id: 4,
-      title: "Custom AI Solutions vs. Off-the-Shelf: Making the Right Choice",
-      excerpt: "Understanding when to choose custom AI automation solutions over generic tools, and how to evaluate your specific needs.",
-      author: "Neubofy Team",
-      date: "2025-01-01",
-      readTime: "4 min read",
-      tags: ["Business", "AI Solutions", "Strategy"],
-      thumbnail: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=400&fit=crop",
-      featured: false,
-      category: "Business"
-    },
-    {
-      id: 5,
-      title: "The Student Advantage in AI Innovation",
-      excerpt: "How being a student founder provides unique advantages in understanding user needs and building innovative solutions.",
-      author: "Neubofy Team",
-      date: "2024-12-28",
-      readTime: "5 min read",
-      tags: ["Student", "Innovation", "Advantage"],
-      thumbnail: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=400&fit=crop",
-      featured: false,
-      category: "Innovation"
-    }
-  ]);
+  // Load blog JSON files from src/content/blog/*.json (add new files here)
+  // Vite's import.meta.glob with eager:true will bundle these at build time.
+  const navigate = useNavigate();
+  const blogPosts = useMemo(() => {
+    const modules = import.meta.glob('../content/blog/*.json', { eager: true }) as Record<string, any>;
+    const values = Object.values(modules).map((m: any) => (m && m.default) || m);
+    // normalize some fields and sort by publishedAt desc
+    return values
+      .map((p: any, i: number) => ({
+        id: p.id ?? i + 1,
+        slug: p.slug ?? p.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        title: p.name ?? p.title ?? 'Untitled',
+        excerpt: p.shortDescription ?? p.excerpt ?? '',
+        author: p.author ?? 'Neubofy Team',
+        date: p.publishedAt ?? p.date ?? new Date().toISOString(),
+        readTime: p.readTime ?? '5 min read',
+        tags: p.tags ?? [],
+        thumbnail: p.thumbnailUrl ?? p.thumbnail ?? '/placeholder.svg',
+        featured: !!p.featured,
+        category: p.category ?? 'Uncategorized',
+        raw: p
+      }))
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, []);
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   
-  const categories = ["All", "Innovation", "Technology", "Entrepreneurship", "Business"];
+  const categories = useMemo(() => {
+    const cats = Array.from(new Set(blogPosts.map((p) => p.category).filter(Boolean)));
+    return ["All", ...cats];
+  }, [blogPosts]);
   
   const filteredPosts = selectedCategory === "All" 
     ? blogPosts 
@@ -87,14 +53,14 @@ const Blog = () => {
     <div className="min-h-screen animated-gradient">
       <Navbar />
       
-      <div className="container mx-auto px-4 py-32">
+      <div className="container mx-auto px-4 py-24 md:py-32">
         {/* Header */}
         <Reveal>
-          <div className="text-center mb-16">
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 gradient-text">
+          <div className="text-center mb-12 md:mb-16">
+            <h1 className="text-4xl md:text-7xl font-display font-bold mb-4 md:mb-6 gradient-text">
               Innovation Insights
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
               Latest thoughts on AI automation, innovation, and the future of technology 
               from our young founder's perspective.
             </p>
@@ -104,20 +70,22 @@ const Blog = () => {
         {/* Featured Post */}
         {featuredPost && (
           <Reveal>
-          <div className="glass-card rounded-3xl overflow-hidden mb-16 shadow-elevated">
+          <div className="glass-card rounded-2xl md:rounded-3xl overflow-hidden mb-12 md:mb-16 shadow-elevated">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
               <div className="relative">
-                <img 
-                  src={featuredPost.thumbnail} 
-                  alt={featuredPost.title}
-                  className="w-full h-64 lg:h-full object-cover"
-                />
-                <div className="absolute top-4 left-4">
+                <AspectRatio ratio={4/5}>
+                  <img
+                    src={featuredPost.thumbnail}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-cover"
+                  />
+                </AspectRatio>
+                <div className="absolute top-3 left-3 md:top-4 md:left-4">
                   <Badge className="bg-primary text-primary-foreground">Featured</Badge>
                 </div>
               </div>
-              <div className="p-8 lg:p-12 flex flex-col justify-center">
-                <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+              <div className="p-6 md:p-8 lg:p-12 flex flex-col justify-center">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4" />
                     {featuredPost.author}
@@ -129,7 +97,7 @@ const Blog = () => {
                   <span>{featuredPost.readTime}</span>
                 </div>
                 
-                <h2 className="text-3xl font-bold mb-4 gradient-text">
+                <h2 className="text-2xl md:text-3xl font-bold mb-4 gradient-text">
                   {featuredPost.title}
                 </h2>
                 
@@ -146,7 +114,7 @@ const Blog = () => {
                   ))}
                 </div>
                 
-                <Button className="btn-hero w-fit group">
+                <Button className="btn-hero w-fit group" onClick={() => navigate(`/blog/${featuredPost.slug}`)}>
                   Read Full Article
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -158,16 +126,15 @@ const Blog = () => {
 
         {/* Category Filter */}
         <Reveal>
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12">
           {categories.map((category) => (
             <Button
               key={category}
               onClick={() => setSelectedCategory(category)}
               variant={selectedCategory === category ? "default" : "outline"}
-              className={selectedCategory === category 
+              className={`${selectedCategory === category 
                 ? "btn-hero" 
-                : "btn-outline-glow"
-              }
+                : "btn-outline-glow"} text-sm md:text-base`}
             >
               {category}
             </Button>
@@ -176,26 +143,31 @@ const Blog = () => {
         </Reveal>
 
         {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
           {filteredPosts.map((post, index) => (
             <Reveal key={post.id} delay={index * 0.05}>
-            <article
-              className="glass-card rounded-2xl overflow-hidden hover:shadow-elevated transition-all duration-500 group"
+            <button
+              type="button"
+              onClick={() => navigate(`/blog/${post.slug}`)}
+              className="w-full text-left glass-card rounded-2xl overflow-hidden hover:shadow-elevated transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-primary"
+              tabIndex={0}
             >
               <div className="relative">
-                <img 
-                  src={post.thumbnail} 
-                  alt={post.title}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+                <AspectRatio ratio={4/5}>
+                  <img
+                    src={post.thumbnail}
+                    alt={post.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </AspectRatio>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                <div className="absolute bottom-4 left-4">
+                <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4">
                   <Badge variant="secondary">{post.category}</Badge>
                 </div>
               </div>
 
-              <div className="p-6">
-                <div className="flex items-center gap-4 mb-4 text-xs text-muted-foreground">
+              <div className="p-5 md:p-6">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <User className="w-3 h-3" />
                     {post.author}
@@ -228,22 +200,22 @@ const Blog = () => {
                   )}
                 </div>
                 
-                <Button variant="ghost" className="p-0 h-auto font-medium text-primary hover:text-primary-glow group">
+                <span className="inline-flex items-center font-medium text-primary group-hover:text-primary-glow text-sm">
                   Read More
                   <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                </span>
               </div>
-            </article>
+            </button>
             </Reveal>
           ))}
         </div>
 
         {/* Add New Post Section (for content management) */}
         <Reveal>
-        <div className="glass-card p-8 rounded-2xl text-center">
-          <Plus className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-xl font-bold mb-4">Want to Contribute?</h3>
-          <p className="text-muted-foreground mb-6">
+        <div className="glass-card p-6 md:p-8 rounded-2xl text-center">
+          <Plus className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-4 text-muted-foreground" />
+          <h3 className="text-lg md:text-xl font-bold mb-4">Want to Contribute?</h3>
+          <p className="text-muted-foreground mb-6 text-sm md:text-base">
             We welcome guest posts and insights from fellow innovators, students, and AI enthusiasts. 
             Share your story and help inspire the next generation of builders.
           </p>

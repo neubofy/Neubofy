@@ -136,7 +136,7 @@ const HeroSection = () => {
 
           {/* Enhanced Stats */}
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-4 gap-8 mt-16 animate-fade-in"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16 animate-fade-in"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.7 }}
@@ -152,10 +152,6 @@ const HeroSection = () => {
             <div className="text-center group">
               <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Custom</div>
               <div className="text-muted-foreground font-medium">Built for You</div>
-            </div>
-            <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">No Code</div>
-              <div className="text-muted-foreground font-medium">Required</div>
             </div>
           </motion.div>
         </motion.div>

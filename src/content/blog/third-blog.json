@@ -1,0 +1,18 @@
+{
+  "slug": "privacy-by-design-checklist",
+  "name": "Privacy-by-Design Checklist",
+  "shortDescription": "A quick checklist to help you enforce privacy at every step of building an AI product.",
+  "detailDescription": "Checklist style guidance for engineering teams.",
+  "thumbnailUrl": "/src/assets/hero-dashboard-mockup.jpg",
+  "imageUrls": [],
+  "publishedAt": "2025-02-02",
+  "tags": ["Privacy", "Checklist"],
+  "author": "Neubofy Team",
+  "readTime": "4 min read",
+  "category": "Technology",
+  "content": [
+    { "type": "paragraph", "text": "1. Minimize data collection. 2. Use encryption. 3. Provide clear consent flows. 4. Allow data deletion and export." },
+    { "type": "image", "src": "/src/assets/founder-avatar.jpg", "caption": "Privacy checklist in practice" },
+    { "type": "paragraph", "text": "Use this checklist during design reviews and sprints to catch privacy regressions early." }
+  ]
+}
