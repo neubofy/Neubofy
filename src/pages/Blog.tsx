@@ -33,6 +33,89 @@ interface BlogPost {
   }>;
 }
 
+// Thin auto-sliding banner component for featured posts
+const FeaturedBannerSlider = ({ posts, navigate }: { posts: BlogPost[]; navigate: any }) => {
+  const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (!posts || posts.length === 0) return;
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % posts.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [posts, isPaused]);
+
+  useEffect(() => {
+    // ensure index stays valid if posts change
+    if (index >= posts.length) setIndex(0);
+  }, [posts, index]);
+
+  if (!posts || posts.length === 0) return null;
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') {
+      setIndex((i) => (i - 1 + posts.length) % posts.length);
+    } else if (e.key === 'ArrowRight') {
+      setIndex((i) => (i + 1) % posts.length);
+    }
+  };
+
+  return (
+    <div
+      className="w-full h-20 md:h-24 relative"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Featured posts"
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="w-full h-full overflow-hidden">
+        <div
+          className="flex h-full"
+          style={{ width: `${posts.length * 100}%`, transform: `translateX(-${index * (100 / posts.length)}%)`, transition: 'transform 700ms ease-in-out' }}
+        >
+          {posts.map((p, i) => (
+            <div
+              key={p.id ?? i}
+              className="w-full flex-shrink-0 flex items-center justify-between px-4 md:px-8"
+              aria-hidden={i !== index}
+            >
+              <div className="flex-1 pr-4 md:pr-8">
+                <div className="text-xs text-muted-foreground mb-0">Featured</div>
+                <div className="font-semibold text-sm md:text-lg line-clamp-1">{p.title}</div>
+                <div className="text-sm text-muted-foreground line-clamp-2">{p.excerpt}</div>
+              </div>
+
+              <div className="flex items-center">
+                <Button variant="outline" onClick={() => navigate(`/blog/${p.slug}`)} aria-label={`Visit ${p.title}`}>
+                  Visit
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* indicators */}
+      <div className="absolute right-3 bottom-2 flex gap-2">
+        {posts.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            aria-label={`Go to featured ${i + 1}`}
+            aria-current={i === index}
+            className={`w-2 h-2 rounded-full ${i === index ? 'bg-primary' : 'bg-muted'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Blog = () => {
   const navigate = useNavigate();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -124,58 +207,19 @@ const Blog = () => {
           </div>
         </Reveal>
 
-        {/* Featured Post */}
-        {featuredPost && (
+        {/* Featured posts - thin auto-sliding banner (no thumbnails) */}
+        {blogPosts.some(p => p.featured) && (
           <Reveal>
-            <div className="glass-card rounded-2xl md:rounded-3xl overflow-hidden mb-12 md:mb-16 shadow-elevated">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                <div className="relative">
-                  <AspectRatio ratio={4/5}>
-                    <img
-                      src={featuredPost.thumbnail}
-                      alt={featuredPost.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </AspectRatio>
-                  <div className="absolute top-3 left-3 md:top-4 md:left-4">
-                    <Badge className="bg-primary text-primary-foreground">Featured</Badge>
+            <div className="mb-8 md:mb-12">
+              <div className="relative glass-card rounded-xl overflow-hidden shadow-elevated">
+                {/* Slider viewport */}
+                <div className="overflow-hidden">
+                  <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-0%)` }}>
+                    {/* We'll render items via JS-controlled translate (see useEffect below) */}
                   </div>
                 </div>
-                <div className="p-6 md:p-8 lg:p-12 flex flex-col justify-center">
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      {featuredPost.author}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(featuredPost.date).toLocaleDateString()}
-                    </div>
-                    <span>{featuredPost.readTime}</span>
-                  </div>
-                  
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4 gradient-text">
-                    {featuredPost.title}
-                  </h2>
-                  
-                  <p className="text-muted-foreground mb-6 leading-relaxed">
-                    {featuredPost.excerpt}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {featuredPost.tags?.map((tag) => (
-                      <Badge key={tag} variant="secondary">
-                        <Tag className="w-3 h-3 mr-1" />
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  
-                  <Button className="btn-hero w-fit group" onClick={() => navigate(`/blog/${featuredPost.slug}`)}>
-                    Read Full Article
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </div>
+                {/* Actual slider implemented below using React to control translate */}
+                <FeaturedBannerSlider posts={blogPosts.filter(p => p.featured)} navigate={navigate} />
               </div>
             </div>
           </Reveal>
