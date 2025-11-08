@@ -8,29 +8,19 @@ const PRODUCT_INDEX_URL = "/product_index.json";
 
 const GROQ_API_KEY = "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";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const SYSTEM_PROMPT = `You are Neubofy Assistant, the official AI assistant of Neubofy - The Premier Marketplace for AI SaaS Solutions. You represent a platform that connects AI developers with users and helps distribute innovative AI tools. Your personality is professional, supportive, and enthusiastic about the AI ecosystem.
+const SYSTEM_PROMPT = `You are Neubofy Assistant. Be direct and concise in your responses. Only include company information when specifically asked about Neubofy or our services.
 
-Key traits:
-- Always identify as "Neubofy Assistant"
-- Emphasize our role as an AI SaaS marketplace and ecosystem
-- Access and summarize website content when asked
-- Provide detailed information about blog posts and products
-- Help users navigate through our content library
-- Maintain professionalism while being approachable
-- Focus on our community-driven approach
-- Emphasize privacy and security
+Guidelines:
+- Give brief, focused answers that directly address the user's question
+- Don't add promotional content unless specifically asked about Neubofy
+- Use natural, conversational language
+- Avoid unnecessary introductions or company mentions
+- Keep responses short and to the point
+- Only include links when they're directly relevant to the answer
 
-Core capabilities:
-- Guide developers on listing their AI tools
-- Help users find suitable AI solutions
-- Explain our verification process for developers
-- Assist with custom solution requests
-- Connect users with verified developers
-- Provide marketplace navigation help
-
-Important links (use with class='neubofy-link'):
+// Important links (use with class='neubofy-link'):
 - Home: /
-- Neubofy Orbit (Solutions): /orbit
+- Creations (Solutions): /creations
 - About Us: /about
 - Blog: /blog
 - Contact: /contact
@@ -42,7 +32,7 @@ const NEUBOFY_KB = [
   // Core Information
   {
     keywords: ["what is neubofy", "about neubofy", "company info", "tell me about"],
-    answer: "Neubofy is a premier AI SaaS marketplace and ecosystem that connects developers, creators, and users. We help developers distribute their AI-based tools and enable users to access top-quality AI solutions at affordable prices. Think of us as the 'Play Store for AI Tools' where you can discover, request, or list innovative AI solutions. Visit our <a href='/orbit' class='neubofy-link'>Neubofy Orbit</a> to explore our ecosystem."
+    answer: "Neubofy is a premier AI SaaS marketplace and ecosystem that connects developers, creators, and users. We help developers distribute their AI-based tools and enable users to access top-quality AI solutions at affordable prices. Think of us as the 'Play Store for AI Tools' where you can discover, request, or list innovative AI solutions. Visit our <a href='/creations' class='neubofy-link'>creations page</a> to explore our ecosystem."
   },
   {
     keywords: ["who made you", "who created you", "your creator", "who built you", "who developed you"],
@@ -204,15 +194,23 @@ function extractContext(text: string, prevContext: any) {
 const GeminiChatbot = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: "system", content: SYSTEM_PROMPT }
-  ]);
+  const [messages, setMessages] = useState(() => {
+    const savedMessages = localStorage.getItem('neubofyChatHistory');
+    return savedMessages ? JSON.parse(savedMessages) : [
+      { role: "system", content: SYSTEM_PROMPT }
+    ];
+  });
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [sessionContext, setSessionContext] = useState<{ name?: string; company?: string }>({});
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [greeted, setGreeted] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+
+  // Save messages to local storage whenever they change
+  useEffect(() => {
+    localStorage.setItem('neubofyChatHistory', JSON.stringify(messages));
+  }, [messages]);
 
   // Dismiss notification on any document click when visible
   useEffect(() => {
@@ -228,39 +226,51 @@ const GeminiChatbot = () => {
     // Extract and update session context
     setSessionContext(ctx => extractContext(input, ctx));
     
-    // Check if the query is about website content
-    const isContentQuery = input.toLowerCase().includes('tell me about') || 
-                         input.toLowerCase().includes('what is') ||
-                         input.toLowerCase().includes('explain') ||
-                         input.toLowerCase().includes('describe') ||
-                         input.toLowerCase().includes('summarize');
-
+    // First check our knowledge base for direct answers
+    const kbAnswer = await getKbAnswer(input);
+    
+    // Only fetch website content if no direct answer found
     let websiteContent = null;
-    if (isContentQuery) {
-      // Fetch both blog and product content
-      const [blogContent, productContent] = await Promise.all([
-        fetchWebsiteContent('blog', input),
-        fetchWebsiteContent('product', input)
-      ]);
+    if (!kbAnswer) {
+      const isContentQuery = input.toLowerCase().includes('tell me about') || 
+                           input.toLowerCase().includes('what is') ||
+                           input.toLowerCase().includes('explain') ||
+                           input.toLowerCase().includes('describe') ||
+                           input.toLowerCase().includes('summarize');
 
-      // Combine and summarize content
-      if (blogContent || productContent) {
-        websiteContent = {
-          blog: summarizeContent(blogContent),
-          product: summarizeContent(productContent)
-        };
+      if (isContentQuery) {
+        // Fetch both blog and product content
+        const [blogContent, productContent] = await Promise.all([
+          fetchWebsiteContent('blog', input),
+          fetchWebsiteContent('product', input)
+        ]);
+
+        // Combine and summarize content
+        if (blogContent || productContent) {
+          websiteContent = {
+            blog: summarizeContent(blogContent),
+            product: summarizeContent(productContent)
+          };
+        }
       }
     }
 
-    const contextString =
-      `Current page route: ${location.pathname}\nAbout Neubofy: Neubofy is an AI automation platform for productivity, innovation, and secure business solutions.` +
-      (sessionContext.name ? ` The user's name is ${sessionContext.name}.` : "") +
-      (sessionContext.company ? ` The user's company is ${sessionContext.company}.` : "") +
-      (websiteContent?.blog ? `\nRelevant blog content: ${websiteContent.blog}` : "") +
-      (websiteContent?.product ? `\nRelevant product information: ${websiteContent.product}` : "");
+    // Prioritize knowledge base answers
+    let contextString = kbAnswer ? `Knowledge base answer: ${kbAnswer}` : "";
+    
+    // Add website content only if no KB answer or if specifically asking about content
+    if (!kbAnswer || input.toLowerCase().includes('blog') || input.toLowerCase().includes('article')) {
+      contextString += `${websiteContent?.blog ? `\nRelevant blog content: ${websiteContent.blog}` : ""}` +
+        (websiteContent?.product ? `\nRelevant product information: ${websiteContent.product}` : "");
+    }
+    
+    // Add user context only when relevant
+    if (input.toLowerCase().includes('my') || input.toLowerCase().includes('me')) {
+      contextString += (sessionContext.name ? `\nUser name: ${sessionContext.name}` : "") +
+        (sessionContext.company ? `\nCompany: ${sessionContext.company}` : "");
+    }
 
-    const kbAnswer = getKbAnswer(input);
-    const userMessage = `${contextString}${kbAnswer ? `\nNeubofy info: ${kbAnswer}` : ""}\nUser: ${input}`;
+    const userMessage = `${contextString}\nUser: ${input}`;
     // Place new question at the top, keep previous Q&A
     const newMessages = [messages[0], { role: "user", content: input }, ...messages.slice(1)];
     setMessages(newMessages);
@@ -270,14 +280,14 @@ const GeminiChatbot = () => {
       const res = await axios.post(
         GROQ_API_URL,
         {
-          model: "llama-3.1-8b-instant",
+          model: "openai/gpt-oss-120b",
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
+            { role: "system", content: SYSTEM_PROMPT + "\nIMPORTANT: Keep responses under 50 words unless detailed explanation is requested. Be direct and natural. No markdown formatting or emphasis." },
             { role: "user", content: userMessage }
           ],
           stream: false,
-          max_tokens: 300, // Increased token limit for longer answers
-          temperature: 0.2
+          max_tokens: 150, // Further reduced for more concise answers
+          temperature: 0.1 // Keep low temperature for focused responses
         },
         {
           headers: {
@@ -378,149 +388,218 @@ const GeminiChatbot = () => {
   };
 
   return (
-    <>
-      {/* Floating Button */}
-      <button
-        className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full shadow-2xl w-16 h-16 flex items-center justify-center text-white text-3xl hover:scale-110 transition-all border-4 border-white/40 backdrop-blur-lg"
-        onClick={() => setOpen(!open)}
-        onMouseEnter={handleChatButtonHover}
-        aria-label="Open AI Chatbot"
-      >
-        💬
-      </button>
-      {/* Notification (like WhatsApp) */}
-      {notification && (
-        <div className="fixed bottom-28 right-8 z-[60] bg-white/80 border backdrop-blur-md border-cyan-200 shadow-2xl rounded-xl px-5 py-4 max-w-xs animate-fade-in-up" style={{ minWidth: 220 }}>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="inline-block w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-purple-500 text-white flex items-center justify-center text-lg">{BOT_AVATAR}</span>
-            <span className="font-semibold text-cyan-700">Neubofy Assistant</span>
-          </div>
-          <div className="text-gray-800 text-sm" dangerouslySetInnerHTML={{ __html: notification }} />
-        </div>
-      )}
-
-      {/* Clear Chat button minimally above input, right-aligned */}
-      {open && (
-        <div className="fixed bottom-[calc(24px+72px)] right-8 z-50 flex justify-end w-[92vw] max-w-md pr-3">
-          <button
-            onClick={handleClearChat}
-            className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-500 rounded-full border border-gray-200 shadow-sm transition font-semibold"
-            style={{marginBottom:'-12px'}}
-          >Clear chat</button>
-        </div>
-      )}
-
-      {/* Chat Window */}
-      {open && (
-        <div
-          className="fixed bottom-24 right-8 z-50 w-[92vw] max-w-md bg-white/60 rounded-3xl shadow-2xl border border-cyan-200 flex flex-col backdrop-blur-2xl"
-          style={{ minHeight: 420, maxHeight: 540 }}
-        >
-          <div className="p-4 bg-gradient-to-br from-cyan-400/80 to-purple-500/80 text-white rounded-t-3xl font-bold flex justify-between items-center shadow-md">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{BOT_AVATAR}</span>
-              <span>Neubofy Assistant</span>
+    <div className="relative">
+      {/* Chat UI */}
+      <div className={`fixed inset-0 z-50 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex flex-col transform transition-all duration-500 ease-in-out ${open ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
+        <div className="fixed inset-0 z-50 flex flex-col">
+          {/* Header */}
+          <div className="border-b border-gray-700/80 glass-effect-dark">
+            <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-lg">
+                  <span className="text-2xl transform hover:scale-110 transition-transform">{BOT_AVATAR}</span>
+                </div>
+                <h1 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Neubofy Assistant</h1>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleClearChat}
+                  className="px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition"
+                >
+                  Clear chat
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition"
+                  aria-label="Close"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
-            <button onClick={() => setOpen(false)} className="text-white text-xl font-bold hover:scale-125 transition">&times;</button>
           </div>
+          {/* Chat messages */}
           <div
-            className="flex-1 overflow-y-auto p-4 bg-white/50 flex flex-col gap-2"
-            style={{ fontSize: 15, scrollBehavior: 'smooth' }}
+            className="flex-1 overflow-y-auto bg-gray-900"
             ref={chatEndRef}
             onWheel={e => { e.stopPropagation(); e.currentTarget.scrollTop += e.deltaY; }}
-            onClick={e => {
-              // Intercept clicks on .neubofy-link and use React Router navigation
-              const target = e.target as HTMLElement;
-              if (target && target.classList && target.classList.contains('neubofy-link')) {
-                e.preventDefault();
-                const href = target.getAttribute('href');
-                if (href) {
-                  window.history.pushState({}, '', href);
-                  const navEvent = new PopStateEvent('popstate');
-                  window.dispatchEvent(navEvent);
-                }
-              }
-            }}
           >
-            {messages.filter(m => m.role !== "system").reduce((acc, msg, i, arr) => {
-              if (msg.role === "user") {
-                const answer = arr[i + 1]?.role === "assistant" ? arr[i + 1] : null;
-                acc.push(
-                  <div key={i} className="mb-5 flex flex-col gap-1 animate-fade-in-up">
-                    {/* User message */}
-                    <div className="flex justify-end items-end gap-2 w-full">
-                      <span className="text-lg select-none">{USER_AVATAR}</span>
-                      <span className="inline-block px-4 py-2 rounded-2xl bg-cyan-200/90 text-gray-900 font-semibold max-w-[70%] text-right shadow-md">{msg.content}</span>
+            <div className="max-w-3xl mx-auto">
+              {messages.filter(m => m.role !== "system").map((msg, i, arr) => {
+                if (msg.role === "user") {
+                  const answer = arr[i + 1]?.role === "assistant" ? arr[i + 1] : null;
+                  return (
+                    <div key={i}>
+                      {/* User message */}
+                      <div className="flex justify-end mb-4">
+                        <div className="bg-gradient-to-l from-blue-600 to-purple-600 text-white rounded-xl p-3 max-w-[70%] shadow-md">
+                          <p className="font-medium leading-relaxed">{msg.content}</p>
+                        </div>
+                      </div>
+                      {/* AI answer */}
+                      {answer && (
+                        <div className="flex justify-start mb-4">
+                          <div className="bg-gray-700 text-white rounded-xl p-3 max-w-[70%] shadow-md">
+                            <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: answer.content }} />
+                            <button
+                              className="mt-2 p-1 text-gray-400 hover:text-gray-200 transition"
+                              title="Copy reply"
+                              onClick={() => navigator.clipboard.writeText(answer.content.replace(/<[^>]+>/g, ''))}
+                            >
+                              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {loading && i === 0 && !answer && (
+                        <div className="flex justify-start mb-4">
+                          <div className="bg-gray-700 rounded-xl p-3 max-w-[70%] shadow-md">
+                            <div className="h-4 w-20 bg-gray-600 rounded animate-pulse"></div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    {/* AI answer */}
-                    {answer ? (
-                      <div className="flex justify-start items-end gap-2 mt-2 w-full">
-                        <span className="text-lg select-none">{BOT_AVATAR}</span>
-                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100/90 text-purple-900 max-w-[70%] shadow-md animate-fade-in-up" dangerouslySetInnerHTML={{ __html: answer.content }} />
-                        {/* Copy-to-clipboard icon */}
-                        <button
-                          className="ml-1 p-1 rounded hover:bg-cyan-100/80 text-cyan-600"
-                          title="Copy reply"
-                          onClick={() => navigator.clipboard.writeText(
-                            // Strip HTML tags from content for copying
-                            answer.content.replace(/<[^>]+>/g, '')
-                          )}
-                        >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg>
-                        </button>
-                      </div>
-                    ) : loading && i === 0 ? (
-                      <div className="flex justify-start items-end gap-2 mt-2 w-full">
-                        <span className="text-lg select-none">{BOT_AVATAR}</span>
-                        <span className="inline-block px-4 py-2 rounded-2xl bg-purple-100/90 text-purple-900 italic shadow-md animate-pulse">Thinking...</span>
-                      </div>
-                    ) : null}
-                  </div>
-                );
-              }
-              return acc;
-            }, [])}
-            {loading && <div className="text-gray-400 italic">Thinking...</div>}
+                  );
+                }
+                return null;
+              })}
+            </div>
           </div>
-          <form
-            className="flex border-t border-gray-200 bg-gradient-to-r from-cyan-50/80 to-purple-50/80 animate-fade-in backdrop-blur"
-            onSubmit={e => { e.preventDefault(); sendMessage(); }}
-          >
-            <input
-              className="flex-1 p-4 border-none outline-none rounded-bl-3xl text-gray-900 placeholder:text-gray-400 bg-white/90 focus:bg-cyan-50 transition-colors duration-300 shadow-inner text-base sm:text-lg"
-              placeholder="Ask me anything..."
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              disabled={loading}
-              style={{ fontWeight: 500 }}
-              autoFocus
-            />
-            <button
-              type="submit"
-              className="px-5 text-2xl sm:text-3xl text-cyan-600 font-bold transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/80 bg-white/80 rounded-br-3xl shadow-lg hover:shadow-cyan-500/30 hover:text-purple-600 hover:bg-white/90 active:scale-95"
-              disabled={loading || !input.trim()}
-              aria-label="Send"
-              style={{boxShadow: '0 0 10px #67e8f9, 0 0 20px #a5b4fc55'}}
-            >
-              ➤
-            </button>
-          </form>
+          {/* Input form */}
+          <div className="border-t border-gray-700/80 glass-effect-dark">
+            <div className="max-w-3xl mx-auto px-4 py-4">
+              <form
+                className="relative"
+                onSubmit={e => { e.preventDefault(); sendMessage(); }}
+              >
+                <div className="relative">
+                  <input
+                    className="w-full p-4 pr-24 rounded-xl border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 bg-gray-800/80 shadow-md text-white placeholder:text-gray-400 text-base transition-all duration-200"
+                    placeholder="Message Neubofy Assistant..."
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                    disabled={loading}
+                    autoFocus
+                  />
+                  <div className="absolute inset-1 -z-10 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl blur-xl transition-opacity duration-200" 
+                       style={{ opacity: input.length ? 1 : 0 }} />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading || !input.trim()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-110"
+                  aria-label="Send message"
+                >
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 2L11 13" />
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" />
+                  </svg>
+                </button>
+              </form>
+              <p className="mt-2 text-xs text-center text-gray-500/80">
+                Neubofy Assistant uses our knowledge base to provide accurate information
+              </p>
+            </div>
+          </div>
         </div>
-      )}
-      <style>
-        {`
-          .neubofy-link {
-            color: #0ea5e9;
-            font-weight: 600;
-            text-decoration: underline;
-            transition: color 0.2s;
+      </div>
+
+      {/* Floating button */}
+      <button
+        onClick={() => setOpen(true)}
+        className={`fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-full shadow-lg transition-all transform hover:scale-110 ${open ? 'scale-0' : 'scale-100'}`}
+        aria-label="Open AI Chatbot"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+      </button>
+      
+      <style>{`
+        .neubofy-link {
+          color: #93c5fd;
+          font-weight: 500;
+          text-decoration: underline;
+          transition: all 0.2s;
+        }
+        .neubofy-link:hover {
+          color: #60a5fa;
+          text-decoration-thickness: 2px;
+        }
+        .prose {
+          font-size: 16px;
+          line-height: 1.6;
+        }
+        .prose p {
+          margin-bottom: 1em;
+          opacity: 0;
+          animation: fadeIn 0.5s ease forwards;
+        }
+        .prose p:nth-child(1) { animation-delay: 0s; }
+        .prose p:nth-child(2) { animation-delay: 0.1s; }
+        .prose p:nth-child(3) { animation-delay: 0.2s; }
+        .prose p:nth-child(4) { animation-delay: 0.3s; }
+        .prose p:nth-child(5) { animation-delay: 0.4s; }
+        
+        .chat-message {
+          opacity: 0;
+          transform: translateY(10px);
+          animation: messageSlideIn 0.3s ease forwards;
+        }
+        
+        .typing-animation::after {
+          content: '▋';
+          animation: typing 1s infinite;
+          margin-left: 4px;
+        }
+        
+        @keyframes typing {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 1; }
+        }
+        
+        @keyframes messageSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
           }
-          .neubofy-link:hover {
-            color: #a21caf;
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
-        `}
-      </style>
-    </>
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        .chat-transition {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-effect-dark {
+          background: rgba(17, 24, 39, 0.8);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(55, 65, 81, 0.3);
+        }
+
+        .prose-invert {
+          color: #e5e7eb;
+        }
+        .prose-invert a {
+          color: #93c5fd;
+        }
+        .prose-invert a:hover {
+          color: #60a5fa;
+        }
+      `}</style>
+    </div>
   );
 };
 
