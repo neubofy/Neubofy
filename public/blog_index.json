@@ -1,10 +1,6 @@
 {
   "blogPosts": [
     "ai-innovation-for-students.json",
-    "n8n.json",
-    "future-of-ai-automation.json",
-    "how-to-build-a-privacy-first-ai.json",
-    "privacy-by-design-checklist.json",
-    "student-advantage-in-ai-innovation.json"
+    "n8n.json"
   ]
 }
