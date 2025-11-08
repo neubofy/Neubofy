@@ -34,6 +34,20 @@ const NEUBOFY_KB = [
     keywords: ["what is neubofy", "about neubofy", "company info", "tell me about"],
     answer: "Neubofy is a premier AI SaaS marketplace and ecosystem that connects developers, creators, and users. We help developers distribute their AI-based tools and enable users to access top-quality AI solutions at affordable prices. Think of us as the 'Play Store for AI Tools' where you can discover, request, or list innovative AI solutions. Visit our <a href='/creations' class='neubofy-link'>creations page</a> to explore our ecosystem."
   },
+  // Vision and All Data
+  {
+    keywords: ["vision", "our vision", "company vision", "future", "goal", "mission statement"],
+    answer: "Our vision at Neubofy is to democratize access to advanced AI and automation, empowering everyone to innovate and solve real-world problems. We believe in a future where AI is accessible, ethical, and beneficial for all. Neubofy is committed to supporting local talent, fostering global collaboration, and making AI solutions affordable and secure for businesses and individuals everywhere."
+  },
+  {
+    keywords: ["all data", "company data", "neubofy data", "about all data", "company details", "company background"],
+    answer: "Neubofy is an AI SaaS marketplace founded to bridge the gap between AI creators and users. We offer a platform for developers to list, distribute, and monetize their AI tools, while users can discover, request, and use innovative solutions. Our offerings include a verified developer network, custom AI development, privacy-first platform, and a growing ecosystem of automation tools. Neubofy is led by a young and passionate founder, Pawan Washudev."
+  },
+  // Founder Info
+  {
+    keywords: ["founder", "who is the founder", "about founder", "pawan washudev", "who started neubofy", "company founder"],
+    answer: "Neubofy was founded by Pawan Washudev, a young entrepreneur passionate about AI, automation, and empowering others through technology. Pawan's vision is to make advanced AI accessible and useful for everyone, supporting both local and global innovation."
+  },
   {
     keywords: ["who made you", "who created you", "your creator", "who built you", "who developed you"],
     answer: "I was created by the Neubofy team as your dedicated AI assistant. I'm here to help you with any questions about our services and solutions."
@@ -225,18 +239,18 @@ const GeminiChatbot = () => {
 
     // Extract and update session context
     setSessionContext(ctx => extractContext(input, ctx));
-    
+
     // First check our knowledge base for direct answers
     const kbAnswer = await getKbAnswer(input);
-    
+
     // Only fetch website content if no direct answer found
     let websiteContent = null;
     if (!kbAnswer) {
-      const isContentQuery = input.toLowerCase().includes('tell me about') || 
-                           input.toLowerCase().includes('what is') ||
-                           input.toLowerCase().includes('explain') ||
-                           input.toLowerCase().includes('describe') ||
-                           input.toLowerCase().includes('summarize');
+      const isContentQuery = input.toLowerCase().includes('tell me about') ||
+        input.toLowerCase().includes('what is') ||
+        input.toLowerCase().includes('explain') ||
+        input.toLowerCase().includes('describe') ||
+        input.toLowerCase().includes('summarize');
 
       if (isContentQuery) {
         // Fetch both blog and product content
@@ -257,34 +271,48 @@ const GeminiChatbot = () => {
 
     // Prioritize knowledge base answers
     let contextString = kbAnswer ? `Knowledge base answer: ${kbAnswer}` : "";
-    
+
     // Add website content only if no KB answer or if specifically asking about content
     if (!kbAnswer || input.toLowerCase().includes('blog') || input.toLowerCase().includes('article')) {
       contextString += `${websiteContent?.blog ? `\nRelevant blog content: ${websiteContent.blog}` : ""}` +
         (websiteContent?.product ? `\nRelevant product information: ${websiteContent.product}` : "");
     }
-    
+
     // Add user context only when relevant
     if (input.toLowerCase().includes('my') || input.toLowerCase().includes('me')) {
       contextString += (sessionContext.name ? `\nUser name: ${sessionContext.name}` : "") +
         (sessionContext.company ? `\nCompany: ${sessionContext.company}` : "");
     }
 
-    const userMessage = `${contextString}\nUser: ${input}`;
-    // Place new question at the top, keep previous Q&A
+    // Add the new user message to the message history
     const newMessages = [messages[0], { role: "user", content: input }, ...messages.slice(1)];
     setMessages(newMessages);
     setInput("");
     setLoading(true);
     try {
+      // Prepare the last 5 messages (excluding system prompt) for memory
+      const history = newMessages
+        .filter((m, i) => i !== 0) // skip system prompt
+        .slice(0, 5) // last 5 exchanges
+        .reverse() // keep order oldest to newest
+        .map(m => ({ role: m.role, content: m.content }));
+
+      // Always include system prompt at the start
+      const apiMessages = [
+        { role: "system", content: SYSTEM_PROMPT + "\nIMPORTANT: Keep responses under 50 words unless detailed explanation is requested. Be direct and natural. No markdown formatting or emphasis." },
+        ...history
+      ];
+
+      // Add context string as a user message if present
+      if (contextString) {
+        apiMessages.push({ role: "user", content: contextString });
+      }
+
       const res = await axios.post(
         GROQ_API_URL,
         {
           model: "openai/gpt-oss-120b",
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT + "\nIMPORTANT: Keep responses under 50 words unless detailed explanation is requested. Be direct and natural. No markdown formatting or emphasis." },
-            { role: "user", content: userMessage }
-          ],
+          messages: apiMessages,
           stream: false,
           max_tokens: 150, // Further reduced for more concise answers
           temperature: 0.1 // Keep low temperature for focused responses
