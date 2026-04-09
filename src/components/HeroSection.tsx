@@ -59,7 +59,7 @@ const HeroSection = () => {
 
           {/* Main Headline - Updated messaging */}
           <motion.h1
-            className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-8 animate-fade-in"
+            className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-8 animate-fade-in text-3d"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -95,7 +95,7 @@ const HeroSection = () => {
           >
             <Link to="/orbit">
               <motion.button
-                className="btn-hero text-xl px-10 py-5 group hover:scale-105 pulse-glow focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="btn-3d text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-primary/50"
                 whileHover={{ scale: 1.07 }}
                 whileTap={{ scale: 0.97 }}
                 type="button"
@@ -107,7 +107,7 @@ const HeroSection = () => {
             </Link>
             <Link to="/contact">
               <motion.button
-                className="btn-outline-glow text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                className="btn-3d bg-transparent border-2 border-primary text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-secondary/50 hover:bg-primary/10"
                 whileHover={{ scale: 1.07 }}
                 whileTap={{ scale: 0.97 }}
                 type="button"
@@ -125,11 +125,11 @@ const HeroSection = () => {
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <div className="glass-card p-4 md:p-8 rounded-3xl shadow-elevated max-w-6xl mx-auto glow-effect">
+            <div className="glass-card p-4 md:p-8 rounded-3xl shadow-elevated max-w-6xl mx-auto glow-effect card-3d">
               <img
                 src={heroDashboard}
                 alt="Neubofy AI Dashboard - Custom automation interface showing analytics, workflows, and AI chat features"
-                className="w-full h-auto rounded-2xl shadow-card"
+                className="w-full h-auto rounded-2xl shadow-card card-3d-content"
               />
             </div>
           </motion.div>

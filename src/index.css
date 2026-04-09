@@ -26,26 +26,26 @@
     --popover-foreground: 240 10% 95%;
 
     /* Brand Colors - Premium Purple/Blue System */
-    --primary: 258 90% 65%;
+    --primary: 270 100% 60%; /* Neon Purple */
     --primary-foreground: 240 10% 95%;
-    --primary-glow: 270 100% 75%;
+    --primary-glow: 280 100% 65%; /* Brighter Purple Glow */
     --primary-dark: 258 60% 45%;
 
     /* Secondary Brand - Cyan Accents */
-    --secondary: 185 85% 55%;
+    --secondary: 180 100% 50%; /* Cyan */
     --secondary-foreground: 240 25% 3%;
-    --secondary-glow: 185 100% 65%;
+    --secondary-glow: 180 100% 60%; /* Brighter Cyan Glow */
 
     /* Tertiary - Pink/Magenta Accents */
-    --tertiary: 315 85% 65%;
+    --tertiary: 330 100% 55%; /* Hot Pink */
     --tertiary-foreground: 240 10% 95%;
-    --tertiary-glow: 315 100% 75%;
+    --tertiary-glow: 330 100% 65%; /* Hot Pink Glow */
 
     /* Muted & Text System */
     --muted: 240 15% 15%;
     --muted-foreground: 240 5% 65%;
 
-    --accent: 185 85% 55%;
+    --accent: 85 100% 50%; /* Lime Green */
     --accent-foreground: 240 25% 3%;
 
     /* System Colors */
@@ -822,4 +822,58 @@ html {
     width: 3rem;
     height: 3rem;
   }
+}
+
+
+/* 3D Utilities */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.card-3d:hover {
+  transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) scale(1.05);
+  box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5),
+              -10px -10px 30px rgba(255, 255, 255, 0.1);
+}
+
+.card-3d-content {
+  transform: translateZ(30px);
+}
+
+.text-3d {
+  /* Use filter: drop-shadow for text with bg-clip-text to avoid rendering bugs */
+  filter: drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.5));
+}
+
+.btn-3d {
+  position: relative;
+  display: inline-block;
+  padding: 15px 30px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 -3px 0 rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+  transform: translateY(0);
+}
+
+.btn-3d.bg-transparent {
+  background: transparent !important;
+}
+
+.btn-3d:not(.bg-transparent) {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+}
+
+
+.btn-3d:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 25px rgba(0,0,0,0.4), inset 0 -3px 0 rgba(0,0,0,0.2);
+}
+
+.btn-3d:active {
+  transform: translateY(2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3), inset 0 -1px 0 rgba(0,0,0,0.2);
 }
