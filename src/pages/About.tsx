@@ -1,4 +1,4 @@
-import { Heart, Shield, Zap, Users, Award, Calendar, Instagram, Github, Facebook, ExternalLink, MessageCircle, Mail } from "lucide-react";
+import { Heart, Shield, Zap, Users, Award, Calendar, Instagram, Github, Facebook, ExternalLink, MessageCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -62,7 +62,7 @@ const About = () => {
     {
       name: "WhatsApp",
       icon: WhatsAppIcon,
-      url: "https://wa.me/919279377276",
+      url: "https://wa.me/pawanwashudev",
       color: "from-green-500 to-green-600",
       hoverColor: "hover:from-green-600 hover:to-green-700",
       description: "Chat with us directly"
@@ -79,9 +79,9 @@ const About = () => {
       name: "Instagram",
       icon: Instagram,
       url: "https://instagram.com/pawan_washudev",
-      color: "from-pink-500 to-purple-600",
-      hoverColor: "hover:from-pink-600 hover:to-purple-700",
-      description: "Follow our journey"
+      color: "from-pink-500 to-pink-600",
+      hoverColor: "hover:from-pink-600 hover:to-pink-700",
+      description: "Follow us on Instagram"
     },
     {
       name: "Facebook",

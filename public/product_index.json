@@ -1,9 +1,13 @@
 {
   "files": [
-    "zapier-automation.json",
-    "make-integromat.json",
-    "power-automate.json",
-    "uipath.json",
-    "tray-io.json"
+    "nfcapture.json",
+    "nf-connect.json",
+    "lcld.json",
+    "tgvis.json",
+    "nf-watch.json",
+    "sps.json",
+    "reality.json",
+    "neubofy-photo-editor.json",
+    "instantdeploy.json"
   ]
 }
