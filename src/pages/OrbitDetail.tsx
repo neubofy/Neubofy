@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
@@ -166,8 +168,12 @@ const OrbitDetail = () => {
         {/* Detail description */}
         <Reveal>
           <div className="max-w-3xl mx-auto glass-card p-8 rounded-2xl">
-            <h2 className="text-2xl font-semibold mb-3">About this solution</h2>
-            <p className="text-muted-foreground leading-relaxed">{item.detailDescription}</p>
+            <h2 className="text-2xl font-semibold mb-6">About this solution</h2>
+            <div className="prose prose-invert max-w-none text-muted-foreground">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {item.detailDescription}
+              </ReactMarkdown>
+            </div>
           </div>
         </Reveal>
       </div>
