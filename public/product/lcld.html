@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCLD</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <style>
         body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="min-h-screen p-8">
     <div class="max-w-4xl mx-auto glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Orbit</a>
+        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
         <div class="flex items-center gap-6 mb-8">
             <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
             <div>
@@ -21,17 +21,17 @@
             </div>
         </div>
 
-        <div class="prose prose-invert max-w-none text-gray-300 mb-8 leading-relaxed">
-<h1>🛡️ LCLD: Locate &amp; Control Lost Device</h1>
-<p><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
-<a href="https://developer.android.com"><img src="https://img.shields.io/badge/Platform-Android-green.svg" alt="Android"></a>
-<a href="https://github.com/pawanwashudev-official/LCLD/releases"><img src="https://img.shields.io/github/downloads/pawanwashudev-official/LCLD/total.svg" alt="Downloads"></a>
-<a href="https://github.com/pawanwashudev-official/LCLD"><img src="https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg" alt="Open Source"></a></p>
-<p><strong>LCLD (Locate &amp; Control Lost Device)</strong> is the ultimate privacy-focused, offline-first security solution for your Android device. We&#39;ve taken the core foundation of open-source tracking and completely overhauled it for the modern user.</p>
-<p>Developed by <strong>Pawan Washudev</strong> (<a href="https://github.com/pawanwashudev-official">@pawanwashudev-official</a>)</p>
+        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
+<h1 class="text-4xl md:text-5xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 drop-shadow-sm">🛡️ LCLD: Locate &amp; Control Lost Device</h1>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg"><a href="https://www.gnu.org/licenses/gpl-3.0" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+<a href="https://developer.android.com" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Platform-Android-green.svg" alt="Android"></a>
+<a href="https://github.com/pawanwashudev-official/LCLD/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/github/downloads/pawanwashudev-official/LCLD/total.svg" alt="Downloads"></a>
+<a href="https://github.com/pawanwashudev-official/LCLD" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg" alt="Open Source"></a></p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>LCLD (Locate &amp; Control Lost Device)</strong> is the ultimate privacy-focused, offline-first security solution for your Android device. We&#39;ve taken the core foundation of open-source tracking and completely overhauled it for the modern user.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">Developed by <strong>Pawan Washudev</strong> (<a href="https://github.com/pawanwashudev-official" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">@pawanwashudev-official</a>)</p>
 <hr>
-<h2>🚀 Why LCLD is Better Than Default FMD Apps</h2>
-<p>Standard FMD apps are often tied to a single ecosystem, require an active internet connection, and are easily bypassed. <strong>LCLD is built to be unstoppable.</strong></p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🚀 Why LCLD is Better Than Default FMD Apps</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">Standard FMD apps are often tied to a single ecosystem, require an active internet connection, and are easily bypassed. <strong>LCLD is built to be unstoppable.</strong></p>
 <table>
 <thead>
 <tr>
@@ -72,55 +72,55 @@
 </tr>
 </tbody></table>
 <hr>
-<h2>✨ Key Features &amp; Major Enhancements</h2>
-<h3>🆕 Elegant &amp; Simplified UI</h3>
-<p>We&#39;ve completely redesigned the interface to be beautiful, intuitive, and modern. Setup is now a breeze—go from installation to full protection in under 60 seconds.</p>
-<h3>🚨 Unstoppable Siren (Enhanced Ring)</h3>
-<p>The <code>ring</code> command is now a true siren. </p>
-<ul>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">✨ Key Features &amp; Major Enhancements</h2>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🆕 Elegant &amp; Simplified UI</h3>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">We&#39;ve completely redesigned the interface to be beautiful, intuitive, and modern. Setup is now a breeze—go from installation to full protection in under 60 seconds.</p>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🚨 Unstoppable Siren (Enhanced Ring)</h3>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">The <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">ring</code> command is now a true siren. </p>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Auto-Max Volume:</strong> Instantly forces device volume to 100%.</li>
 <li><strong>Anti-Mute:</strong> If a thief tries to lower the volume, LCLD automatically pulls it back to maximum.</li>
 <li><strong>Unlock to Stop:</strong> The siren <strong>will not stop</strong> until the device is successfully unlocked by the owner.</li>
 </ul>
-<h3>⚡ Integrated Server Support</h3>
-<p>Unlike the original FMD, <strong>LCLD does not require an additional app</strong> (like Push Distributor) to receive server commands. We&#39;ve built the communication layer directly into the app for a lighter, more reliable experience.</p>
-<h3>🛑 THEFT MODE (The Ultimate Countermeasure)</h3>
-<p>The new <code>theft</code> command is a proactive security protocol that triggers multiple actions simultaneously:</p>
-<ul>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">⚡ Integrated Server Support</h3>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">Unlike the original FMD, <strong>LCLD does not require an additional app</strong> (like Push Distributor) to receive server commands. We&#39;ve built the communication layer directly into the app for a lighter, more reliable experience.</p>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🛑 THEFT MODE (The Ultimate Countermeasure)</h3>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">The new <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">theft</code> command is a proactive security protocol that triggers multiple actions simultaneously:</p>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Instant Lockdown:</strong> Locks the device immediately.</li>
 <li><strong>Continuous Tracking:</strong> Starts aggressive location reporting.</li>
 <li><strong>Siren Activation:</strong> Triggers the unstoppable siren.</li>
 <li><strong>Persistence:</strong> Even if the thief restarts the phone, the siren and lock will resume <strong>instantly</strong> upon boot. There is no escape.</li>
 </ul>
-<h3>📸 Remote Camera &amp; Precision Locating</h3>
-<ul>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">📸 Remote Camera &amp; Precision Locating</h3>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Remote Snap:</strong> Capture high-quality photos from front/back cameras.</li>
 <li><strong>GPS + Cell Tower:</strong> Locate your device even when GPS is disabled or signal is weak.</li>
 </ul>
 <hr>
-<h2>🛠️ Getting Started</h2>
-<ol>
-<li><strong>Download:</strong> Get the latest APK from <a href="https://github.com/pawanwashudev-official/LCLD/releases">Releases</a>.</li>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🛠️ Getting Started</h2>
+<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
+<li><strong>Download:</strong> Get the latest APK from <a href="https://github.com/pawanwashudev-official/LCLD/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Releases</a>.</li>
 <li><strong>Setup PIN:</strong> Set your secure 4-6 digit PIN for SMS commands.</li>
 <li><strong>Grant Permissions:</strong> Enable Location, Camera, and Device Admin for full protection.</li>
 <li><strong>Trusted Contacts:</strong> (Optional) Add numbers that can control the device without a PIN.</li>
 </ol>
 <hr>
-<h2>🔒 Security &amp; Privacy</h2>
-<p>LCLD is built with a <strong>Security-First</strong> mindset. </p>
-<ul>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🔒 Security &amp; Privacy</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">LCLD is built with a <strong>Security-First</strong> mindset. </p>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>No Tracking:</strong> We don&#39;t track your location. Your data is only shared with the channels <em>you</em> configure.</li>
 <li><strong>Encrypted Communication:</strong> Server communication is secured via industry-standard encryption.</li>
 </ul>
 <hr>
-<h2>❤️ Credits &amp; Foundation</h2>
-<p>LCLD is a heavily enhanced and rebranded version of the <strong>Find My Device (FMD)</strong> app by <strong>Nulide</strong>. We&#39;ve built upon their excellent FOSS foundation to create the most powerful device control app available.</p>
-<ul>
-<li><strong>Original Project:</strong> <a href="https://gitlab.com/fmd-foss/fmd-android">FMD Android</a></li>
-<li><strong>Original Developer:</strong> <a href="https://fmd-foss.org">Nulide</a></li>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">❤️ Credits &amp; Foundation</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">LCLD is a heavily enhanced and rebranded version of the <strong>Find My Device (FMD)</strong> app by <strong>Nulide</strong>. We&#39;ve built upon their excellent FOSS foundation to create the most powerful device control app available.</p>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
+<li><strong>Original Project:</strong> <a href="https://gitlab.com/fmd-foss/fmd-android" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">FMD Android</a></li>
+<li><strong>Original Developer:</strong> <a href="https://fmd-foss.org" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Nulide</a></li>
 </ul>
 <hr>
-<p><strong>Developed with ❤️ by Pawan Washudev</strong></p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Developed with ❤️ by Pawan Washudev</strong></p>
 
 </div>
         <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>

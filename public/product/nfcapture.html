@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NFCapture</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <style>
         body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="min-h-screen p-8">
     <div class="max-w-4xl mx-auto glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Orbit</a>
+        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
         <div class="flex items-center gap-6 mb-8">
             <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
             <div>
@@ -21,37 +21,37 @@
             </div>
         </div>
 
-        <div class="prose prose-invert max-w-none text-gray-300 mb-8 leading-relaxed">
-<h1>NFCapture 🛡️</h1>
-<p><strong>NFCapture</strong> (No-Filter Capture) is a 100% serverless, end-to-end encrypted, and database-free web application designed to restore trust in photography for high-stakes verifications, such as marriage proposals.</p>
-<p>It guarantees that a photo is taken <strong>live</strong>, <strong>unedited</strong>, and <strong>unaltered</strong> through a cryptographically secure &quot;Lock &amp; Key&quot; workflow.</p>
-<h2>🚀 Live Demo</h2>
-<p><a href="https://nf-capture.vercel.app">https://nf-capture.vercel.app</a> (Replace with your actual Vercel URL)</p>
-<h2>✨ Features</h2>
-<ul>
+        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
+<h1 class="text-4xl md:text-5xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 drop-shadow-sm">NFCapture 🛡️</h1>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>NFCapture</strong> (No-Filter Capture) is a 100% serverless, end-to-end encrypted, and database-free web application designed to restore trust in photography for high-stakes verifications, such as marriage proposals.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">It guarantees that a photo is taken <strong>live</strong>, <strong>unedited</strong>, and <strong>unaltered</strong> through a cryptographically secure &quot;Lock &amp; Key&quot; workflow.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🚀 Live Demo</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg"><a href="https://nf-capture.vercel.app" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">https://nf-capture.vercel.app</a> (Replace with your actual Vercel URL)</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">✨ Features</h2>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Serverless Trust:</strong> No database, no backend. Everything happens in your browser.</li>
 <li><strong>Mandatory Live Camera:</strong> Strictly enforces camera capture; no file uploads allowed for the source.</li>
 <li><strong>Asymmetric Encryption:</strong> Uses Curve25519 (tweetnacl) to ensure the sender cannot view or edit the photo after capture.</li>
 <li><strong>Local Private Keys:</strong> Private keys are stored safely in your browser&#39;s IndexedDB.</li>
 <li><strong>Privacy First:</strong> Your data never leaves your device in an unencrypted state.</li>
 </ul>
-<h2>🛠️ How it Works</h2>
-<ol>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🛠️ How it Works</h2>
+<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Requester (Owner):</strong> Generates a capture request. The Private Key is saved locally.</li>
 <li><strong>Sender (Groom):</strong> Clicks the link, takes a photo, and the app encrypts it instantly.</li>
-<li><strong>Distribution:</strong> The Sender shares the <code>.nfcapture</code> file via WhatsApp/Email.</li>
+<li><strong>Distribution:</strong> The Sender shares the <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">.nfcapture</code> file via WhatsApp/Email.</li>
 <li><strong>Unlock:</strong> The Requester uploads the file, and the app unlocks it using the stored local key.</li>
 </ol>
-<h2>💻 Tech Stack</h2>
-<ul>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">💻 Tech Stack</h2>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>React + TypeScript + Vite</strong></li>
 <li><strong>Tweetnacl.js</strong> (Cryptography)</li>
 <li><strong>IDB</strong> (IndexedDB for key storage)</li>
 <li><strong>Lucide React</strong> (Icons)</li>
 <li><strong>CSS Animations</strong> (Premium UI/UX)</li>
 </ul>
-<h2>🏗️ Local Development</h2>
-<pre><code class="language-bash"># Clone the repo
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🏗️ Local Development</h2>
+<div class="relative group mt-6 mb-8"><div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div><pre class="relative bg-[#0a0a0a] border border-white/10 rounded-lg p-4 overflow-x-auto"><code class="text-sm font-mono text-gray-300"># Clone the repo
 git clone https://github.com/pawanwashudev-official/NFCapture.git
 
 # Install dependencies
@@ -59,17 +59,17 @@ npm install
 
 # Run dev server
 npm run dev
-</code></pre>
-<h2>👨‍💻 Developer</h2>
-<p>Developed with ❤️ by <strong>Pawan Washudev</strong></p>
-<ul>
+</code></pre></div>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">👨‍💻 Developer</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">Developed with ❤️ by <strong>Pawan Washudev</strong></p>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Founder:</strong> Neubofy</li>
-<li><strong>Email:</strong> <a href="mailto:pawanwashudev@neubofy.in">pawanwashudev@neubofy.in</a></li>
-<li><strong>Instagram:</strong> <a href="https://instagram.com/pawan_washudev">@pawan_washudev</a></li>
-<li><strong>Telegram:</strong> <a href="https://t.me/pawanwashudev">@pawanwashudev</a></li>
+<li><strong>Email:</strong> <a href="mailto:pawanwashudev@neubofy.in" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">pawanwashudev@neubofy.in</a></li>
+<li><strong>Instagram:</strong> <a href="https://instagram.com/pawan_washudev" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">@pawan_washudev</a></li>
+<li><strong>Telegram:</strong> <a href="https://t.me/pawanwashudev" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">@pawanwashudev</a></li>
 </ul>
-<h2>📄 License</h2>
-<p>Open Source under the MIT License.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">📄 License</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">Open Source under the MIT License.</p>
 
 </div>
         <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>

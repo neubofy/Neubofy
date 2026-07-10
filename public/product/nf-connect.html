@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NF-Connect</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <style>
         body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="min-h-screen p-8">
     <div class="max-w-4xl mx-auto glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Orbit</a>
+        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
         <div class="flex items-center gap-6 mb-8">
             <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
             <div>
@@ -21,27 +21,27 @@
             </div>
         </div>
 
-        <div class="prose prose-invert max-w-none text-gray-300 mb-8 leading-relaxed">
-<h1>NF Connect - Android app</h1>
-<p>NF Connect is a multi-platform app that allows your devices to communicate (e.g., your phone and your computer).</p>
-<h2>(Some) Features</h2>
-<ul>
+        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
+<h1 class="text-4xl md:text-5xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 drop-shadow-sm">NF Connect - Android app</h1>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">NF Connect is a multi-platform app that allows your devices to communicate (e.g., your phone and your computer).</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">(Some) Features</h2>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Shared clipboard</strong>: copy and paste between your phone and your computer (or any other device).</li>
 <li><strong>Notification sync</strong>: Read and reply to your Android notifications from the desktop.</li>
 <li><strong>Share files and URLs</strong> instantly from one device to another.</li>
 <li><strong>Multimedia remote control</strong>: Use your phone as a remote for media players.</li>
 <li><strong>Virtual touchpad</strong>: Use your phone screen as your computer&#39;s touchpad and keyboard.</li>
 </ul>
-<p>All this without wires, over the already existing Wi-Fi network, and using TLS encryption.</p>
-<h2>About this app</h2>
-<p>This is the official Android app for NF Connect. You will find more information about the NF Connect ecosystem <a href="https://github.com/pawanwashudev-official/NF-Connect">here</a>.</p>
-<h2>How to install this app</h2>
-<p>You can install this app from the <a href="https://github.com/pawanwashudev-official/NF-Connect/releases">GitHub Releases</a>. Note you will also need to install the <a href="https://github.com/pawanwashudev-official/NF-Connect">desktop app</a> for it to work.</p>
-<h2>Contributing</h2>
-<p>For bug reporting, please use <a href="https://github.com/pawanwashudev-official/NF-Connect/issues">GitHub Issues</a>.</p>
-<p>To contribute patches or new features, please submit a Pull Request to our <a href="https://github.com/pawanwashudev-official/NF-Connect">GitHub repository</a>.</p>
-<h2>License</h2>
-<p><a href="https://www.gnu.org/licenses/gpl-2.0.html">GNU GPL v2</a> and <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL v3</a></p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">All this without wires, over the already existing Wi-Fi network, and using TLS encryption.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">About this app</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">This is the official Android app for NF Connect. You will find more information about the NF Connect ecosystem <a href="https://github.com/pawanwashudev-official/NF-Connect" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">here</a>.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">How to install this app</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">You can install this app from the <a href="https://github.com/pawanwashudev-official/NF-Connect/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">GitHub Releases</a>. Note you will also need to install the <a href="https://github.com/pawanwashudev-official/NF-Connect" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">desktop app</a> for it to work.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">Contributing</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">For bug reporting, please use <a href="https://github.com/pawanwashudev-official/NF-Connect/issues" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">GitHub Issues</a>.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">To contribute patches or new features, please submit a Pull Request to our <a href="https://github.com/pawanwashudev-official/NF-Connect" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">GitHub repository</a>.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">License</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg"><a href="https://www.gnu.org/licenses/gpl-2.0.html" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">GNU GPL v2</a> and <a href="https://www.gnu.org/licenses/gpl-3.0.html" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">GNU GPL v3</a></p>
 
 </div>
         <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>

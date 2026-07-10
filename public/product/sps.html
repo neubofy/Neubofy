@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sps</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <style>
         body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="min-h-screen p-8">
     <div class="max-w-4xl mx-auto glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Orbit</a>
+        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
         <div class="flex items-center gap-6 mb-8">
             <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
             <div>
@@ -21,31 +21,31 @@
             </div>
         </div>
 
-        <div class="prose prose-invert max-w-none text-gray-300 mb-8 leading-relaxed">
-<p>This is a <a href="https://nextjs.org">Next.js</a> project bootstrapped with <a href="https://nextjs.org/docs/app/api-reference/cli/create-next-app"><code>create-next-app</code></a>.</p>
-<h2>Getting Started</h2>
-<p>First, run the development server:</p>
-<pre><code class="language-bash">npm run dev
+        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">This is a <a href="https://nextjs.org" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Next.js</a> project bootstrapped with <a href="https://nextjs.org/docs/app/api-reference/cli/create-next-app" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">create-next-app</code></a>.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">Getting Started</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">First, run the development server:</p>
+<div class="relative group mt-6 mb-8"><div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div><pre class="relative bg-[#0a0a0a] border border-white/10 rounded-lg p-4 overflow-x-auto"><code class="text-sm font-mono text-gray-300">npm run dev
 # or
 yarn dev
 # or
 pnpm dev
 # or
 bun dev
-</code></pre>
-<p>Open <a href="http://localhost:3000">http://localhost:3000</a> with your browser to see the result.</p>
-<p>You can start editing the page by modifying <code>app/page.tsx</code>. The page auto-updates as you edit the file.</p>
-<p>This project uses <a href="https://nextjs.org/docs/app/building-your-application/optimizing/fonts"><code>next/font</code></a> to automatically optimize and load <a href="https://vercel.com/font">Geist</a>, a new font family for Vercel.</p>
-<h2>Learn More</h2>
-<p>To learn more about Next.js, take a look at the following resources:</p>
-<ul>
-<li><a href="https://nextjs.org/docs">Next.js Documentation</a> - learn about Next.js features and API.</li>
-<li><a href="https://nextjs.org/learn">Learn Next.js</a> - an interactive Next.js tutorial.</li>
+</code></pre></div>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">Open <a href="http://localhost:3000" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">http://localhost:3000</a> with your browser to see the result.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">You can start editing the page by modifying <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">app/page.tsx</code>. The page auto-updates as you edit the file.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">This project uses <a href="https://nextjs.org/docs/app/building-your-application/optimizing/fonts" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">next/font</code></a> to automatically optimize and load <a href="https://vercel.com/font" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Geist</a>, a new font family for Vercel.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">Learn More</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">To learn more about Next.js, take a look at the following resources:</p>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
+<li><a href="https://nextjs.org/docs" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Next.js Documentation</a> - learn about Next.js features and API.</li>
+<li><a href="https://nextjs.org/learn" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Learn Next.js</a> - an interactive Next.js tutorial.</li>
 </ul>
-<p>You can check out <a href="https://github.com/vercel/next.js">the Next.js GitHub repository</a> - your feedback and contributions are welcome!</p>
-<h2>Deploy on Vercel</h2>
-<p>The easiest way to deploy your Next.js app is to use the <a href="https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme">Vercel Platform</a> from the creators of Next.js.</p>
-<p>Check out our <a href="https://nextjs.org/docs/app/building-your-application/deploying">Next.js deployment documentation</a> for more details.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">You can check out <a href="https://github.com/vercel/next.js" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">the Next.js GitHub repository</a> - your feedback and contributions are welcome!</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">Deploy on Vercel</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">The easiest way to deploy your Next.js app is to use the <a href="https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Vercel Platform</a> from the creators of Next.js.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">Check out our <a href="https://nextjs.org/docs/app/building-your-application/deploying" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Next.js deployment documentation</a> for more details.</p>
 
 </div>
         <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>

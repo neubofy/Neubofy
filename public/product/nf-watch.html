@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NF-Watch</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <style>
         body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="min-h-screen p-8">
     <div class="max-w-4xl mx-auto glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 mb-6 inline-block">&larr; Back to Orbit</a>
+        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
         <div class="flex items-center gap-6 mb-8">
             <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
             <div>
@@ -21,49 +21,49 @@
             </div>
         </div>
 
-        <div class="prose prose-invert max-w-none text-gray-300 mb-8 leading-relaxed">
-<h1>⌚ NF Watch — Premium Universal Companion for Da Fit Protocol</h1>
-<p>NF Watch is a state-of-the-art, open-source Android companion application designed specifically for devices using the <strong>Moyoung (Da Fit) protocol</strong>. This includes popular brands like <strong>GoBoult</strong>, <strong>Drift</strong>, <strong>Colmi</strong>, <strong>Fire-Boltt</strong>, and many other Da Fit-skinned wearables.</p>
-<p>It prioritizes <strong>Zero-Touch Connectivity</strong>, <strong>Extreme Anti-Theft Security</strong>, and <strong>100% Offline Privacy</strong>.</p>
-<h2>🎯 Compatibility</h2>
-<p>NF Watch is compatible with any smartwatch that traditionally connects via the <strong>Da Fit</strong> app or its localized variants. By using the raw Moyoung protocol, it provides a faster, more reliable, and private alternative to standard companion apps.</p>
-<h2>🚀 Key Features</h2>
-<h3>📡 Zero-Touch Background Connectivity</h3>
-<ul>
+        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
+<h1 class="text-4xl md:text-5xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 drop-shadow-sm">⌚ NF Watch — Premium Universal Companion for Da Fit Protocol</h1>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">NF Watch is a state-of-the-art, open-source Android companion application designed specifically for devices using the <strong>Moyoung (Da Fit) protocol</strong>. This includes popular brands like <strong>GoBoult</strong>, <strong>Drift</strong>, <strong>Colmi</strong>, <strong>Fire-Boltt</strong>, and many other Da Fit-skinned wearables.</p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">It prioritizes <strong>Zero-Touch Connectivity</strong>, <strong>Extreme Anti-Theft Security</strong>, and <strong>100% Offline Privacy</strong>.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🎯 Compatibility</h2>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg">NF Watch is compatible with any smartwatch that traditionally connects via the <strong>Da Fit</strong> app or its localized variants. By using the raw Moyoung protocol, it provides a faster, more reliable, and private alternative to standard companion apps.</p>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🚀 Key Features</h2>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">📡 Zero-Touch Background Connectivity</h3>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Gatt Auto-Connect</strong>: Uses specialized Bluetooth hardware hooks to reconnect instantly when you walk into range, without waking the phone&#39;s CPU.</li>
 <li><strong>Smart Reconnection</strong>: Unlike standard apps, NF Watch handles Bluetooth toggles gracefully. It intercepts system &quot;Bluetooth ON&quot; signals to force a fresh connection burst, restoring your link in seconds without needing to open the app.</li>
 <li><strong>The Hour Waker</strong>: A WorkManager safety net that runs every hour to guarantee background sync even if the system kills the app.</li>
 </ul>
-<h3>🚨 Aggressive Anti-Theft &quot;Find My Phone&quot; (SOS Mode)</h3>
-<ul>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🚨 Aggressive Anti-Theft &quot;Find My Phone&quot; (SOS Mode)</h3>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>SOS Piercing Mode</strong>: Synthesizes a <strong>3.2kHz high-frequency sine wave</strong> (safe for speakers) that is audible from extreme distances.</li>
 <li><strong>Volume Guardian</strong>: Automatically resets volume to <strong>100% Every 3 Seconds</strong> during an alert. It’s impossible to silence.</li>
-<li><strong>Synced SOS Pattern</strong>: The flashlight, vibration, and sound pulse in a synchronized rhythmic SOS pattern (<code>... --- ...</code>).</li>
+<li><strong>Synced SOS Pattern</strong>: The flashlight, vibration, and sound pulse in a synchronized rhythmic SOS pattern (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">... --- ...</code>).</li>
 <li><strong>Watch-Only Termination</strong>: The alert can <strong>ONLY</strong> be stopped from the watch; the phone becomes a dedicated emergency beacon.</li>
 </ul>
-<h3>🏥 Health &amp; Privacy</h3>
-<ul>
+<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🏥 Health &amp; Privacy</h3>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Health Connect Integration</strong>: Two-way synchronization with Android&#39;s native health storage.</li>
 <li><strong>Real-time Vitals</strong>: Live tracking for Steps, Calories, Heart Rate, SpO2, and Blood Pressure.</li>
 <li><strong>100% Offline</strong>: All data stays on your device. No cloud accounts, no data selling, no tracking.</li>
 <li><strong>Premium Glassmorphism UI</strong>: A dark-themed, immersive interface with buttery smooth micro-animations.</li>
 </ul>
-<h2>🛠️ Technical Stack</h2>
-<ul>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🛠️ Technical Stack</h2>
+<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li><strong>Language</strong>: 100% Kotlin</li>
 <li><strong>UI Framework</strong>: Jetpack Compose (Material 3)</li>
 <li><strong>Local Storage</strong>: Room DB &amp; DataStore Preferences</li>
 <li><strong>Protocol</strong>: Native implementation of the Moyoung (Da Fit) BLE Protocol.</li>
 <li><strong>Optimization</strong>: R8 enabled with custom ProGuard rules for minimal binary size and code protection.</li>
 </ul>
-<h2>🏗️ Build Instructions</h2>
-<ol>
+<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🏗️ Build Instructions</h2>
+<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
 <li>Ensure you have the latest <strong>Android SDK</strong> (API 35).</li>
-<li>Add your signing keys to <code>local.properties</code>.</li>
-<li>Run <code>.\gradlew installrelease</code> to build the optimized production APK.</li>
+<li>Add your signing keys to <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">local.properties</code>.</li>
+<li>Run <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">.\gradlew installrelease</code> to build the optimized production APK.</li>
 </ol>
 <hr>
-<p><em>Developed for power users who value security, speed, and privacy.</em></p>
+<p class="text-gray-300 mb-5 leading-relaxed text-lg"><em>Developed for power users who value security, speed, and privacy.</em></p>
 
 </div>
         <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>
