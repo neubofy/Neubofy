@@ -9,11 +9,9 @@ import GoToTop from "@/components/GoToTop";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link, useNavigate } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
-import NewProductForm from "@/components/NewProductForm";
 
 const Orbit = () => {
   const navigate = useNavigate();
-  const [isProductFormOpen, setIsProductFormOpen] = useState(false);
 
   type CreationItem = {
     slug: string;
@@ -29,6 +27,7 @@ const Orbit = () => {
     features?: string[];
     demoUrl?: string;
     caseStudyUrl?: string;
+    htmlPath?: string;
   };
 
   const [creations, setCreations] = useState<CreationItem[]>([]);
@@ -55,7 +54,7 @@ const Orbit = () => {
           const fileName = entry;
           console.log(`Loading product file: ${fileName}`);
           try {
-            const r = await fetch(`/product/${fileName}`, { cache: 'no-cache' });
+            const r = await fetch(`/metadata/product/${fileName}`, { cache: 'no-cache' });
             if (!r.ok) throw new Error(`Failed to load ${fileName}: ${r.status}`);
             const text = await r.text();
             try {
@@ -152,7 +151,7 @@ const Orbit = () => {
           {filteredCreations.map((creation, index) => (
             <Reveal key={creation.slug} delay={index * 0.05}>
               <button
-                onClick={() => navigate(`/orbit/${creation.slug}`)}
+                onClick={() => window.location.href = `/product/${creation.slug}.html`}
                 className="text-left w-full glass-card rounded-2xl overflow-hidden hover:shadow-elevated transition-all duration-500 group"
               >
                 <div className="relative">
@@ -209,36 +208,7 @@ const Orbit = () => {
             </Reveal>
           ))}
         </div>
-
-        {/* Add New Solution Section */}
-        <Reveal>
-        <div className="glass-card p-8 rounded-2xl text-center">
-          <Plus className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-2xl font-bold mb-4 gradient-text">Have an AI Solution to Share?</h3>
-          <p className="text-muted-foreground mb-6 text-lg">
-            Submit your AI tool or automation solution to be featured in our marketplace.
-            Join our growing community of innovators and developers.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="btn-hero" onClick={() => setIsProductFormOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              List Your Solution
-            </Button>
-            <Button variant="outline" className="btn-outline-glow" asChild>
-              <Link to="/contact">
-                <Code className="w-4 h-4 mr-2" />
-                Contact Us
-              </Link>
-            </Button>
-          </div>
-        </div>
-        </Reveal>
       </div>
-
-      {/* Solution Submission Form Modal */}
-      {isProductFormOpen && (
-        <NewProductForm onClose={() => setIsProductFormOpen(false)} />
-      )}
 
       <Footer />
       <GoToTop />
