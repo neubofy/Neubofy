@@ -33,6 +33,7 @@ interface BlogPost {
   featured: boolean;
   category: string;
   content?: BlogContent[];
+  htmlPath?: string;
 }
 
 // Featured posts grid component
@@ -44,7 +45,7 @@ const FeaturedPostsGrid = ({ posts, navigate }: { posts: BlogPost[]; navigate: a
       {posts.map((post, index) => (
         <button
           key={post.id ?? index}
-          onClick={() => navigate(`/blog/${post.slug}`)}
+          onClick={() => window.location.href = `/blog/${post.slug}.html`}
           className="w-full text-left glass-card rounded-2xl overflow-hidden hover:shadow-elevated transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-primary relative"
         >
           <div className="aspect-w-16 aspect-h-9 relative">
@@ -120,7 +121,7 @@ const Blog = () => {
           blogFiles.map(async (fileName: string) => {
             if (!fileName) return null;
             try {
-              const response = await fetch(`/blog/${fileName}`);
+              const response = await fetch(`/metadata/blog/${fileName}`);
               if (!response.ok) return null;
               const post = await response.json();
               return {
@@ -225,7 +226,7 @@ const Blog = () => {
             <Reveal key={post.id} delay={index * 0.05}>
               <button
                 type="button"
-                onClick={() => navigate(`/blog/${post.slug}`)}
+                onClick={() => window.location.href = `/blog/${post.slug}.html`}
                 className="w-full text-left glass-card rounded-2xl overflow-hidden hover:shadow-elevated transition-all duration-500 group focus:outline-none focus:ring-2 focus:ring-primary"
                 tabIndex={0}
               >

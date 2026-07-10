@@ -29,6 +29,7 @@ const Orbit = () => {
     features?: string[];
     demoUrl?: string;
     caseStudyUrl?: string;
+    htmlPath?: string;
   };
 
   const [creations, setCreations] = useState<CreationItem[]>([]);
@@ -55,7 +56,7 @@ const Orbit = () => {
           const fileName = entry;
           console.log(`Loading product file: ${fileName}`);
           try {
-            const r = await fetch(`/product/${fileName}`, { cache: 'no-cache' });
+            const r = await fetch(`/metadata/product/${fileName}`, { cache: 'no-cache' });
             if (!r.ok) throw new Error(`Failed to load ${fileName}: ${r.status}`);
             const text = await r.text();
             try {
@@ -152,7 +153,7 @@ const Orbit = () => {
           {filteredCreations.map((creation, index) => (
             <Reveal key={creation.slug} delay={index * 0.05}>
               <button
-                onClick={() => navigate(`/orbit/${creation.slug}`)}
+                onClick={() => window.location.href = `/product/${creation.slug}.html`}
                 className="text-left w-full glass-card rounded-2xl overflow-hidden hover:shadow-elevated transition-all duration-500 group"
               >
                 <div className="relative">
