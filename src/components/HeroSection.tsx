@@ -105,17 +105,6 @@ const HeroSection = () => {
                 <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
               </motion.button>
             </Link>
-            <Link to="/contact">
-              <motion.button
-                className="btn-3d bg-transparent border-2 border-primary text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-secondary/50 hover:bg-primary/10"
-                whileHover={{ scale: 1.07 }}
-                whileTap={{ scale: 0.97 }}
-                type="button"
-              >
-                <Zap className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" />
-                Get Free Consultation
-              </motion.button>
-            </Link>
           </motion.div>
 
           {/* Hero Dashboard Mockup */}

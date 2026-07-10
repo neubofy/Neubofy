@@ -9,11 +9,9 @@ import GoToTop from "@/components/GoToTop";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link, useNavigate } from "react-router-dom";
 import ProductCard from "@/components/ProductCard";
-import NewProductForm from "@/components/NewProductForm";
 
 const Orbit = () => {
   const navigate = useNavigate();
-  const [isProductFormOpen, setIsProductFormOpen] = useState(false);
 
   type CreationItem = {
     slug: string;
@@ -41,42 +39,18 @@ const Orbit = () => {
     let isMounted = true;
     const load = async () => {
       try {
-        console.log('Loading product index...');
-        const res = await fetch('/product_index.json', { cache: 'no-cache' });
-        if (!res.ok) throw new Error(`Failed to load product_index.json: ${res.status}`);
+        console.log('Loading project index...');
+        const res = await fetch('/project.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`Failed to load project.json: ${res.status}`);
         const data = await res.json();
-        console.log('Product index loaded:', data);
+        console.log('Project index loaded:', data);
         
-        const files = (data?.files as string[] | undefined) || [];
-        if (!Array.isArray(files)) throw new Error('Invalid manifest format. Expected { files: [...] }');
-        console.log('Files to load:', files);
+        if (!Array.isArray(data)) throw new Error('Invalid manifest format. Expected an array.');
         
-        const detailPromises = files.map(async (entry) => {
-          const fileName = entry;
-          console.log(`Loading product file: ${fileName}`);
-          try {
-            const r = await fetch(`/product/${fileName}`, { cache: 'no-cache' });
-            if (!r.ok) throw new Error(`Failed to load ${fileName}: ${r.status}`);
-            const text = await r.text();
-            try {
-              const product = JSON.parse(text);
-              console.log(`Successfully loaded ${fileName}:`, product);
-              return product as CreationItem;
-            } catch (parseError) {
-              throw new Error(`Invalid JSON in ${fileName}: ${parseError.message}`);
-            }
-          } catch (fetchError) {
-            console.error(`Error with ${fileName}:`, fetchError);
-            throw fetchError;
-          }
-        });
-        
-        const detailed = await Promise.all(detailPromises);
-        console.log('All products loaded:', detailed);
-        if (isMounted) setCreations(detailed);
+        if (isMounted) setCreations(data as CreationItem[]);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : 'Unknown error';
-        console.error('Error loading products:', message);
+        console.error('Error loading projects:', message);
         if (isMounted) setError(message);
       } finally {
         if (isMounted) setLoading(false);
@@ -210,35 +184,7 @@ const Orbit = () => {
           ))}
         </div>
 
-        {/* Add New Solution Section */}
-        <Reveal>
-        <div className="glass-card p-8 rounded-2xl text-center">
-          <Plus className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-2xl font-bold mb-4 gradient-text">Have an AI Solution to Share?</h3>
-          <p className="text-muted-foreground mb-6 text-lg">
-            Submit your AI tool or automation solution to be featured in our marketplace.
-            Join our growing community of innovators and developers.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="btn-hero" onClick={() => setIsProductFormOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              List Your Solution
-            </Button>
-            <Button variant="outline" className="btn-outline-glow" asChild>
-              <Link to="/contact">
-                <Code className="w-4 h-4 mr-2" />
-                Contact Us
-              </Link>
-            </Button>
-          </div>
-        </div>
-        </Reveal>
       </div>
-
-      {/* Solution Submission Form Modal */}
-      {isProductFormOpen && (
-        <NewProductForm onClose={() => setIsProductFormOpen(false)} />
-      )}
 
       <Footer />
       <GoToTop />

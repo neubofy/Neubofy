@@ -23,7 +23,7 @@ Guidelines:
 - Creations (Solutions): /creations
 - About Us: /about
 - Blog: /blog
-- Contact: /contact
+- Contact: support@neubofy.in
 
 Format responses professionally with paragraphs and bullet points when appropriate. Max length 200 words unless detailed explanation needed.`;
 
@@ -64,11 +64,11 @@ const NEUBOFY_KB = [
   },
   {
     keywords: ["how to start", "get started", "begin", "first steps", "onboarding"],
-    answer: "Getting started with Neubofy is easy:<br><br>For Users:<br>1. Browse AI tools in <a href='/orbit' class='neubofy-link'>Neubofy Orbit</a><br>2. Find tools that match your needs<br>3. Get affordable access to premium AI solutions<br>4. Request custom tools if needed<br><br>For Developers:<br>1. <a href='/contact' class='neubofy-link'>Contact us</a> to become a verified developer<br>2. List your AI tools on our marketplace<br>3. Reach a wider audience<br>4. Get distribution support"
+    answer: "Getting started with Neubofy is easy:<br><br>For Users:<br>1. Browse AI tools in <a href='/orbit' class='neubofy-link'>Neubofy Orbit</a><br>2. Find tools that match your needs<br>3. Get affordable access to premium AI solutions<br>4. Request custom tools if needed<br><br>For Developers:<br>1. <a href='mailto:support@neubofy.in' class='neubofy-link'>Contact us</a> to become a verified developer<br>2. List your AI tools on our marketplace<br>3. Reach a wider audience<br>4. Get distribution support"
   },
   {
     keywords: ["custom solution", "custom development", "tailored", "bespoke", "specific needs"],
-    answer: "Need a custom AI solution? Our team specializes in developing tailored solutions for unique business requirements. <a href='/contact' class='neubofy-link'>Contact us</a> to discuss your specific needs and let us create the perfect solution for you."
+    answer: "Need a custom AI solution? Our team specializes in developing tailored solutions for unique business requirements. <a href='mailto:support@neubofy.in' class='neubofy-link'>Contact us</a> to discuss your specific needs and let us create the perfect solution for you."
   },
 
   // Company Information
@@ -82,13 +82,13 @@ const NEUBOFY_KB = [
   },
   {
     keywords: ["pricing", "cost", "packages", "plans", "subscription"],
-    answer: "Neubofy offers flexible pricing tailored to your specific needs. Each solution is customized to provide maximum value. <a href='/contact' class='neubofy-link'>Contact us</a> for a personalized quote."
+    answer: "Neubofy offers flexible pricing tailored to your specific needs. Each solution is customized to provide maximum value. <a href='mailto:support@neubofy.in' class='neubofy-link'>Contact us</a> for a personalized quote."
   },
 
   // Support and Resources
   {
     keywords: ["support", "help", "assistance", "contact", "reach"],
-    answer: "We're here to help! You can:<br>• <a href='/contact' class='neubofy-link'>Contact our team</a><br>• Chat with me anytime<br>• Visit our <a href='/blog' class='neubofy-link'>Blog</a> for guides<br>• Request technical support<br>• Schedule a consultation"
+    answer: "We're here to help! You can:<br>• <a href='mailto:support@neubofy.in' class='neubofy-link'>Contact our team</a><br>• Chat with me anytime<br>• Visit our <a href='/blog' class='neubofy-link'>Blog</a> for guides<br>• Request technical support<br>• Schedule a consultation"
   },
   // Content Navigation
   {
@@ -107,11 +107,11 @@ const NEUBOFY_KB = [
   // Integration and Technical
   {
     keywords: ["integration", "implement", "setup", "install", "deploy"],
-    answer: "Neubofy solutions are designed for seamless integration. Our team provides:<br>• Technical consultation<br>• Implementation support<br>• Custom integration options<br>• Ongoing maintenance<br><a href='/contact' class='neubofy-link'>Contact us</a> for integration details."
+    answer: "Neubofy solutions are designed for seamless integration. Our team provides:<br>• Technical consultation<br>• Implementation support<br>• Custom integration options<br>• Ongoing maintenance<br><a href='mailto:support@neubofy.in' class='neubofy-link'>Contact us</a> for integration details."
   },
   {
     keywords: ["api", "technical", "development", "developer", "code"],
-    answer: "For developers, we provide a comprehensive platform:<br>• Developer verification program<br>• Marketplace listing tools<br>• Distribution support services<br>• Technical documentation<br>• Marketing assistance<br>• Customer feedback system<br>• Revenue sharing model<br><a href='/contact' class='neubofy-link'>Contact us</a> to join our developer community."
+    answer: "For developers, we provide a comprehensive platform:<br>• Developer verification program<br>• Marketplace listing tools<br>• Distribution support services<br>• Technical documentation<br>• Marketing assistance<br>• Customer feedback system<br>• Revenue sharing model<br><a href='mailto:support@neubofy.in' class='neubofy-link'>Contact us</a> to join our developer community."
   },
 
   // Success Stories

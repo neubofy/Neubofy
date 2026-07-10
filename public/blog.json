@@ -1,0 +1,60 @@
+[
+  {
+    "id": 1783700058503.293,
+    "slug": "ai-innovation-for-students",
+    "title": "Google AI Agents Intensive 2025: Free 5-Day Course with Kaggle",
+    "excerpt": "Learn to build, evaluate, and deploy AI agents in this free intensive course by Google and Kaggle. Register now for November 10-14, 2025.",
+    "author": "Neubofy Team",
+    "date": "2025-11-08",
+    "readTime": "3 min read",
+    "tags": [
+      "AI",
+      "Google",
+      "Kaggle",
+      "Education",
+      "Machine Learning"
+    ],
+    "thumbnail": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1400&q=80&auto=format&fit=crop",
+    "featured": true,
+    "category": "Technology"
+  },
+  {
+    "id": 1783700058504.773,
+    "slug": "n8n",
+    "title": "n8n Workflow Automation: The Complete Guide for 2025",
+    "excerpt": "Discover why n8n is revolutionizing workflow automation with AI integration, self-hosting capabilities, and unlimited customization for technical teams.",
+    "author": "Neubofy Team",
+    "date": "2025-11-08",
+    "readTime": "8 min read",
+    "tags": [
+      "n8n",
+      "Automation",
+      "AI",
+      "Workflow",
+      "Open Source"
+    ],
+    "thumbnail": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1400&q=80&auto=format&fit=crop",
+    "featured": false,
+    "category": "Technology"
+  },
+  {
+    "id": 1783700058504.592,
+    "slug": "introducing-neubofy",
+    "title": "Introducing Neubofy: The Future of AI SaaS Marketplace",
+    "excerpt": "Discover how Neubofy is revolutionizing the AI SaaS ecosystem by connecting developers with users and making premium AI tools accessible to everyone.",
+    "author": "Neubofy Team",
+    "date": "2025-11-08",
+    "readTime": "5 min read",
+    "tags": [
+      "AI",
+      "SaaS",
+      "Marketplace",
+      "Developers",
+      "Innovation",
+      "Technology"
+    ],
+    "thumbnail": "/neubofylogo.png",
+    "featured": true,
+    "category": "Technology"
+  }
+]

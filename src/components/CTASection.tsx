@@ -30,14 +30,6 @@ const CTASection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link to="/contact">
-                <Button className="btn-hero text-lg px-8 py-4 group">
-                  <MessageCircle className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                  Start Your Journey
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              
               <a 
                 href="https://wa.me/pawanwashudev"
                 target="_blank" 
