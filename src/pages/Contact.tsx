@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, MessageCircle, Send, CheckCircle } from "lucide-react";
+import { Mail, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,7 +14,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    whatsapp: "",
+    telegram: "",
     message: "",
     consent: false
   });
@@ -44,7 +44,7 @@ const Contact = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name);
       formDataToSend.append('email', formData.email);
-      formDataToSend.append('whatsapp', formData.whatsapp);
+      formDataToSend.append('telegram', formData.telegram);
       formDataToSend.append('message', formData.message);
       formDataToSend.append('timestamp', new Date().toISOString());
 
@@ -78,7 +78,7 @@ const Contact = () => {
     setIsSubmitting(false);
     setTimeout(() => {
       setIsSubmitted(false);
-      setFormData({ name: "", email: "", whatsapp: "", message: "", consent: false });
+      setFormData({ name: "", email: "", telegram: "", message: "", consent: false });
     }, 3000);
   };
 
@@ -139,14 +139,14 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="whatsapp" className="block text-sm font-semibold mb-2">
-                    WhatsApp User ID
+                  <label htmlFor="telegram" className="block text-sm font-semibold mb-2">
+                    Telegram User ID
                   </label>
                   <Input
-                    id="whatsapp"
-                    value={formData.whatsapp}
-                    onChange={(e) => handleInputChange("whatsapp", e.target.value)}
-                    placeholder="@pawanwashudev"
+                    id="telegram"
+                    value={formData.telegram}
+                    onChange={(e) => handleInputChange("telegram", e.target.value)}
+                    placeholder="@neubofy"
                     className="bg-background/50 border-primary/20 focus:border-primary"
                   />
                 </div>
@@ -230,51 +230,23 @@ const Contact = () => {
                   </div>
                 </a>
 
-                <a
-                  href="mailto:founder@neubofy.in"
-                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-primary/10 transition-colors group"
-                >
-                  <div className="w-12 h-12 bg-gradient-button rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Mail className="w-6 h-6 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <div className="font-semibold">Email the Founder</div>
-                    <div className="text-muted-foreground">founder@neubofy.in</div>
-                  </div>
-                </a>
-
                 <a 
-                  href="https://wa.me/pawanwashudev"
+                  href="https://t.me/neubofy"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-secondary/10 transition-colors group"
+                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-blue-500/10 transition-colors group"
                 >
-                  <div className="w-12 h-12 bg-gradient-accent rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <MessageCircle className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Send className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <div className="font-semibold">WhatsApp</div>
+                    <div className="font-semibold">Telegram</div>
                     <div className="text-muted-foreground">Chat with us directly</div>
                   </div>
                 </a>
 
-                <a 
-                  href="https://whatsapp.com/channel/0029Vb6TEDNE50UlJ3DDpo1b"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-green-500/10 transition-colors group"
-                >
-                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <MessageCircle className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-semibold">WhatsApp Channel</div>
-                    <div className="text-muted-foreground">Follow our official channel</div>
-                  </div>
-                </a>
-
                 <a
-                  href="https://instagram.com/pawan_washudev"
+                  href="https://instagram.com/neubofy"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 p-4 rounded-xl hover:bg-pink-600/10 transition-colors group"
@@ -284,7 +256,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <div className="font-semibold">Instagram</div>
-                    <div className="text-muted-foreground">@pawan_washudev</div>
+                    <div className="text-muted-foreground">@neubofy</div>
                   </div>
                 </a>
               </div>

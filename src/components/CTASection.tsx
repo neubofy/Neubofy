@@ -1,4 +1,4 @@
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Reveal from "@/components/Reveal";
@@ -39,16 +39,16 @@ const CTASection = () => {
               </Link>
               
               <a 
-                href="https://wa.me/pawanwashudev"
+                href="https://t.me/neubofy"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-lg font-medium text-secondary hover:text-secondary-glow transition-colors flex items-center gap-2"
               >
-                <MessageCircle className="w-5 h-5" />
-                Chat on WhatsApp
+                <Send className="w-5 h-5" />
+                Chat on Telegram
               </a>
               <a
-                href="https://instagram.com/pawan_washudev"
+                href="https://instagram.com/neubofy"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:scale-105 transition-all shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.5)]"
