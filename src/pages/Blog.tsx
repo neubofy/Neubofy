@@ -109,51 +109,25 @@ const Blog = () => {
 
     const loadBlogPosts = async () => {
       try {
-        const indexResponse = await fetch('/blog_index.json');
+        const indexResponse = await fetch('/blog.json');
         if (!indexResponse.ok) {
-          throw new Error('Failed to load blog index');
+          throw new Error('Failed to load blog.json');
         }
         const data = await indexResponse.json();
-        const blogFiles = data.blogPosts || [];
 
-        const posts = await Promise.all(
-          blogFiles.map(async (fileName: string) => {
-            if (!fileName) return null;
-            try {
-              const response = await fetch(`/blog/${fileName}`);
-              if (!response.ok) return null;
-              const post = await response.json();
-              return {
-                id: post.id ?? Date.now(),
-                slug: post.slug ?? fileName.replace('.json', ''),
-                title: post.name ?? post.title ?? 'Untitled',
-                excerpt: post.shortDescription ?? post.excerpt ?? '',
-                author: post.author ?? 'Neubofy Team',
-                date: post.publishedAt ?? post.date ?? new Date().toISOString(),
-                readTime: post.readTime ?? '5 min read',
-                tags: post.tags ?? [],
-                thumbnail: post.thumbnailUrl ?? post.thumbnail ?? '/placeholder.svg',
-                featured: !!post.featured,
-                category: post.category ?? 'Uncategorized',
-                content: post.content ?? []
-              } as BlogPost;
-            } catch (e) {
-              console.error(`Error loading blog post ${fileName}:`, e);
-              return null;
-            }
-          })
-        );
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid format: expected array in blog.json');
+        }
 
         if (!mounted) return;
 
-        const validPosts = posts
-          .filter((post): post is BlogPost => post !== null)
+        const validPosts = (data as BlogPost[])
           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
         setBlogPosts(validPosts);
       } catch (e) {
         console.error('Error loading blog posts:', e);
-        setBlogPosts([]);
+        if (mounted) setBlogPosts([]);
       }
     };
 
@@ -287,26 +261,6 @@ const Blog = () => {
           ))}
         </div>
 
-        {/* Add New Post Section */}
-        <Reveal>
-          <div className="glass-card p-6 md:p-8 rounded-2xl text-center">
-            <Plus className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-4 text-muted-foreground" />
-            <h3 className="text-lg md:text-xl font-bold mb-4">Want to Contribute?</h3>
-            <p className="text-muted-foreground mb-6 text-sm md:text-base">
-              We welcome guest posts and insights from fellow innovators, students, and AI enthusiasts. 
-              Share your story and help inspire the next generation of builders.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="btn-hero">
-                <Plus className="w-4 h-4 mr-2" />
-                Submit Guest Post
-              </Button>
-              <Button variant="outline" className="btn-outline-glow">
-                Contact Editorial Team
-              </Button>
-            </div>
-          </div>
-        </Reveal>
       </div>
 
       <Footer />

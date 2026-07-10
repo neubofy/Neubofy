@@ -1,0 +1,11 @@
+$ vite
+Port 8080 is in use, trying another one...
+
+  VITE v7.3.6  ready in 244 ms
+
+  ➜  Local:   http://localhost:8081/
+  ➜  Network: http://192.168.0.2:8081/
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+4:27:58 PM [vite] (client) hmr update /src/index.css, /src/components/Footer.tsx

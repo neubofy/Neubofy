@@ -8,7 +8,6 @@ import { lazy, Suspense } from "react";
 const Index = lazy(() => import("./pages/Index"));
 const NeubofyOrbit = lazy(() => import("./pages/Orbit"));
 const NeubofyOrbitDetail = lazy(() => import("./pages/OrbitDetail"));
-const Contact = lazy(() => import("./pages/Contact"));
 const About = lazy(() => import("./pages/About"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogDetail = lazy(() => import("./pages/BlogDetail"));
@@ -56,7 +55,6 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/orbit" element={<NeubofyOrbit />} />
             <Route path="/orbit/:slug" element={<NeubofyOrbitDetail />} />
-            <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
