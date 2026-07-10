@@ -161,43 +161,7 @@ We believe in the power of community collaboration. Whether you're reporting bug
 For more details, see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
-
-## 📞 Support
-
-### For Users
-- 📧 Email: support@neubofy.com
-- 💬 Community Chat: [Discord/Community Link]
-- 📚 Documentation: [Docs Link]
-- 🐛 Issue Tracker: [GitHub Issues]
-
-### For Business Inquiries
-- 📧 Business Email: business@neubofy.com
-- 🤝 Partnership: partners@neubofy.com
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- Our community of developers and users
-- All contributors who help improve Neubofy
-- The open-source community that inspires us
-
----
-
-## 🔗 Quick Links
-
-- **Website**: [neubofy.com](#)
-- **Blog**: [blog.neubofy.com](#)
-- **Twitter**: [@neubofy](#)
-- **LinkedIn**: [neubofy](#)
-
----
+##
 
 <div align="center">
 
