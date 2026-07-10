@@ -57,12 +57,6 @@ export default function ProductCard({ product, onListProject }: ProductCardProps
           </div>
         )}
 
-        <div className="flex justify-between items-center mt-auto">
-          <Button variant="outline" className="group" onClick={onListProject}>
-            List Your Project
-            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </div>
       </div>
     </div>
   );
