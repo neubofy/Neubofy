@@ -48,7 +48,7 @@ const CTASection = () => {
                 Chat on WhatsApp
               </a>
               <a
-                href="https://instagram.com/pawan_washudev"
+                href="https://instagram.com/pawanwashudev"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:scale-105 transition-all shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.5)]"
