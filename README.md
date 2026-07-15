@@ -18,7 +18,7 @@ Neubofy is a comprehensive platform designed to streamline pull request manageme
 - **Unified PR Dashboard** - Manage pull requests from all your projects in one centralized location
 - **Multi-Project Support** - Handle PRs across unlimited projects with ease
 - **Collaboration Tools** - Streamlined review process and team communication
-- **Status Tracking** - Real-time updates on PR progress and reviews
+- **Status Tracking** - Real-time updates on PR progress and review
 - **Integration Ready** - Connect with popular version control platforms
 
 ### 🌐 **Project Support**
