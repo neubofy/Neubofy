@@ -1,0 +1,22 @@
+{
+  "slug": "capture",
+  "name": "Capture",
+  "shortDescription": "NFCapture repository by Pawan Washudev",
+  "detailDescription": "# NFCapture 🛡️\n\n**NFCapture** (No-Filter Capture) is a 100% serverless, end-to-end encrypted, and database-free web application designed to restore trust in photography for high-stakes verifications, such as marriage proposals.\n\nIt guarantees that a photo is taken **live**, **unedited**, and **unaltered** through a cryptographically secure \"Lock & Key\" workflow.\n\n## 🚀 Live Demo\n[https://nf-capture.vercel.app](https://nf-capture.vercel.app) (Replace with your actual Vercel URL)\n\n## ✨ Features\n- **Serverless Trust:** No database, no backend. Everything happens in your browser.\n- **Mandatory Live Camera:** Strictly enforces camera capture; no file uploads allowed for the source.\n- **Asymmetric Encryption:** Uses Curve25519 (tweetnacl) to ensure the sender cannot view or edit the photo after capture.\n- **Local Private Keys:** Private keys are stored safely in your browser's IndexedDB.\n- **Privacy First:** Your data never leaves your device in an unencrypted state.\n\n## 🛠️ How it Works\n1. **Requester (Owner):** Generates a capture request. The Private Key is saved locally.\n2. **Sender (Groom):** Clicks the link, takes a photo, and the app encrypts it instantly.\n3. **Distribution:** The Sender shares the `.nfcapture` file via WhatsApp/Email.\n4. **Unlock:** The Requester uploads the file, and the app unlocks it using the stored local key.\n\n## 💻 Tech Stack\n- **React + TypeScript + Vite**\n- **Tweetnacl.js** (Cryptography)\n- **IDB** (IndexedDB for key storage)\n- **Lucide React** (Icons)\n- **CSS Animations** (Premium UI/UX)\n\n## 🏗️ Local Development\n```bash\n# Clone the repo\ngit clone https://github.com/pawanwashudev-official/NFCapture.git\n\n# Install dependencies\nnpm install\n\n# Run dev server\nnpm run dev\n```\n\n## 👨‍💻 Developer\nDeveloped with ❤️ by **Pawan Washudev**\n- **Founder:** Neubofy\n- **Email:** support@neubofy.in\n- **Instagram:** [@pawanwashudev](https://instagram.com/pawanwashudev)\n- **Telegram:** [@pawanwashudev](https://t.me/pawanwashudev)\n\n## 📄 License\nOpen Source under the MIT License.\n",
+  "thumbnailUrl": "/images/nfcapture_thumbnail_1784486988088.png",
+  "imageUrls": [
+    "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+  ],
+  "mainUrl": "https://github.com/pawanwashudev-official/NFCapture",
+  "publishedAt": "2026-05-10",
+  "status": "Live",
+  "category": "Open Source Project",
+  "tags": [
+    "Software",
+    "Development"
+  ],
+  "features": [
+    "See GitHub repository for full details and features."
+  ],
+  "htmlPath": "/product/capture.html"
+}

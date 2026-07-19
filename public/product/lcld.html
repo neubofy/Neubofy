@@ -1,133 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://github.githubassets.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCLD</title>
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <title>LCLD — Locate & Control Lost Device</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        :root {
+            --bg: #09090b;
+            --fg: #fafafa;
+            --accent: #ef4444;
+            --accent-glow: rgba(239, 68, 68, 0.2);
+            --slate: #a1a1aa;
+            --glass: rgba(24, 24, 27, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .ambient-spots {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .spot {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(150px);
+            opacity: 0.12;
+            width: 45vw;
+            height: 45vw;
+        }
+
+        .spot-1 {
+            top: -20%;
+            left: -10%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+        }
+
+        .spot-2 {
+            bottom: -20%;
+            right: -10%;
+            background: radial-gradient(circle, #f97316 0%, transparent 70%);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(9, 9, 11, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .back-link {
+            font-family: monospace;
+            color: var(--slate);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            transition: color 0.3s;
+            border: 1px solid var(--border);
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .back-link:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 8rem 1.5rem 4rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .pill-badge {
+            display: inline-block;
+            font-family: monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.05);
+            padding: 0.4rem 1.2rem;
+            border-radius: 9999px;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .hero-desc {
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            color: var(--slate);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1.1rem 2.8rem;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: #dc2626;
+            box-shadow: 0 0 40px rgba(220, 38, 38, 0.4);
+        }
+
+        .comparison-table {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 6rem;
+            border-collapse: collapse;
+            background: var(--glass);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: rgba(0,0,0,0.4);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+        }
+        
+        .comparison-table .highlight {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 6rem;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            transition: all 0.4s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(24, 24, 27, 0.8);
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--slate);
+            font-size: 0.95rem;
+        }
+
+        .specs-section {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .specs-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .specs-pills {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .spec-pill {
+            font-family: monospace;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--slate);
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            text-transform: uppercase;
+        }
+
+        footer {
+            padding: 4rem 0 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.8rem;
+            font-family: monospace;
+            letter-spacing: 1px;
+            width: 100%;
+        }
     </style>
 </head>
-<body class="min-h-screen p-8">
-    <div class="max-w-3xl mx-auto overflow-hidden glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
-        <div class="flex items-center gap-6 mb-8">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
-            <div>
-                <h1 class="text-4xl font-bold mb-2">LCLD</h1>
-                <p class="text-xl text-gray-400">LCLD repository by Pawan Washudev</p>
-            </div>
-        </div>
-
-        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
-<h1 class="text-4xl md:text-5xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 drop-shadow-sm">🛡️ LCLD: Locate &amp; Control Lost Device</h1>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><a href="https://www.gnu.org/licenses/gpl-3.0" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
-<a href="https://developer.android.com" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Platform-Android-green.svg" alt="Android"></a>
-<a href="https://github.com/pawanwashudev-official/LCLD/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/github/downloads/pawanwashudev-official/LCLD/total.svg" alt="Downloads"></a>
-<a href="https://github.com/pawanwashudev-official/LCLD" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg" alt="Open Source"></a></p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>LCLD (Locate &amp; Control Lost Device)</strong> is the ultimate privacy-focused, offline-first security solution for your Android device. We&#39;ve taken the core foundation of open-source tracking and completely overhauled it for the modern user.</p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">Developed by <strong>Pawan Washudev</strong> (<a href="https://github.com/pawanwashudev-official" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">@pawanwashudev-official</a>)</p>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🚀 Why LCLD is Better Than Default FMD Apps</h2>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">Standard FMD apps are often tied to a single ecosystem, require an active internet connection, and are easily bypassed. <strong>LCLD is built to be unstoppable.</strong></p>
-<table>
-<thead>
-<tr>
-<th align="left">Feature</th>
-<th align="center">Default FMD Apps</th>
-<th align="center"><strong>LCLD</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>Offline Control</strong></td>
-<td align="center">❌ (Requires Data/WiFi)</td>
-<td align="center">✅ <strong>Full Control via SMS</strong></td>
-</tr>
-<tr>
-<td align="left"><strong>Unstoppable Siren</strong></td>
-<td align="center">⚠️ Easy to Mute</td>
-<td align="center">✅ <strong>Forces 100% Vol + Lock Required</strong></td>
-</tr>
-<tr>
-<td align="left"><strong>Theft Mode</strong></td>
-<td align="center">❌ Basic Tracking</td>
-<td align="center">✅ <strong>Persistent Multi-Action Protocol</strong></td>
-</tr>
-<tr>
-<td align="left"><strong>Server Connection</strong></td>
-<td align="center">⚠️ Needs Extra Apps</td>
-<td align="center">✅ <strong>Native Push (No UnifiedPush needed)</strong></td>
-</tr>
-<tr>
-<td align="left"><strong>UI/UX</strong></td>
-<td align="center">⚠️ Functional but Dated</td>
-<td align="center">✅ <strong>Elegant &amp; Simplified Setup</strong></td>
-</tr>
-<tr>
-<td align="left"><strong>Privacy</strong></td>
-<td align="center">⚠️ Tracked by Big Tech</td>
-<td align="center">✅ <strong>100% Private / Self-Hostable</strong></td>
-</tr>
-</tbody></table>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">✨ Key Features &amp; Major Enhancements</h2>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🆕 Elegant &amp; Simplified UI</h3>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">We&#39;ve completely redesigned the interface to be beautiful, intuitive, and modern. Setup is now a breeze—go from installation to full protection in under 60 seconds.</p>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🚨 Unstoppable Siren (Enhanced Ring)</h3>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">The <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">ring</code> command is now a true siren. </p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Auto-Max Volume:</strong> Instantly forces device volume to 100%.</li>
-<li><strong>Anti-Mute:</strong> If a thief tries to lower the volume, LCLD automatically pulls it back to maximum.</li>
-<li><strong>Unlock to Stop:</strong> The siren <strong>will not stop</strong> until the device is successfully unlocked by the owner.</li>
-</ul>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">⚡ Integrated Server Support</h3>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">Unlike the original FMD, <strong>LCLD does not require an additional app</strong> (like Push Distributor) to receive server commands. We&#39;ve built the communication layer directly into the app for a lighter, more reliable experience.</p>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🛑 THEFT MODE (The Ultimate Countermeasure)</h3>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">The new <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">theft</code> command is a proactive security protocol that triggers multiple actions simultaneously:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Instant Lockdown:</strong> Locks the device immediately.</li>
-<li><strong>Continuous Tracking:</strong> Starts aggressive location reporting.</li>
-<li><strong>Siren Activation:</strong> Triggers the unstoppable siren.</li>
-<li><strong>Persistence:</strong> Even if the thief restarts the phone, the siren and lock will resume <strong>instantly</strong> upon boot. There is no escape.</li>
-</ul>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">📸 Remote Camera &amp; Precision Locating</h3>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Remote Snap:</strong> Capture high-quality photos from front/back cameras.</li>
-<li><strong>GPS + Cell Tower:</strong> Locate your device even when GPS is disabled or signal is weak.</li>
-</ul>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🛠️ Getting Started</h2>
-<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Download:</strong> Get the latest APK from <a href="https://github.com/pawanwashudev-official/LCLD/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Releases</a>.</li>
-<li><strong>Setup PIN:</strong> Set your secure 4-6 digit PIN for SMS commands.</li>
-<li><strong>Grant Permissions:</strong> Enable Location, Camera, and Device Admin for full protection.</li>
-<li><strong>Trusted Contacts:</strong> (Optional) Add numbers that can control the device without a PIN.</li>
-</ol>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🔒 Security &amp; Privacy</h2>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">LCLD is built with a <strong>Security-First</strong> mindset. </p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>No Tracking:</strong> We don&#39;t track your location. Your data is only shared with the channels <em>you</em> configure.</li>
-<li><strong>Encrypted Communication:</strong> Server communication is secured via industry-standard encryption.</li>
-</ul>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">❤️ Credits &amp; Foundation</h2>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">LCLD is a heavily enhanced and rebranded version of the <strong>Find My Device (FMD)</strong> app by <strong>Nulide</strong>. We&#39;ve built upon their excellent FOSS foundation to create the most powerful device control app available.</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Original Project:</strong> <a href="https://gitlab.com/fmd-foss/fmd-android" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">FMD Android</a></li>
-<li><strong>Original Developer:</strong> <a href="https://fmd-foss.org" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Nulide</a></li>
-</ul>
-<hr>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Developed with ❤️ by Pawan Washudev</strong></p>
-
-</div>
-        <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>
-        <ul class="list-disc list-inside text-gray-300 mb-8">
-            <li class="mb-2">See GitHub repository for full details and features.</li>
-        </ul>
+<body>
+<style>#custom-svg-loader { position: fixed; inset: 0; z-index: 999999; background: #030305; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s; } #custom-svg-loader.hidden { opacity: 0; visibility: hidden; } .loader-svg-container { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; } .loader-svg-container svg { position: absolute; width: 100%; height: 100%; stroke: #c5a059; stroke-width: 1.5; fill: none; animation: rotateSvg 4s linear infinite; } .loader-svg-container svg:nth-child(2) { width: 60%; height: 60%; animation: rotateSvgReverse 3s linear infinite; stroke: rgba(197, 160, 89, 0.5); stroke-dasharray: 4 4; } @keyframes rotateSvg { 100% { transform: rotate(360deg); } } @keyframes rotateSvgReverse { 100% { transform: rotate(-360deg); } }</style><div id="custom-svg-loader"><div class="loader-svg-container"><svg viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/></svg><svg viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/></svg></div></div><script>window.addEventListener('load', () => { setTimeout(() => { document.getElementById('custom-svg-loader').classList.add('hidden'); }, 800); });</script>
+    <div class="ambient-spots">
+        <div class="spot spot-1"></div>
+        <div class="spot spot-2"></div>
     </div>
+
+    <nav>
+        <div class="logo-text">LCLD</div>
+        <a href="/projects" class="back-link">/// BACK TO PROJECTS</a>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <span class="pill-badge">Device Security Protocol</span>
+            <h1>Unstoppable Control.</h1>
+            <p class="hero-desc">
+                The ultimate privacy-focused, offline-first security solution for Android. Rebuilt from the ground up to bypass standard "Find My Device" limitations with raw SMS intercepts and Device Admin lockouts.
+            </p>
+            <a href="https://github.com/pawanwashudev-official/LCLD" target="_blank" rel="noopener noreferrer" class="btn-primary">View GitHub Repo</a>
+        </header>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Standard Trackers</th>
+                    <th><span class="highlight">LCLD</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Offline Command</td>
+                    <td>❌ Requires Internet</td>
+                    <td>✅ <span class="highlight">Full SMS Control</span></td>
+                </tr>
+                <tr>
+                    <td>Theft Alarm</td>
+                    <td>⚠️ Easy to Mute</td>
+                    <td>✅ <span class="highlight">Forced 100% Vol Lock</span></td>
+                </tr>
+                <tr>
+                    <td>Persistent Lock</td>
+                    <td>❌ Basic Tracking</td>
+                    <td>✅ <span class="highlight">Multi-Action Device Admin Lockdown</span></td>
+                </tr>
+                <tr>
+                    <td>Privacy Architecture</td>
+                    <td>⚠️ Big Tech Telemetry</td>
+                    <td>✅ <span class="highlight">100% Private / Open Source</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="card-icon">🚨</div>
+                <h3>Unstoppable Siren</h3>
+                <p>Instantly forces device volume to 100%. If a thief tries to lower it, LCLD pulls it back to maximum instantly. It cannot be stopped without unlocking the device.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🛑</div>
+                <h3>Aggressive Theft Mode</h3>
+                <p>A multi-action protocol that locks the phone, starts aggressive GPS reporting, and triggers the siren simultaneously. It resumes instantly even if the device is rebooted.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">📡</div>
+                <h3>Offline SMS Commands</h3>
+                <p>Complete control via simple SMS texts secured by a 6-digit PIN. Trigger cameras, wipe data, or locate the device without needing 4G or WiFi connection.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">📸</div>
+                <h3>Silent Remote Capture</h3>
+                <p>Silently triggers the front or rear hardware cameras and uploads the evidence securely, without alerting the person holding the device.</p>
+            </div>
+        </section>
+
+        <section class="specs-section">
+            <h2 class="specs-title">System Specs</h2>
+            <div class="specs-pills">
+                <span class="spec-pill">Kotlin Native</span>
+                <span class="spec-pill">Device Policy Admin API</span>
+                <span class="spec-pill">SMS Broadcast Receiver</span>
+                <span class="spec-pill">Background Services</span>
+                <span class="spec-pill">GPS + Cell Tower Triangulation</span>
+            </div>
+        </section>
+
+        <footer>
+            <p>Developed with pride by Pawan Washudev • © 2026 Neubofy</p>
+        </footer>
+    </main>
 </body>
 </html>
+

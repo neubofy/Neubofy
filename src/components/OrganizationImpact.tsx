@@ -1,55 +1,56 @@
+"use client";
 import { motion } from "framer-motion";
-import { Globe2, Brain, IndianRupee, Code2, Building2, Stars } from "lucide-react";
+import { Globe2, Brain, Handshake, Code2, Building2, Stars } from "lucide-react";
 
 const OrganizationImpact = () => {
   const impactMetrics = [
     {
-      metric: "30+",
-      label: "AI Tools Listed",
-      description: "Curated collection of high-quality AI solutions"
+      metric: "100%",
+      label: "Free to Use",
+      description: "No hidden fees, no subscriptions."
     },
     {
-      metric: "100+",
-      label: "Indian Developers",
-      description: "Supporting local tech talent and innovation"
+      metric: "Global",
+      label: "Developer Network",
+      description: "Connecting talent worldwide directly to clients."
     },
     {
-      metric: "24/7",
-      label: "Support",
-      description: "Round-the-clock assistance for businesses"
+      metric: "0%",
+      label: "Platform Cut",
+      description: "Keep 100% of what you earn from your clients."
     }
   ];
 
   const uniqueFeatures = [
     {
-      icon: <IndianRupee className="w-12 h-12 text-primary" />,
-      title: "Made in India, For India",
-      description: "Supporting Indian developers and businesses with affordable, locally-optimized AI solutions that understand our market's unique needs."
+      icon: <Handshake className="w-12 h-12 text-primary" />,
+      title: "Direct Client Connection",
+      description: "We step out of the way. Consumers contact you directly for your services based on the capabilities you showcase."
     },
     {
       icon: <Brain className="w-12 h-12 text-secondary" />,
-      title: "AI Marketplace Revolution",
-      description: "Think of us as the Play Store for AI - a trusted platform where businesses can discover, compare, and implement AI tools that actually solve real problems."
+      title: "Showcase Capabilities",
+      description: "Use Neubofy Orbit to list your interactive projects and demonstrate your true potential to global clients."
     },
     {
       icon: <Code2 className="w-12 h-12 text-primary" />,
       title: "Developer First",
-      description: "We're building more than a marketplace - we're creating opportunities for developers to showcase their work and reach customers without heavy marketing costs."
+      description: "We're building more than a marketplace - we're creating the ultimate network designed purely for software developers."
     },
     {
       icon: <Building2 className="w-12 h-12 text-secondary" />,
       title: "Business Transformation",
-      description: "Helping organizations embrace AI with confidence through verified solutions, custom development, and expert guidance."
+      description: "Helping organizations find the exact right talent by reviewing verified project showcases and directly hiring the creator."
     },
     {
       icon: <Globe2 className="w-12 h-12 text-primary" />,
-      title: "Distribution Channel",
-      description: "Providing Indian developers with a powerful platform to reach global markets while maintaining their independence and control."
+      title: "Global Distribution",
+      description: "Providing developers worldwide with a powerful platform to reach global markets while maintaining their complete independence."
     },
     {
       icon: <Stars className="w-12 h-12 text-secondary" />,
-      title: "Quality Assurance",
-      description: "Every tool on our platform undergoes thorough verification for security, performance, and business value."
+      title: "Quality Peer Network",
+      description: "Join a community of verified creators, share your work, and elevate your professional developer presence."
     }
   ];
 
@@ -65,15 +66,15 @@ const OrganizationImpact = () => {
         >
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Transforming India's
+              Empowering Global
             </span>
             <br />
             <span className="text-foreground">
-              AI Software Landscape
+              Software Developers
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Building India's most trusted AI marketplace where innovation meets practical business solutions
+            Building the most trusted free ecosystem where developers showcase their work and clients hire them directly
           </p>
         </motion.div>
 

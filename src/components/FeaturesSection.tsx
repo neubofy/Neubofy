@@ -1,3 +1,4 @@
+"use client";
 
 import { Bot, Shield, Zap, Users, Brain, Target } from "lucide-react";
 import studentMentor from "@/assets/student-mentor-mockup.jpg";

@@ -1,58 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://github.githubassets.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tgvis</title>
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <title>TGVIS — The Green Valley International School</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        :root {
+            --bg: #020617;
+            --fg: #f8fafc;
+            --accent: #22c55e;
+            --accent-glow: rgba(34, 197, 94, 0.2);
+            --slate: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .ambient-spots {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .spot {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(150px);
+            opacity: 0.15;
+            width: 45vw;
+            height: 45vw;
+        }
+
+        .spot-1 {
+            top: -20%;
+            left: -10%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+        }
+
+        .spot-2 {
+            bottom: -20%;
+            right: -10%;
+            background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(2, 6, 23, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        .back-link {
+            font-family: monospace;
+            color: var(--slate);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            transition: color 0.3s;
+            border: 1px solid var(--border);
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .back-link:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 8rem 1.5rem 4rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .pill-badge {
+            display: inline-block;
+            font-family: monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.05);
+            padding: 0.4rem 1.2rem;
+            border-radius: 9999px;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        .hero-desc {
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            color: var(--slate);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1.1rem 2.8rem;
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: #fff;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 6rem;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            transition: all 0.4s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--slate);
+            font-size: 0.95rem;
+        }
+
+        .specs-section {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .specs-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .specs-pills {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .spec-pill {
+            font-family: monospace;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--slate);
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            text-transform: uppercase;
+        }
+
+        footer {
+            padding: 4rem 0 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.8rem;
+            font-family: monospace;
+            letter-spacing: 1px;
+            width: 100%;
+        }
     </style>
 </head>
-<body class="min-h-screen p-8">
-    <div class="max-w-3xl mx-auto overflow-hidden glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
-        <div class="flex items-center gap-6 mb-8">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
-            <div>
-                <h1 class="text-4xl font-bold mb-2">tgvis</h1>
-                <p class="text-xl text-gray-400">tgvis repository by Pawan Washudev</p>
-            </div>
-        </div>
-
-        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">This is a <a href="https://nextjs.org" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Next.js</a> project bootstrapped with <a href="https://nextjs.org/docs/app/api-reference/cli/create-next-app" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">create-next-app</code></a>.</p>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">Getting Started</h2>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">First, run the development server:</p>
-<div class="relative group mt-6 mb-8"><div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div><pre class="relative bg-[#0a0a0a] border border-white/10 rounded-lg p-4 overflow-x-auto"><code class="text-sm font-mono text-gray-300">npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-</code></pre></div>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">Open <a href="http://localhost:3000" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">http://localhost:3000</a> with your browser to see the result.</p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">You can start editing the page by modifying <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">app/page.tsx</code>. The page auto-updates as you edit the file.</p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">This project uses <a href="https://nextjs.org/docs/app/building-your-application/optimizing/fonts" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">next/font</code></a> to automatically optimize and load <a href="https://vercel.com/font" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Geist</a>, a new font family for Vercel.</p>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">Learn More</h2>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">To learn more about Next.js, take a look at the following resources:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><a href="https://nextjs.org/docs" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Next.js Documentation</a> - learn about Next.js features and API.</li>
-<li><a href="https://nextjs.org/learn" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Learn Next.js</a> - an interactive Next.js tutorial.</li>
-</ul>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">You can check out <a href="https://github.com/vercel/next.js" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">the Next.js GitHub repository</a> - your feedback and contributions are welcome!</p>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">Deploy on Vercel</h2>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">The easiest way to deploy your Next.js app is to use the <a href="https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Vercel Platform</a> from the creators of Next.js.</p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">Check out our <a href="https://nextjs.org/docs/app/building-your-application/deploying" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">Next.js deployment documentation</a> for more details.</p>
-
-</div>
-        <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>
-        <ul class="list-disc list-inside text-gray-300 mb-8">
-            <li class="mb-2">See GitHub repository for full details and features.</li>
-        </ul>
+<body>
+<style>#custom-svg-loader { position: fixed; inset: 0; z-index: 999999; background: #030305; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s; } #custom-svg-loader.hidden { opacity: 0; visibility: hidden; } .loader-svg-container { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; } .loader-svg-container svg { position: absolute; width: 100%; height: 100%; stroke: #c5a059; stroke-width: 1.5; fill: none; animation: rotateSvg 4s linear infinite; } .loader-svg-container svg:nth-child(2) { width: 60%; height: 60%; animation: rotateSvgReverse 3s linear infinite; stroke: rgba(197, 160, 89, 0.5); stroke-dasharray: 4 4; } @keyframes rotateSvg { 100% { transform: rotate(360deg); } } @keyframes rotateSvgReverse { 100% { transform: rotate(-360deg); } }</style><div id="custom-svg-loader"><div class="loader-svg-container"><svg viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/></svg><svg viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/></svg></div></div><script>window.addEventListener('load', () => { setTimeout(() => { document.getElementById('custom-svg-loader').classList.add('hidden'); }, 800); });</script>
+    <div class="ambient-spots">
+        <div class="spot spot-1"></div>
+        <div class="spot spot-2"></div>
     </div>
+
+    <nav>
+        <div class="logo-text">TGVIS</div>
+        <a href="/projects" class="back-link">/// BACK TO PROJECTS</a>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <span class="pill-badge">Educational Platform Architecture</span>
+            <h1>Next.js Immersive Web.</h1>
+            <p class="hero-desc">
+                The official web platform for The Green Valley International School. A highly optimized, interactive, and beautifully animated Next.js application designed to provide an immersive digital experience.
+            </p>
+            <a href="https://github.com/pawanwashudev-official/tgvis" target="_blank" rel="noopener noreferrer" class="btn-primary">View Source Code</a>
+        </header>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="card-icon">🚀</div>
+                <h3>Next.js App Router</h3>
+                <p>Built entirely on the modern Next.js 15 framework. Leverages server-side rendering for optimal SEO and instantaneous page loads for parents and faculty.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">✨</div>
+                <h3>Framer Motion Magic</h3>
+                <p>Hardware-accelerated fluid scroll logic. Features complex roller-diving transitions, holographic tilt effects, and deeply immersive scroll-linked animations.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🎨</div>
+                <h3>Glassmorphism UI</h3>
+                <p>Premium modern styling featuring liquid glass containers, heavy backdrop filters, fluid blurs, and neon glows all compiled efficiently through Tailwind CSS.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">📱</div>
+                <h3>Mobile-First Dynamics</h3>
+                <p>A fully responsive layout engineered with touch-optimized interfaces, snap-scrolling image galleries, and smooth mobile micro-interactions.</p>
+            </div>
+        </section>
+
+        <section class="specs-section">
+            <h2 class="specs-title">System Specs</h2>
+            <div class="specs-pills">
+                <span class="spec-pill">Next.js 15</span>
+                <span class="spec-pill">React Server Components</span>
+                <span class="spec-pill">Framer Motion</span>
+                <span class="spec-pill">Tailwind CSS v4</span>
+                <span class="spec-pill">Lucide React</span>
+                <span class="spec-pill">Geist Font Engine</span>
+            </div>
+        </section>
+
+        <footer>
+            <p>Designed & Engineered by Pawan Washudev • © 2026 Neubofy</p>
+        </footer>
+    </main>
 </body>
 </html>
+

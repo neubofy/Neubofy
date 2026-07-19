@@ -1,7 +1,8 @@
+"use client";
 
 import { ArrowRight, Sparkles, Zap, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import ParallaxBackground from "./ParallaxBackground";
 import heroDashboard from "@/assets/hero-dashboard-mockup.jpg";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
@@ -57,21 +58,21 @@ const HeroSection = () => {
             <span className="text-sm font-semibold">100% Privacy-First AI Platform</span>
           </motion.div>
 
-          {/* Main Headline - Updated messaging */}
+          {/* Main Headline */}
           <motion.h1
             className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-8 animate-fade-in text-3d"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <span className="gradient-text">Find AI SaaS & Automation</span>
+            <span className="gradient-text">The Global Network</span>
             <br />
-            <span className="text-foreground">Tailored</span>
+            <span className="text-foreground">For Top</span>
             <br />
-            <span className="gradient-text">to Your Needs</span>
+            <span className="gradient-text">Developers</span>
           </motion.h1>
 
-          {/* Enhanced Value Proposition */}
+          {/* Value Proposition */}
           <motion.div
             className="max-w-4xl mx-auto mb-8 animate-fade-in"
             initial={{ opacity: 0, y: 40 }}
@@ -79,21 +80,21 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <p className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-              Find SaaS products like AI tools and automation according to your need.
+              Showcase your capabilities, list your projects, and get hired directly.
             </p>
             <p className="text-xl text-muted-foreground">
-              Our goal is to let you choose AI-based SaaS products and automation tools—like a Play Store for AI.
+              Our goal is to create the ultimate free ecosystem—like LinkedIn for developers—where consumers find and contact top talent globally without platform interference.
             </p>
           </motion.div>
 
-          {/* Enhanced CTA Buttons */}
+          {/* CTA Buttons */}
           <motion.div
             className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fade-in"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            <Link to="/orbit">
+            <Link href="/orbit">
               <motion.button
                 className="btn-3d text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-primary/50"
                 whileHover={{ scale: 1.07 }}
@@ -105,17 +106,15 @@ const HeroSection = () => {
                 <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
               </motion.button>
             </Link>
-            <Link to="/contact">
-              <motion.button
-                className="btn-3d bg-transparent border-2 border-primary text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-secondary/50 hover:bg-primary/10"
-                whileHover={{ scale: 1.07 }}
-                whileTap={{ scale: 0.97 }}
-                type="button"
-              >
-                <Zap className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" />
-                Get Free Consultation
-              </motion.button>
-            </Link>
+            
+            <motion.button
+              disabled
+              className="btn-3d bg-transparent border-2 border-primary text-xl px-10 py-5 group focus:outline-none opacity-50 cursor-not-allowed"
+              type="button"
+            >
+              <Zap className="w-6 h-6 mr-3" />
+              Coming Soon
+            </motion.button>
           </motion.div>
 
           {/* Hero Dashboard Mockup */}
@@ -127,7 +126,7 @@ const HeroSection = () => {
           >
             <div className="glass-card p-4 md:p-8 rounded-3xl shadow-elevated max-w-6xl mx-auto glow-effect card-3d">
               <img
-                src={heroDashboard}
+                src={heroDashboard.src}
                 alt="Neubofy AI Dashboard - Custom automation interface showing analytics, workflows, and AI chat features"
                 className="w-full h-auto rounded-2xl shadow-card card-3d-content"
               />
@@ -143,15 +142,15 @@ const HeroSection = () => {
           >
             <div className="text-center group">
               <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">100%</div>
-              <div className="text-muted-foreground font-medium">Privacy Focused</div>
+              <div className="text-muted-foreground font-medium">Free to Use</div>
             </div>
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">24/7</div>
-              <div className="text-muted-foreground font-medium">AI Assistance</div>
+              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">0%</div>
+              <div className="text-muted-foreground font-medium">Platform Fees</div>
             </div>
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Custom</div>
-              <div className="text-muted-foreground font-medium">Built for You</div>
+              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Direct</div>
+              <div className="text-muted-foreground font-medium">Client Contact</div>
             </div>
           </motion.div>
         </motion.div>

@@ -1,3 +1,4 @@
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,11 +8,13 @@ interface ParallaxBackgroundProps {
 }
 
 const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
-  const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  const [mousePosition, setMousePosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [press, setPress] = useState<{x: number, y: number} | null>(null);
 
-
   useEffect(() => {
+    // Set initial position safely on client side
+    setMousePosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -26,6 +29,7 @@ const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
       return () => clearTimeout(timeout);
     }
   }, [press]);
+  
   return (
     <div
       className="relative"
@@ -42,59 +46,20 @@ const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute w-64 h-64 bg-primary/10 rounded-full blur-3xl"
-          style={{
-            left: -128,
-            top: -128
-          }}
-          animate={press ? {
-            scale: 0.7,
-            x: press.x - 128,
-            y: press.y - 128,
-            filter: "brightness(0.85)"
-          } : {
-            scale: 1,
-            x: mousePosition.x - 128,
-            y: mousePosition.y - 128,
-            filter: "brightness(1)"
-          }}
+          style={{ left: -128, top: -128 }}
+          animate={press ? { scale: 0.7, x: press.x - 128, y: press.y - 128, filter: "brightness(0.85)" } : { scale: 1, x: mousePosition.x - 128, y: mousePosition.y - 128, filter: "brightness(1)" }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
         />
         <motion.div
           className="absolute w-48 h-48 bg-secondary/10 rounded-full blur-3xl"
-          style={{
-            left: -96,
-            top: -96
-          }}
-          animate={press ? {
-            scale: 0.8,
-            x: press.x - 96,
-            y: press.y - 96,
-            filter: "brightness(0.9)"
-          } : {
-            scale: 1,
-            x: mousePosition.x - 96,
-            y: mousePosition.y - 96,
-            filter: "brightness(1)"
-          }}
+          style={{ left: -96, top: -96 }}
+          animate={press ? { scale: 0.8, x: press.x - 96, y: press.y - 96, filter: "brightness(0.9)" } : { scale: 1, x: mousePosition.x - 96, y: mousePosition.y - 96, filter: "brightness(1)" }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
         />
         <motion.div
-          className="absolute w-56 h-56 bg-tertiary/10 rounded-full blur-3xl"
-          style={{
-            left: -112,
-            top: -112
-          }}
-          animate={press ? {
-            scale: 0.6,
-            x: press.x - 112,
-            y: press.y - 112,
-            filter: "brightness(0.8)"
-          } : {
-            scale: 1,
-            x: mousePosition.x - 112,
-            y: mousePosition.y - 112,
-            filter: "brightness(1)"
-          }}
+          className="absolute w-56 h-56 bg-accent/10 rounded-full blur-3xl"
+          style={{ left: -112, top: -112 }}
+          animate={press ? { scale: 0.6, x: press.x - 112, y: press.y - 112, filter: "brightness(0.8)" } : { scale: 1, x: mousePosition.x - 112, y: mousePosition.y - 112, filter: "brightness(1)" }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
         />
       </div>

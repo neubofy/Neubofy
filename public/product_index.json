@@ -1,13 +1,8 @@
 {
   "files": [
-    "nfcapture.json",
-    "nf-connect.json",
-    "lcld.json",
-    "tgvis.json",
+    "capture.json",
     "nf-watch.json",
-    "sps.json",
-    "reality.json",
-    "neubofy-photo-editor.json",
-    "instantdeploy.json"
+    "lcld.json",
+    "reality.json"
   ]
 }

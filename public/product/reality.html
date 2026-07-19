@@ -1,1382 +1,822 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://github.githubassets.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data: https:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reality</title>
-    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <title>Reality OS — Military-Grade Life System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { background-color: #030014; color: #fff; font-family: system-ui, sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        :root {
+            --bg: #050507;
+            --fg: #f5f5f7;
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.2);
+            --slate: #8e8e93;
+            --glass: rgba(15, 15, 17, 0.6);
+            --border: rgba(255, 255, 255, 0.06);
+            --amber: #fca311;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Glow & Canvas Backdrops */
+        #neural-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .ambient-spots {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .spot {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(150px);
+            opacity: 0.12;
+            width: 45vw;
+            height: 45vw;
+        }
+
+        .spot-1 {
+            top: -15%;
+            left: -10%;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+        }
+
+        .spot-2 {
+            bottom: -15%;
+            right: -10%;
+            background: radial-gradient(circle, var(--amber) 0%, transparent 70%);
+        }
+
+        /* Navigation Header */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(5, 5, 7, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 40%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            font-family: monospace;
+            color: var(--slate);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            transition: color 0.3s;
+            border: 1px solid var(--border);
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .back-link:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Section Container */
+        main {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 8rem 1.5rem 4rem;
+        }
+
+        /* Hero Area */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 6rem;
+        }
+
+        .pill-badge {
+            display: inline-block;
+            font-family: monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.06);
+            padding: 0.3rem 1.2rem;
+            border-radius: 9999px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(185deg, #ffffff 40%, var(--slate) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: var(--slate);
+            max-width: 750px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .btn-gold {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--gold);
+            color: black;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-4px) scale(1.02);
+            background: #fff;
+            box-shadow: 0 0 45px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Tapasya Focus Simulator Widget */
+        .simulator-section {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 6rem;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .sim-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .sim-subtitle {
+            color: var(--slate);
+            font-size: 0.95rem;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .timer-circle-wrapper {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 0 auto 3rem;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+            width: 260px;
+            height: 260px;
+        }
+
+        .timer-track {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 8;
+        }
+
+        .timer-fill {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 754;
+            stroke-dashoffset: 754;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-text-display {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .timer-countdown {
+            font-family: monospace;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-family: monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--slate);
+            margin-top: 0.5rem;
+        }
+
+        .sim-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.8rem 2.2rem;
+            font-weight: 700;
+            border-radius: 9999px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .sim-btn:hover {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 25px var(--gold-glow);
+        }
+
+        .sim-btn.active {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .sim-btn.active:hover {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Glitch Animation Classes */
+        .glitch-active {
+            animation: text-glitch 0.15s infinite;
+        }
+
+        @keyframes text-glitch {
+            0% { transform: translate(0); text-shadow: none; }
+            20% { transform: translate(-3px, 2px); text-shadow: 2px 0 #ef4444, -2px 0 #3b82f6; }
+            40% { transform: translate(3px, -2px); text-shadow: -2px 0 #ef4444, 2px 0 #3b82f6; }
+            60% { transform: translate(-2px, -3px); text-shadow: 1px 0 #ef4444, -1px 0 #3b82f6; }
+            80% { transform: translate(2px, 3px); text-shadow: -1px 0 #ef4444, 1px 0 #3b82f6; }
+            100% { transform: translate(0); }
+        }
+
+        /* Core Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 6rem;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px var(--gold-glow);
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-card p {
+            color: var(--slate);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* Setup Timeline Section */
+        .setup-section {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 4rem 2rem;
+            margin-bottom: 6rem;
+        }
+
+        .section-headline {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 9999px;
+            background: var(--gold);
+            border: 3px solid var(--bg);
+            transform: translate(-6px, 6px);
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .timeline-item h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .timeline-item p {
+            color: var(--slate);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .timeline-code {
+            display: block;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--gold);
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+
+        /* Tech Stack Spec List */
+        .specs-section {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .specs-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
+        }
+
+        .specs-pills {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .spec-pill {
+            font-family: monospace;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--slate);
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer {
+            padding: 6rem 0 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.8rem;
+            font-family: monospace;
+            letter-spacing: 1px;
+            border-t: 1px solid var(--border);
+            width: 100%;
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            main { padding-top: 7rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .timeline { padding-left: 1.5rem; }
+            .timeline-marker { left: -1.5rem; transform: translate(-4px, 6px); }
+        }
     </style>
 </head>
-<body class="min-h-screen p-8">
-    <div class="max-w-3xl mx-auto overflow-hidden glass-card rounded-2xl p-8">
-        <a href="/orbit" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors mb-6 inline-block">&larr; Back to Orbit</a>
-        <div class="flex items-center gap-6 mb-8">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Thumbnail" class="w-24 h-24 rounded-xl object-cover">
-            <div>
-                <h1 class="text-4xl font-bold mb-2">Reality</h1>
-                <p class="text-xl text-gray-400">Reality repository by Pawan Washudev</p>
-            </div>
-        </div>
-
-        <div class="prose prose-invert prose-lg max-w-none text-gray-300 mb-8 leading-relaxed">
-<div align="center"><img src="https://res.cloudinary.com/dnh4fonis/image/upload/v1781091079/ck39669alz53z3vkeiaq.png" width="180" alt="Reality Logo" style="border-radius: 20px; margin-bottom: 20px;"><h1 class="text-4xl md:text-5xl font-display font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 drop-shadow-sm">Reality</h1>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">The Intelligent Life OS</h3>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Developed by Pawan Washudev | Neubofy</strong></p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><a href="https://github.com/pawanwashudev-official/Reality/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/github/v/release/pawanwashudev-official/Reality?style=for-the-badge&color=orange" alt="GitHub release (latest by date)"></a>
-<a href="https://github.com/pawanwashudev-official/Reality/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/github/downloads/pawanwashudev-official/Reality/total?style=for-the-badge&color=success" alt="GitHub All Releases"></a>
-<a href="https://www.gnu.org/licenses/gpl-3.0" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge" alt="License"></a>
-<a href="https://www.android.com" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Platform-Android-green.svg?style=for-the-badge" alt="Platform"></a>
-<a href="" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Data-Local%20%2B%20Your%20G--Drive-lock.svg?style=for-the-badge&color=teal" alt="Privacy"></a>
-<a href="" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/AI-Bring%20Your%20Own%20Key-purple.svg?style=for-the-badge" alt="AI"></a>
-<a href="" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Ads-ZERO-red.svg?style=for-the-badge" alt="Ads"></a>
-<a href="" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><img src="https://img.shields.io/badge/Trackers-ZERO-red.svg?style=for-the-badge" alt="Trackers"></a></p>
-<blockquote>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>&quot;Stop managing your life. Start commanding it.&quot;</strong></p>
-</blockquote>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">🌟 100% Open Source • No Ads • No Trackers • Any AI (BYO Key)</h3>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">While advanced features (like Neural Protocol, Gamification, and Google Workspace Sync) require a yearly Reality Pro subscription to support ongoing maintenance, the app remains 100% open source. You can always build the APK yourself from the source code.</p><p class="text-gray-300 mb-5 leading-relaxed text-lg"><a href="https://reality.neubofy.in" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><strong>🌐 Official Website</strong></a> • <a href="https://github.com/pawanwashudev-official/Reality/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><strong>⬇️ Download Latest APK</strong></a></p>
-</div><hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🎯 EXECUTIVE SUMMARY</h2>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Reality</strong> is a military-grade productivity operating system that combines:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>App Blocking Engine</strong> (accessibility service-based protection)</li>
-<li><strong>Gamification System</strong> (XP/Streak-based discipline tracking)</li>
-<li><strong>AI-Powered Neural Protocol</strong> (daily reflection, planning, &amp; reporting)</li>
-<li><strong>Google Workspace Integration</strong> (Tasks, Calendar, Drive, Docs, Sheets)</li>
-<li><strong>Health Connect Sync</strong> (steps, calories, sleep tracking)</li>
-<li><strong>Intelligent Alarm System</strong> (adaptive wake-up with math challenges)</li>
-</ul>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Core Philosophy:</strong> <em>Stop managing your life. Start commanding it.</em></p>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🏆 COMPLETE FEATURE MATRIX</h2>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">1. <strong>FOCUS &amp; APP BLOCKING</strong> 🚫</h3>
-<h4>Standard Focus Mode</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Blocklist Management</strong> (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">UnifiedBlocklistActivity</code>)<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Add/remove apps to block list</li>
-<li>Category-based blocking (Social, Gaming, Shopping, etc.)</li>
-<li>Quick-toggle blocking on/off</li>
-</ul>
-</li>
-<li><strong>Real-Time Blocking</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>AccessibilityService monitors active window</li>
-<li>O(1) &quot;SettingsBox&quot; lookup for settings app protection</li>
-<li>Prevents app launching via multiple bypass methods:<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Direct intent hijacking</li>
-<li>Overlay attacks</li>
-<li>Background process resurrection</li>
-</ul>
-</li>
-<li>Floating timer overlay visible across all apps</li>
-<li>Custom block messages with action URLs</li>
-</ul>
-</li>
-</ul>
-<h4>Armored Strict Mode 🔒</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Device Admin Protection</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Prevents uninstall during active focus</li>
-<li>Blocks settings access (Settings Protection)</li>
-<li>Two-pass accessibility scanning (50ms + 300ms retry)</li>
-</ul>
-</li>
-<li><strong>Time Tampering Detection</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Detects system clock manipulation attempts</li>
-<li>Blocks timezone/NTP exploitation</li>
-</ul>
-</li>
-<li><strong>Loop Hole Closers</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Catches intent hijacking from accessibility overlays</li>
-<li>Blocks package manager access</li>
-<li>Prevents accessibility service disable attempts</li>
-<li>Monitors for adb shell bypasses</li>
-</ul>
-</li>
-</ul>
-<h4>Neural Focus Mode (Ultra-Focus) 🔥</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Named after Sanskrit for &quot;deep, burning discipline&quot;</li>
-<li><strong>Auto-activation</strong> on scheduled focus times</li>
-<li><strong>State Persistence</strong> across device reboots (via BootReceiver)</li>
-<li><strong>Warning Sounds</strong> when focus period is ending</li>
-<li><strong>Aggressive Protection</strong> - the most extreme focus mode</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">2. <strong>INTELLIGENT SCHEDULING &amp; REMINDERS</strong> ⏰</h3>
-<h4>Schedule Management (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">ScheduleListActivity</code>)</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Auto-Focus Hours</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Set recurring daily focus blocks</li>
-<li>Multiple time slots per day</li>
-<li>Syncs with Google Calendar</li>
-</ul>
-</li>
-<li><strong>Bedtime Mode</strong> (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">BedtimeActivity</code>)<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Custom bedtime routines</li>
-<li>Device restriction during sleep hours</li>
-<li>Sleep tracking via Health Connect</li>
-<li>Smart wake-up alarm integration</li>
-</ul>
-</li>
-<li><strong>Emergency Mode</strong> (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">EmergencyModeActivity</code>)<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Extreme restrictions for critical situations</li>
-<li>Override capabilities with emergency unlock codes</li>
-</ul>
-</li>
-<li><strong>Usage Limits</strong> (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">UsageLimitActivity</code>)<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Per-app daily time limits</li>
-<li>Per-app group limits (social apps limit)</li>
-<li>XP penalties for exceeding limits</li>
-<li>Grace period before enforcement</li>
-</ul>
-</li>
-</ul>
-<h4>Reminder System</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Multi-Source Reminders</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Local alarms (via AlarmManager)</li>
-<li>Google Tasks integration</li>
-<li>Google Calendar events</li>
-<li>Custom reminders with HTTP actions</li>
-</ul>
-</li>
-<li><strong>Intelligent Alarm Activity</strong> (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">AlarmActivity</code>)<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Full-screen interrupt overlay</li>
-<li>Snooze functionality with countdown</li>
-<li><strong>Math Challenge Verification</strong> (prevents sleepy tapping)</li>
-<li>Custom URL actions (open apps, web links, &quot;reality://&quot; deep links)</li>
-<li>Auto-snooze timer for repeated alarms</li>
-<li>Action logging for dismissed/snoozed alarms</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">3. <strong>GAMIFICATION &amp; XP SYSTEM</strong> 🏆</h3>
-<h4>Dynamic XP Mechanics</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>XP Earnings</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Base XP for blocking attempts (users resist temptation)</li>
-<li>Screen time bonus for staying under daily limits</li>
-<li>Streak bonuses (consecutive days of discipline)</li>
-<li>Schedule adherence XP (attending planned focus blocks)</li>
-</ul>
-</li>
-<li><strong>XP Penalties</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Negative XP for exceeding usage limits</li>
-<li>Breaking focus mode penalty</li>
-<li>Screen time overage penalty</li>
-<li>Accessing blocked apps penalty</li>
-</ul>
-</li>
-<li><strong>Leveling System</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>User level reflects actual digital discipline</li>
-<li>Level-based unlocks for features</li>
-<li>Leaderboard readiness (framework in place)</li>
-</ul>
-</li>
-</ul>
-<h4>Streak Tracking</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Consecutive days of focus</li>
-<li>Resets on breaking focus rules</li>
-<li>Visual motivation cards</li>
-<li>XP tier system (Bronze → Silver → Gold → Platinum)</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">4. <strong>🌙 NIGHTLY PROTOCOL</strong> (Reality Pro - AI-Powered Evening Ritual)</h3>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">The cornerstone of Reality&#39;s intelligence. A fully autonomous 4-phase evening workflow:</p>
-<h4><strong>Phase 1: Data Collection</strong> 📊</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">NightlyPhaseData.kt</code> - Collects your entire day&#39;s digital footprint:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 1: Fetch Google Tasks</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Syncs all task lists from Google Tasks API</li>
-<li>Categorizes: Due Today, Completed, Pending</li>
-<li>Task statistics (pending count, completion %)</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 2: Fetch Calendar + Neural Focus Sessions</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Google Calendar events for the day</li>
-<li>Neural Focus deep-work session logs</li>
-<li>Event duration &amp; completion status</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 3: Calculate Screen Time &amp; Health Metrics</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Total screen time (via UsageStatsManager)</li>
-<li>Per-app usage breakdown</li>
-<li>Health Connect data:<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Steps walked</li>
-<li>Calories burned</li>
-<li>Sleep quality &amp; duration (if wearing fitness tracker)</li>
-</ul>
-</li>
-<li>Converts to XP (10 min under limit = +XP bonus)</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 4: AI Reflection Questions</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Generates dynamic questions based on your actual day</li>
-<li>Example: &quot;You spent 4h on Instagram but 30min studying. Why?&quot;</li>
-<li>Uses OpenAI/Gemini/Groq API (bring your own key)</li>
-<li>Questions personalized from AI Settings</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 5: Create AI Diary in Google Docs</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Automatic Google Docs creation in Drive</li>
-<li>AI-written reflections saved to your document</li>
-<li>Timestamps &amp; metrics embedded</li>
-<li>Shareable diary (invite friends for accountability)</li>
-</ul>
-</li>
-</ul>
-<h4><strong>Phase 2: Analysis &amp; AI Coaching</strong> 🤖</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">NightlyPhaseAnalysis.kt</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Reflection Analysis</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Re-analyzes your responses to AI questions</li>
-<li>Identifies patterns (procrastination, peak focus hours, etc.)</li>
-<li>Generates personalized coaching advice</li>
-</ul>
-</li>
-<li><strong>XP Finalization</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Calculates screen time bonuses/penalties</li>
-<li>Applies streak multipliers</li>
-<li>Updates level progression</li>
-</ul>
-</li>
-</ul>
-<h4><strong>Phase 3: Planning</strong> 📅</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">NightlyPhasePlanning.kt</code> - AI generates tomorrow&#39;s schedule:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 8: Create Plan Document</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>New Google Docs file in Drive (dated)</li>
-<li>Folder structure: Reality &gt; Plans &gt; YYYY &gt; MM &gt; YYYY-MM-DD</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 9: AI Parse Plan to JSON</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>AI converts plan narrative to structured JSON:<div class="relative group mt-6 mb-8"><div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div><pre class="relative bg-[#0a0a0a] border border-white/10 rounded-lg p-4 overflow-x-auto"><code class="text-sm font-mono text-gray-300">{
-  &quot;tasks&quot;: [
-    {&quot;title&quot;: &quot;Study Math&quot;, &quot;duration&quot;: 90, &quot;priority&quot;: &quot;high&quot;},
-    {&quot;title&quot;: &quot;Gym&quot;, &quot;duration&quot;: 60, &quot;priority&quot;: &quot;medium&quot;}
-  ],
-  &quot;events&quot;: [
-    {&quot;title&quot;: &quot;Meeting&quot;, &quot;time&quot;: &quot;14:00&quot;, &quot;duration&quot;: 60}
-  ],
-  &quot;alarms&quot;: [
-    {&quot;title&quot;: &quot;Wake Up&quot;, &quot;time&quot;: &quot;06:30&quot;, &quot;challenge&quot;: &quot;math&quot;}
-  ]
-}
-</code></pre></div>
-</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 10: Create Google Tasks &amp; Calendar Events</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Auto-creates tasks in Google Tasks (default list)</li>
-<li>Auto-creates calendar events in your primary calendar</li>
-<li>Links back to plan document</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 11: Generate AI Report</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Daily PDF report with:<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Yesterday&#39;s achievements &amp; failures</li>
-<li>XP gained/lost</li>
-<li>Health metrics summary</li>
-<li>AI coaching insights</li>
-</ul>
-</li>
-<li>Uploads to Google Drive</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 12: Create PDF Report</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Uses iText7 (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">html2pdf:4.0.5</code>)</li>
-<li>Styled markdown → PDF conversion</li>
-<li>Multi-page support with charts</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Step 13: Set Wake-up Alarm</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>System alarm created for tomorrow morning</li>
-<li>Math challenge configured</li>
-<li>Snooze intervals set (3-5 minutes)</li>
-<li>Max attempts limit (5 tries before force-open)</li>
-</ul>
-</li>
-</ul>
-<h4><strong>Phase 4: Reporting &amp; Notifications</strong> 📈</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Dashboard updates with today&#39;s XP gain</li>
-<li>Widgets refresh (Neural Report Widget, Plan Widget)</li>
-<li>Optional email reports (Gemini workspace integration)</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">5. <strong>HEALTH &amp; WELLNESS INTEGRATION</strong> 💪</h3>
-<h4>Health Connect Sync</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Steps Tracking</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Daily step count</li>
-<li>Weekly/monthly trends</li>
-<li>XP bonus for hitting step goals (10k steps = +50 XP)</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Sleep Monitoring</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Sleep duration tracking</li>
-<li>Sleep quality metrics</li>
-<li>Bedtime reminders</li>
-<li>Wakeup verification (sleep quality check-in)</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Calorie Burn Tracking</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Daily calorie expenditure</li>
-<li>Activity-based metrics</li>
-<li>Health dashboard integration</li>
-</ul>
-</li>
-</ul>
-<h4>Smart Sleep Features (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">SmartSleepActivity</code>)</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Sleep Verification Dialog</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Triggered on wake-up alarm</li>
-<li>Confirms user slept well</li>
-<li>Updates health metrics</li>
-</ul>
-</li>
-<li><strong>Deep Link Support</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">reality://smart_sleep</code> - direct sleep check-in</li>
-<li>Accessible from alarm actions</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">6. <strong>GOOGLE WORKSPACE INTEGRATION</strong> ☁️</h3>
-<h4>Google Tasks API</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">GoogleTasksManager.kt</code> - Full tasks management:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>List all task lists</li>
-<li>Create/update/delete tasks</li>
-<li>Task list synchronization</li>
-<li>Today&#39;s task statistics</li>
-<li>Supports multiple task lists (default &amp; custom)</li>
-</ul>
-<h4>Google Calendar API</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">GoogleCalendarManager.kt</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>List calendars</li>
-<li>Create events with automatic scheduling</li>
-<li>Sync scheduled focus blocks</li>
-<li>View upcoming events (nightly planning reference)</li>
-</ul>
-<h4>Google Docs Integration</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">GoogleDocsManager.kt</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Create diary documents</li>
-<li>Create plan documents</li>
-<li>Auto-formatting with headings/lists/tables</li>
-<li>Insert images from Drive</li>
-<li>Batch updates for performance</li>
-</ul>
-<h4>Google Drive Integration</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">GoogleDriveManager.kt</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Automatic folder creation (Reality &gt; Diary, Plans, Reports)</li>
-<li>PDF report upload</li>
-<li>Automatic organization by date (YYYY &gt; MM &gt; DD structure)</li>
-<li>File search &amp; versioning</li>
-<li>Trash management (archival)</li>
-</ul>
-<h4>Google Sheets Support</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">GoogleSheetsManager.kt</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Daily stats logging (optional)</li>
-<li>Historical data aggregation</li>
-<li>CSV export capability</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">7. <strong>INTELLIGENT ALARM SYSTEM</strong> ⏰</h3>
-<h4>Alarm Types</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">AlarmActivity.kt</code> &amp; <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">WakeupAlarmRingingActivity.kt</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Standard Reminders</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Simple dismissal</li>
-<li>Snooze options (5, 10, 15 min)</li>
-<li>Custom URL actions</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Wakeup Alarms</strong> (with challenges)</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Math challenge (arithmetic problems)</li>
-<li>Forces mental engagement before dismissal</li>
-<li>Progressive difficulty</li>
-<li>Max attempts limit</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Multi-Source Alarms</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Local database alarms (custom created)</li>
-<li>Google Tasks deadlines (synced)</li>
-<li>Google Calendar notifications (synced)</li>
-<li>Neural Protocol alarms (AI-generated)</li>
-</ul>
-</li>
-</ul>
-<h4>Alarm Features</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Full-Screen Interrupt</strong> (notification policy access required)</li>
-<li><strong>Vibration &amp; Sound</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Customizable ringtone</li>
-<li>Vibration patterns</li>
-<li>Audio focus control</li>
-</ul>
-</li>
-<li><strong>Auto-Snooze Timer</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Configurable snooze interval (default 3 min)</li>
-<li>Max attempts before force-open app</li>
-<li>Sound escalation</li>
-</ul>
-</li>
-</ul>
-<h4>Alarm Persistence</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>BootReceiver</strong> reschedules alarms after device reboot</li>
-<li><strong>AlarmScheduler</strong> handles both AlarmManager &amp; WorkManager</li>
-<li>Heartbeat Worker refreshes alarm state every 15 minutes</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">8. <strong>PERSONALIZATION &amp; APPEARANCE</strong> 🎨</h3>
-<h4>Customizable Themes (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">AppearanceActivity</code>)</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Color Palettes</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Light mode &amp; dark mode independent colors</li>
-<li>Accent colors (Teal, Orange, Purple, Blue, Green, Red)</li>
-<li>Custom color picker integration</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Background Patterns</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Zen (minimalist)</li>
-<li>Tech (grid)</li>
-<li>Nature (organic)</li>
-<li>Urban (modern)</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Typography Settings</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Font size adjustment</li>
-<li>Font family selection</li>
-<li>Line spacing control</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Visual Effects</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Blur intensity</li>
-<li>Corner radius</li>
-<li>Animations toggle</li>
-<li>Floating timer styling</li>
-</ul>
-</li>
-</ul>
-<h4>Dynamic Localization</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>16+ Languages Supported</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>European: French, German, Spanish, Italian, Portuguese</li>
-<li>Asian: Hindi, Tamil, Telugu, Kannada, Marathi, Bengali</li>
-<li>Others: Dutch, Polish, Russian, Japanese, Chinese</li>
-</ul>
-</li>
-<li><strong>Per-App Locale</strong> (Android 13+)<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Change language without app restart</li>
-<li>Instant language switching</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">9. <strong>DEVICE CONTROL &amp; ADMINISTRATION</strong> 🔐</h3>
-<h4>Device Admin Features</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Armored Strict Mode Protection</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Prevents app deletion during active focus</li>
-<li>Requires security unlock</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Settings Protection</strong> (Strict Mode)</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Blocks access to system settings</li>
-<li>Two-pass detection system:<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Fast pass (50ms) for unique class detection</li>
-<li>Retry pass (300ms) for keyword-based pages</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Battery Optimization Bypass</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Allows app to survive battery saver mode</li>
-<li>Maintains background functionality</li>
-</ul>
-</li>
-</ul>
-<h4>Accessibility Service Integration (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">AppBlockerService</code>)</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Monitors window changes in real-time</li>
-<li>Detects blocked app launches</li>
-<li>Intercepts and blocks app opens</li>
-<li>Logs all block attempts</li>
-<li>Shows penalty overlays</li>
-<li>Detects settings app access attempts</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">10. <strong>BACKUP &amp; DATA MANAGEMENT</strong> 💾</h3>
-<h4>Cloud Backup System (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">BackupManager.kt</code>)</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>17 Backup Categories</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Blocklist &amp; Focus Mode</li>
-<li>Schedules &amp; Auto-Focus Hours</li>
-<li>Bedtime Mode Settings</li>
-<li>Emergency Mode Config</li>
-<li>Usage Limits</li>
-<li>Strict Mode Rules</li>
-<li>Gamification (XP/Streak)</li>
-<li>Neural Protocol Settings</li>
-<li>AI Model Preferences</li>
-<li>Theme &amp; Appearance</li>
-<li>Block Messages</li>
-<li>Reminders</li>
-<li>App Groups</li>
-<li>Per-App Limits</li>
-<li>Neural Focus Sessions</li>
-<li>Daily Statistics</li>
-<li>App Blocking Configurations</li>
-</ul>
-</li>
-</ul>
-<h4>Selective Restore</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Choose which categories to restore</li>
-<li>Granular control (don&#39;t overwrite everything)</li>
-<li>Restore from any backup point</li>
-<li>Timestamp tracking</li>
-</ul>
-<h4>Google Drive Integration</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Backup file: <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">reality_backup.json</code></li>
-<li>Hidden folder: <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">.reality_backup</code></li>
-<li>Version tracking</li>
-<li>Metadata preservation (app version, device model)</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">11. <strong>ADVANCED FEATURES - HIDDEN GEMS</strong> 🔮</h3>
-<h4>Neural Focus Sessions (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">TapasyaActivity</code>)</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Deep Work Time-Boxing</strong><ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Start focused work session</li>
-<li>Customizable duration (30min - 4h)</li>
-<li>Auto-starts focus mode</li>
-<li>Blocks all non-focus apps</li>
-<li>Progress timer</li>
-<li>Completion rewards (XP bonus)</li>
-</ul>
-</li>
-</ul>
-<h4>Floating Action Buttons &amp; Widgets</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>AI Chat Widget</strong> (Popup overlay)</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Quick access AI chat from any app</li>
-<li>Lightweight widget</li>
-<li>Persistent across activities</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Neural Report Widget</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Shows yesterday&#39;s XP earned</li>
-<li>Daily achievements summary</li>
-<li>Quick-click to view full report</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Plan Widget</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Today&#39;s scheduled tasks</li>
-<li>Upcoming calendar blocks</li>
-<li>XP progress bar</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Neural Focus Widget</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Current session status</li>
-<li>Time remaining</li>
-<li>One-tap start/stop</li>
-</ul>
-</li>
-</ul>
-<h4>Quick Settings Tile</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">RealitySleepTileService</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>System-level quick tile for sleep mode</li>
-<li>One-tap bedtime activation</li>
-<li>Status indicator in notification shade</li>
-</ul>
-<h4>App Groups &amp; Family Controls</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">AppGroupsActivity</code> &amp; <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">AppLimitsActivity</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Create app categories (Social, Gaming, Work, etc.)</li>
-<li>Set group-level time limits</li>
-<li>Apply rules to entire categories</li>
-<li>Per-app exceptions</li>
-</ul>
-<h4>Block Messages (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">BlockMessagesActivity</code>)</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Custom messages when users hit blocks</li>
-<li>Motivational quotes</li>
-<li>Action buttons (open calendar, view stats)</li>
-<li>Message scheduling by time of day</li>
-</ul>
-<h4>Active Blocks Dashboard</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">ActiveBlocksActivity</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Live view of currently blocked apps</li>
-<li>Active focus session status</li>
-<li>Manual unblock with confirmation</li>
-<li>Block history</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">12. <strong>AI &amp; AUTOMATION SYSTEM</strong> 🤖</h3>
-<h4>Hybrid AI Architecture</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Bring Your Own Key Model</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Supports: OpenAI (GPT-4), Google Gemini, Anthropic Claude, Groq, Mistral</li>
-<li>Any OpenRouter-compatible model</li>
-<li>Free fallback: GPT-OSS-120B</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>AI Settings</strong> (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">AISettingsActivity</code>)</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Model selection</li>
-<li>API key input (encrypted storage)</li>
-<li>Temperature &amp; response customization</li>
-<li>System prompts for reflection/planning</li>
-</ul>
-</li>
-</ul>
-<h4>AI-Powered Features</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Nightly Reflection</strong> - Dynamic questions based on actual data</li>
-<li><strong>Plan Generation</strong> - Tomorrow&#39;s schedule auto-created</li>
-<li><strong>Coaching</strong> - Personalized motivation &amp; advice</li>
-<li><strong>Analytics</strong> - Pattern recognition in behavior</li>
-</ul>
-<h4>Preset Models</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Comes with &quot;Reality-Optimized&quot; GPT-OSS-120B ready to use</li>
-<li>One-click model switching</li>
-<li>Model-specific prompt optimization</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">13. <strong>NOTIFICATIONS &amp; USER ENGAGEMENT</strong> 📲</h3>
-<h4>Notification Channels</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>High Priority Alarms</strong> (full screen, sound)</li>
-<li><strong>Reminders</strong> (heads-up, vibration)</li>
-<li><strong>Focus Started/Ended</strong> (silent, persistent)</li>
-<li><strong>XP Updates</strong> (silent, dismissible)</li>
-<li><strong>Nightly Completion</strong> (high priority)</li>
-</ul>
-<h4>Notification Types</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Block attempt notifications</li>
-<li>Focus mode status</li>
-<li>Alarm &amp; reminder notifications</li>
-<li>XP milestone celebrations</li>
-<li>Daily summary notifications</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">14. <strong>STATISTICS &amp; ANALYTICS</strong> 📊</h3>
-<h4>Daily Stats Tracking</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Screen Time Analytics</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Total daily screen time</li>
-<li>Per-app breakdowns</li>
-<li>Trends over time</li>
-<li>Comparison to limits</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Usage Patterns</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Most used apps</li>
-<li>Peak usage hours</li>
-<li>App usage by category</li>
-<li>Time-of-day heatmaps</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Focus Metrics</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Focus blocks completed</li>
-<li>Focus blocks missed</li>
-<li>Average focus duration</li>
-<li>Consistency score</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Health Metrics</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Steps</li>
-<li>Calories</li>
-<li>Sleep hours</li>
-<li>XP correlation with health</li>
-</ul>
-</li>
-</ul>
-<h4>Data Retention</h4>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Detailed stats: 3 days (local)</li>
-<li>Summary stats: 30 days (database)</li>
-<li>Historical data: Synced to Drive monthly</li>
-</ul>
-<hr>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">15. <strong>ONBOARDING &amp; PERMISSIONS</strong> 🚀</h3>
-<h4>Progressive Onboarding System</h4>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">OnboardingActivity</code> &amp; <code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">OnboardingPermissionsFragment</code>:</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Welcome Screen</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>App introduction</li>
-<li>Core values explanation</li>
-<li>Permission overview</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Permission Checklist</strong> (5 Required, Optional)</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Required:</strong><ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Accessibility Service (app blocker core)</li>
-<li>Overlay Permission (floating timer)</li>
-<li>Usage Stats Permission (screen time)</li>
-</ol>
-</li>
-<li><strong>Optional:</strong><ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Notifications (alarms &amp; alerts)</li>
-<li>Battery Optimization Bypass (reliability)</li>
-</ol>
-</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Security Intro</strong> (<code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">SecurityIntroActivity</code>)</p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Device Admin explanation</li>
-<li>Anti-bypass measures overview</li>
-<li>Commitment confirmation</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Pro Feature Setup</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Google Workspace credentials</li>
-<li>AI model selection</li>
-<li>Initial plan creation</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🏗️ DEEP TECHNICAL ARCHITECTURE</h2>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Technology Stack</h3>
-<pre><code>Platform:       Android 26+ (API 26 to 35)
-Language:       Kotlin 100% (type-safe)
-UI Framework:   AndroidX + Material3
-Database:       Room ORM + SQLite
-Threading:      Coroutines (Kotlin Flow)
-Networking:     OkHttp + Retrofit (Google APIs)
-Background:     WorkManager + AlarmManager
-Logging:        Terminal Logger (custom)
-Parsing:        GSON, JSoup, Markwon
-</code></pre>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Key Libraries</h3>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Library</th>
-<th>Version</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Google APIs</strong></td>
-<td>google-api-client-android</td>
-<td>2.2.0</td>
-<td>OAuth2 + service calls</td>
-</tr>
-<tr>
-<td></td>
-<td>Tasks API</td>
-<td>v1-rev20210709</td>
-<td>Task management</td>
-</tr>
-<tr>
-<td></td>
-<td>Calendar API</td>
-<td>v3-rev20231123</td>
-<td>Event scheduling</td>
-</tr>
-<tr>
-<td></td>
-<td>Docs API</td>
-<td>v1-rev20230929</td>
-<td>Document creation</td>
-</tr>
-<tr>
-<td></td>
-<td>Drive API</td>
-<td>v3-rev20230520</td>
-<td>File management</td>
-</tr>
-<tr>
-<td></td>
-<td>Sheets API</td>
-<td>v4-rev20230815</td>
-<td>Data logging</td>
-</tr>
-<tr>
-<td><strong>Health</strong></td>
-<td>Health Connect Client</td>
-<td>1.1.0-alpha07</td>
-<td>Fitness tracking</td>
-</tr>
-<tr>
-<td><strong>Database</strong></td>
-<td>Room</td>
-<td>2.5.2</td>
-<td>Local persistence</td>
-</tr>
-<tr>
-<td><strong>Background</strong></td>
-<td>WorkManager</td>
-<td>2.8.1</td>
-<td>Scheduled tasks</td>
-</tr>
-<tr>
-<td><strong>UI</strong></td>
-<td>Material3</td>
-<td>Latest</td>
-<td>Design system</td>
-</tr>
-<tr>
-<td></td>
-<td>Lottie</td>
-<td>6.0.0</td>
-<td>Animations</td>
-</tr>
-<tr>
-<td></td>
-<td>Coil</td>
-<td>2.6.0</td>
-<td>Image loading</td>
-</tr>
-<tr>
-<td><strong>Markdown</strong></td>
-<td>Markwon</td>
-<td>4.6.2</td>
-<td>Content rendering</td>
-</tr>
-<tr>
-<td><strong>PDF</strong></td>
-<td>iText7 html2pdf</td>
-<td>4.0.5</td>
-<td>Report generation</td>
-</tr>
-<tr>
-<td><strong>QR Code</strong></td>
-<td>ZXing + ML Kit</td>
-<td>3.5.3, 17.3.0</td>
-<td>QR scan/generate</td>
-</tr>
-<tr>
-<td><strong>Other</strong></td>
-<td>JSoup</td>
-<td>1.17.2</td>
-<td>HTML parsing</td>
-</tr>
-</tbody></table>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Database Schema</h3>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Focus Mode</strong>: Blocked apps, block history</li>
-<li><strong>Schedules</strong>: Auto-focus hours, bedtime times</li>
-<li><strong>Usage Limits</strong>: Per-app limits, thresholds</li>
-<li><strong>XP &amp; Gamification</strong>: XP history, streaks, levels</li>
-<li><strong>Reminders</strong>: Local alarms, dismissed status</li>
-<li><strong>Nightly</strong>: Step data, reflection responses, plan JSON</li>
-<li><strong>App Groups</strong>: Category definitions, memberships</li>
-<li><strong>Settings</strong>: User preferences, theme, language</li>
-</ul>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Security Model</h3>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Implementation</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Data at Rest</strong></td>
-<td>Encrypted SharedPreferences</td>
-</tr>
-<tr>
-<td><strong>Google API Auth</strong></td>
-<td>OAuth 2.0 with refresh tokens</td>
-</tr>
-<tr>
-<td><strong>Local Blocking</strong></td>
-<td>Accessibility Service + Device Admin</td>
-</tr>
-<tr>
-<td><strong>Bypass Prevention</strong></td>
-<td>Multi-layer validation (5+ checks)</td>
-</tr>
-<tr>
-<td><strong>Permissions</strong></td>
-<td>Runtime + static manifest declarations</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🌍 COMPETITIVE COMPARISON: Reality vs World-Class Apps</h2>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">vs Forest (Popular Productivity App)</h3>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>Reality</th>
-<th>Forest</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Price</strong></td>
-<td>🟢 Open Source (Pro Optional)</td>
-<td>🔴 Paid (</div>
-        <h2.99)</td>
-</tr>
-<tr>
-<td><strong>Open Source</strong></td>
-<td>🟢 100%</td>
-<td>🔴 Closed</td>
-</tr>
-<tr>
-<td><strong>Ads/Trackers</strong></td>
-<td>🟢 Zero</td>
-<td>🔴 Has Ads</td>
-</tr>
-<tr>
-<td><strong>Data Storage</strong></td>
-<td>🟢 Your Drive</td>
-<td>🔴 Their Servers</td>
-</tr>
-<tr>
-<td><strong>App Blocking</strong></td>
-<td>🟢 Military-Grade</td>
-<td>🟡 Visual Metaphor Only</td>
-</tr>
-<tr>
-<td><strong>AI Agent</strong></td>
-<td>🟢 Autonomous (Plans/Alarms/Reports)</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>Google Integration</strong></td>
-<td>🟢 Full Ecosystem (Tasks, Cal, Drive, Docs)</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>XP System</strong></td>
-<td>🟢 Dynamic (bonus/penalty)</td>
-<td>🟡 Simple Counter</td>
-</tr>
-<tr>
-<td><strong>Neural Protocol</strong></td>
-<td>🟢 4-Phase AI Ritual</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>Health Sync</strong></td>
-<td>🟢 Steps, Calories, Sleep</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>Battery Impact</strong></td>
-<td>🟢 &lt;1%</td>
-<td>🟡 Standard</td>
-</tr>
-</tbody></table>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">vs Freedom (Enterprise Blocking)</h3>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>Reality</th>
-<th>Freedom</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Price</strong></td>
-<td>🟢 Open Source</td>
-<td>🔴 Subscription ($5-15/mo)</td>
-</tr>
-<tr>
-<td><strong>Blocking Tech</strong></td>
-<td>🟢 Native Accessibility</td>
-<td>🔴 VPN-Based (high battery)</td>
-</tr>
-<tr>
-<td><strong>Bypass Protection</strong></td>
-<td>🟢 Loop Hole Closers (5+ checks)</td>
-<td>🟡 Good but VPN-limited</td>
-</tr>
-<tr>
-<td><strong>AI Planning</strong></td>
-<td>🟢 Yes (Neural Protocol)</td>
-<td>🔴 No</td>
-</tr>
-<tr>
-<td><strong>Google Sync</strong></td>
-<td>🟢 Full</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>Data Privacy</strong></td>
-<td>🟢 Yours Alone</td>
-<td>🟡 Via VPN servers</td>
-</tr>
-<tr>
-<td><strong>Open Source</strong></td>
-<td>🟢 Yes</td>
-<td>🔴 No</td>
-</tr>
-</tbody></table>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">vs AppBlock (Simple Blocker)</h3>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>Reality</th>
-<th>AppBlock</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Price</strong></td>
-<td>🟢 Open Source</td>
-<td>🟡 Freemium + Paid</td>
-</tr>
-<tr>
-<td><strong>Blocking</strong></td>
-<td>🟢 Advanced (Strict Mode)</td>
-<td>🟡 Standard</td>
-</tr>
-<tr>
-<td><strong>Gamification</strong></td>
-<td>🟢 Advanced XP/Levels</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>AI Features</strong></td>
-<td>🟢 Full Neural Protocol</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>Workspace Sync</strong></td>
-<td>🟢 Full Google Integration</td>
-<td>🔴 None</td>
-</tr>
-<tr>
-<td><strong>Health Integration</strong></td>
-<td>🟢 Yes</td>
-<td>🔴 No</td>
-</tr>
-<tr>
-<td><strong>Report Generation</strong></td>
-<td>🟢 PDF + Docs</td>
-<td>🔴 Basic Stats</td>
-</tr>
-<tr>
-<td><strong>Customization</strong></td>
-<td>🟢 Extensive</td>
-<td>🟡 Limited</td>
-</tr>
-</tbody></table>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">vs Notion (Productivity Hub)</h3>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>Reality</th>
-<th>Notion</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Price</strong></td>
-<td>🟢 Open Source</td>
-<td>🟡 Subscription</td>
-</tr>
-<tr>
-<td><strong>App Blocking</strong></td>
-<td>🟢 Yes</td>
-<td>🔴 No</td>
-</tr>
-<tr>
-<td><strong>AI Agent</strong></td>
-<td>🟢 Autonomous Planner</td>
-<td>🟡 AI Assistant Only</td>
-</tr>
-<tr>
-<td><strong>Mobile-First</strong></td>
-<td>🟢 Yes</td>
-<td>🟡 Web-Focused</td>
-</tr>
-<tr>
-<td><strong>Offline Use</strong></td>
-<td>🟢 100%</td>
-<td>🟡 Limited</td>
-</tr>
-<tr>
-<td><strong>Daily Automation</strong></td>
-<td>🟢 Full (Nightly)</td>
-<td>🔴 Manual</td>
-</tr>
-<tr>
-<td><strong>Health Sync</strong></td>
-<td>🟢 Yes</td>
-<td>🔴 No</td>
-</tr>
-<tr>
-<td><strong>Battery Impact</strong></td>
-<td>🟢 &lt;1%</td>
-<td>🟡 N/A</td>
-</tr>
-</tbody></table>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🔐 SECURITY &amp; PRIVACY ARCHITECTURE</h2>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Zero-Trust Security Model</h3>
-<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>No Backend Servers</strong> - Reality has zero infrastructure</li>
-<li><strong>Local-First Processing</strong> - All blocking logic runs on-device</li>
-<li><strong>Your Drive Only</strong> - Backups stored in your personal Google Drive</li>
-<li><strong>Open Source Audit</strong> - Every line of code publicly visible</li>
-<li><strong>Encrypted Credentials</strong> - OAuth tokens stored securely</li>
-</ol>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Bypass Prevention Layer (Reality&#39;s Secret Sauce)</h3>
-<div class="relative group mt-6 mb-8"><div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-500"></div><pre class="relative bg-[#0a0a0a] border border-white/10 rounded-lg p-4 overflow-x-auto"><code class="text-sm font-mono text-gray-300">// Multi-layer validation:
-1. AccessibilityService window monitoring (real-time)
-2. SettingsBox O(1) lookup (instant page detection)
-3. Keyword scanning fallback (for ambiguous settings pages)
-4. Device Admin enforcement (prevents uninstall)
-5. Time validation (detects clock tampering)
-6. Intent hijacking detection (catches overlay attacks)
-7. Package manager access blocking (prevents uninstall via ADB)
-</code></pre></div>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">📱 SYSTEM REQUIREMENTS &amp; PERMISSIONS</h2>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Minimum Requirements</h3>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Android Version:</strong> 8.0 (API 26) - Android 15 compatible</li>
-<li><strong>RAM:</strong> 256MB minimum (typical 50-100MB usage)</li>
-<li><strong>Storage:</strong> 150MB app + database</li>
-<li><strong>Connectivity:</strong> Optional (works offline, Google Sync requires internet)</li>
-</ul>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Required Permissions (3)</h3>
-<table>
-<thead>
-<tr>
-<th>Permission</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">ACCESSIBILITY_SERVICE</code></td>
-<td>Real-time app blocking</td>
-</tr>
-<tr>
-<td><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">SYSTEM_ALERT_WINDOW</code></td>
-<td>Floating timer overlay</td>
-</tr>
-<tr>
-<td><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">PACKAGE_USAGE_STATS</code></td>
-<td>Accurate screen time</td>
-</tr>
-</tbody></table>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Optional Permissions (2)</h3>
-<table>
-<thead>
-<tr>
-<th>Permission</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">POST_NOTIFICATIONS</code></td>
-<td>Alarms &amp; alerts</td>
-</tr>
-<tr>
-<td><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">REQUEST_IGNORE_BATTERY_OPTIMIZATIONS</code></td>
-<td>Background reliability</td>
-</tr>
-</tbody></table>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Full Manifest Permissions</h3>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Health Connect (steps, calories, sleep)</li>
-<li>Camera (QR scanner)</li>
-<li>Record Audio (voice input for AI)</li>
-<li>Internet (Google APIs)</li>
-<li>Network State (connectivity check)</li>
-<li>Device Admin (anti-uninstall)</li>
-<li>Schedule Exact Alarm (Neural Protocol)</li>
-<li>Query All Packages (app listing)</li>
-<li>Usage Stats (screen time)</li>
-<li>Access Notification Policy (DND mode)</li>
-</ul>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🎮 HIDDEN FEATURES YOU HAVEN&#39;T DISCOVERED</h2>
-<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Deep Link Support</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">reality://smart_sleep</code> - quick sleep mode toggle</li>
-<li><code class="bg-white/10 text-pink-400 px-1.5 py-0.5 rounded text-sm font-mono">reality://block_&lt;appName&gt;</code> - block specific app</li>
-<li>Accessible from any app via custom URLs</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Terminal Logger</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Detailed debug logs for power users</li>
-<li>Export logs for troubleshooting</li>
-<li>Hidden terminal view</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>ADB Setup Assistant</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Guides developers through adb commands</li>
-<li>One-click permission granting</li>
-<li>Device integration setup</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>QR Code Scanner</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Built-in barcode scanning</li>
-<li>Create shareable focus schedules via QR</li>
-<li>Scan competitor&#39;s settings to compare</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Shortcut System</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Android app shortcuts for quick actions</li>
-<li>Start focus via home screen icon</li>
-<li>Custom automation routines</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Health Dashboard</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Advanced health metrics visualization</li>
-<li>Correlation with XP &amp; focus</li>
-<li>Historical health trends</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Reflection Detail View</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Deep dive into nightly reflections</li>
-<li>View AI coaching history</li>
-<li>Behavior pattern analysis</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Planning Pad Activity</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Free-form planning interface</li>
-<li>Voice-to-text input</li>
-<li>Auto-sync to Google Docs</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Math Challenge Difficulty Levels</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Difficulty adjusts based on time of morning</li>
-<li>Earlier wake = harder math</li>
-<li>Prevents easy dismissal</li>
-</ul>
-</li>
-<li><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>Penalty Overlay</strong></p>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Shows when blocked app accessed</li>
-<li>Custom penalty duration</li>
-<li>Can be extended for repeated violations</li>
-</ul>
-</li>
-</ol>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">🚀 GETTING STARTED</h2>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Installation</h3>
-<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Download latest APK from GitHub Releases</li>
-<li>Enable installation from unknown sources</li>
-<li>Tap APK to install</li>
-<li>Open Reality and complete onboarding</li>
-<li>Grant required permissions</li>
-</ol>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Initial Setup (5 minutes)</h3>
-<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>Security Intro</strong> - Understand features</li>
-<li><strong>Permissions</strong> - Grant accessibility + overlay + usage stats</li>
-<li><strong>Add Blocklist</strong> - Select apps to block</li>
-<li><strong>Set Focus Hours</strong> - Recurring daily schedule</li>
-<li><strong>Configure AI</strong> - Add OpenAI key (optional, has free default)</li>
-</ol>
-<h3 class="text-2xl font-bold mt-8 mb-3 text-white">Power User Setup (15 minutes)</h3>
-<ol class="list-decimal list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li>Connect Google Account (Tasks, Calendar, Drive)</li>
-<li>Configure Neural Protocol settings</li>
-<li>Set up Neural Focus sessions</li>
-<li>Enable Health Connect sync</li>
-<li>Customize appearance theme</li>
-<li>Import backup (if migrating from another device)</li>
-</ol>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">📞 SUPPORT &amp; COMMUNITY</h2>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>GitHub</strong>: <a href="https://github.com/pawanwashudev-official/Reality" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">https://github.com/pawanwashudev-official/Reality</a></li>
-<li><strong>Website</strong>: <a href="https://reality.neubofy.in" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors">https://reality.neubofy.in</a></li>
-<li><strong>Issues</strong>: Report bugs on GitHub</li>
-<li><strong>Contributing</strong>: PRs welcome for features/improvements</li>
-</ul>
-<hr>
-<h2 class="text-3xl font-display font-bold mt-10 mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 drop-shadow-sm">📄 LICENSE &amp; TERMS</h2>
-<ul class="list-disc list-outside ml-6 space-y-2 text-gray-300 mb-6">
-<li><strong>License</strong>: Open Source (Apache 2.0)</li>
-<li><strong>Developer</strong>: Pawan Washudev (Neubofy)</li>
-<li><strong>Status</strong>: Active Development</li>
-<li><strong>Version</strong>: 1.0.5 (Stability)</li>
-</ul>
-<hr>
-<div align="center"><p class="text-gray-300 mb-5 leading-relaxed text-lg"><strong>&quot;Your data. Your focus. Your life. On YOUR terms.&quot;</strong></p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><em>Made with ❤️ and Intelligence by Pawan Washudev</em></p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg">Built by someone who lost control of their own fingers. Designed for those who want it back.</p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><br><br></p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><a href="https://reality.neubofy.in" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><strong>🌐 Official Website</strong></a> • <a href="https://github.com/pawanwashudev-official/Reality/releases" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 hover:decoration-blue-400 transition-colors"><strong>⬇️ Download Latest APK</strong></a></p>
-<p class="text-gray-300 mb-5 leading-relaxed text-lg"><br><br></p>
-<a href='https://reality-digital-wellbeing-and-focus.en.uptodown.com/android' title='Download Reality - The Intelligent Life OS' >
-    <img src='https://stc.utdstc.com/img/mediakit/download-aao-big.png' alt='Download Reality - The Intelligent Life OS'>
-</a></div>
-
-</div>
-        <h2 class="text-2xl font-bold mb-4 text-white">Features</h2>
-        <ul class="list-disc list-inside text-gray-300 mb-8">
-            <li class="mb-2">See GitHub repository for full details and features.</li>
-        </ul>
+<body>
+<style>#custom-svg-loader { position: fixed; inset: 0; z-index: 999999; background: #030305; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s; } #custom-svg-loader.hidden { opacity: 0; visibility: hidden; } .loader-svg-container { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; } .loader-svg-container svg { position: absolute; width: 100%; height: 100%; stroke: #c5a059; stroke-width: 1.5; fill: none; animation: rotateSvg 4s linear infinite; } .loader-svg-container svg:nth-child(2) { width: 60%; height: 60%; animation: rotateSvgReverse 3s linear infinite; stroke: rgba(197, 160, 89, 0.5); stroke-dasharray: 4 4; } @keyframes rotateSvg { 100% { transform: rotate(360deg); } } @keyframes rotateSvgReverse { 100% { transform: rotate(-360deg); } }</style><div id="custom-svg-loader"><div class="loader-svg-container"><svg viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/></svg><svg viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/></svg></div></div><script>window.addEventListener('load', () => { setTimeout(() => { document.getElementById('custom-svg-loader').classList.add('hidden'); }, 800); });</script>
+    <!-- Ambient CSS Spotlights -->
+    <div class="ambient-spots">
+        <div class="spot spot-1"></div>
+        <div class="spot spot-2"></div>
     </div>
+
+    <!-- Background Interactive Neural Network Canvas -->
+    <canvas id="neural-canvas"></canvas>
+
+    <nav>
+        <div class="logo-text">REALITY OS</div>
+        <a href="/projects" class="back-link">/// BACK TO PROJECTS</a>
+    </nav>
+
+    <main>
+        <!-- HERO SEGMENT -->
+        <header class="hero">
+            <span class="pill-badge">Digital Wellness OS</span>
+            <h1>Command Your Focus</h1>
+            <p class="hero-desc">
+                An unstoppable, local-first Android life partner. Built purely in native Kotlin to eliminate settings bypasses, sync biological data connection, and organize goals privately.
+            </p>
+            <a href="https://github.com/pawanwashudev-official/Reality" target="_blank" rel="noopener noreferrer" class="btn-gold">View Source Code</a>
+        </header>
+
+        <!-- INTERACTIVE SIMULATOR WIDGET -->
+        <section class="simulator-section">
+            <h2 class="sim-title">Tapasya Neural Timer</h2>
+            <p class="sim-subtitle">Simulate strict focus locking. When active, closing the page or changing tabs penalizes progress.</p>
+            
+            <div class="timer-circle-wrapper">
+                <svg class="timer-svg" viewBox="0 0 260 260">
+                    <circle class="timer-track" cx="130" cy="130" r="120" />
+                    <circle id="timer-progress" class="timer-fill" cx="130" cy="130" r="120" />
+                </svg>
+                <div class="timer-text-display">
+                    <div id="countdown-text" class="timer-countdown">15:00</div>
+                    <div id="countdown-label" class="timer-label">Ready</div>
+                </div>
+            </div>
+            
+            <button id="sim-control-btn" class="sim-btn">Initiate Focus Layer</button>
+        </section>
+
+        <!-- CORE FEATURES MATRIX -->
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="card-icon">🚫</div>
+                <h3>Zero-Tamper App Blocker</h3>
+                <p>Enforced by Android's native Accessibility Services. Monitors focus window changes in real-time, blocking system settings access and preventing force-stops. Integrates time cooldown blocks to eliminate bypass loopholes.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🌙</div>
+                <h3>Nightly Protocol Scheduling</h3>
+                <p>An automated evening reflection worker orchestrated by Android WorkManager. Compiles daily screen metrics, requests reflection answers, calculates XP progression, and schedules tomorrow's focus grids into calendars.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🛌</div>
+                <h3>Smart Bedtime Integration</h3>
+                <p>Circadian sleeping dashboard connected directly with Android Health Connect APIs. Pulls sleep analysis, active energy burn, and daily steps natively without routing through cloud servers or external wearables.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🔔</div>
+                <h3>Math-Based Wakeup Alarms</h3>
+                <p>Prevents sleep-inertia. Built-in alarm screen locks system settings and overrides standard volume buttons. Scales math problem equation complexity depending on how early the user sets the alarm ring.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🤖</div>
+                <h3>Local Intelligence Assistant</h3>
+                <p>A secure local chat agent. Harnesses Model Context Protocol (MCP) tool registrations to allow private on-device execution for creating calendar blocks, task items, and app block configurations.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="card-icon">🔒</div>
+                <h3>Absolute Privacy Architecture</h3>
+                <p>Zero cloud servers. Zero telemetry trackers. Zero accounts required. Storage database footprints are kept strictly inside private local SQLite schemas, giving you complete data ownership.</p>
+            </div>
+        </section>
+
+        <!-- GOOGLE SYNC SETUP GUIDE (BYOC) -->
+        <section class="setup-section">
+            <h2 class="section-headline">Google Workspace Sync (BYOC)</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <h4>1. Enable APIs in Google Cloud Console</h4>
+                    <p>Go to your Google Cloud Console, create a new project, and enable the Google Calendar API, Google Drive API, Google Tasks API, and Google Docs API inside the API Library.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <h4>2. Configure OAuth Consent Screen</h4>
+                    <p>Set User Type to "External", publish the app state to Testing, and add your own Google email address as a test user to authorize secure, personal OAuth connections.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <h4>3. Create Desktop OAuth Credentials</h4>
+                    <p>Navigate to Credentials, click "Create Credentials" -> "OAuth client ID", and set Application Type to **Desktop app**. Secure the client credentials keys:</p>
+                    <code class="timeline-code">ClientID: xxxxx-xxxxx.apps.googleusercontent.com<br>ClientSecret: GOCSPX-xxxxxxxxxxxxx</code>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <h4>4. Link Credentials inside Reality Settings</h4>
+                    <p>Enter the generated ClientID and ClientSecret inside Reality's Settings panel.Reality will sync and format daily metrics sheets inside your Google Drive, and map tasks directly into Google Tasks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIFICATIONS SPEC LIST -->
+        <section class="specs-section">
+            <h2 class="specs-title">System Specs</h2>
+            <div class="specs-pills">
+                <span class="spec-pill">Kotlin Native</span>
+                <span class="spec-pill">Android SDK 35</span>
+                <span class="spec-pill">Accessibility Services</span>
+                <span class="spec-pill">SQLite / Room DB</span>
+                <span class="spec-pill">Health Connect API</span>
+                <span class="spec-pill">WorkManager Scheduler</span>
+                <span class="spec-pill">Local MCP Tools</span>
+                <span class="spec-pill">Google APIs Client</span>
+            </div>
+        </section>
+
+        <footer>
+            <p>Developed with pride by <a href="https://github.com/pawanwashudev-official" target="_blank" rel="noopener noreferrer">Pawan Washudev</a> • © 2026 Neubofy</p>
+        </footer>
+    </main>
+
+    <!-- Interactive Canvas & Simulator script logic -->
+    <script>
+        // ─── 1. NEURAL CANVAS NETWORKING BACKDROP ───
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const maxParticles = 60;
+        const connectionDist = 120;
+        const mouse = { x: null, y: null };
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce borders
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Mouse interaction - magnetic pull
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        this.x += dx * 0.01;
+                        this.y += dy * 0.01;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(214, 175, 55, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw connections
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectionDist) {
+                        const alpha = (1 - dist / connectionDist) * 0.15;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // ─── 2. TAPASYA TIMER SIMULATION WIDGET ───
+        const progressCircle = document.getElementById('timer-progress');
+        const countdownText = document.getElementById('countdown-text');
+        const countdownLabel = document.getElementById('countdown-label');
+        const simBtn = document.getElementById('sim-control-btn');
+
+        const totalLength = 754; // 2 * PI * R where R=120
+        progressCircle.style.strokeDashoffset = totalLength;
+
+        let focusActive = false;
+        let timerSeconds = 15 * 60; // 15 minutes simulation
+        let timerInterval = null;
+
+        function updateProgress(percent) {
+            const offset = totalLength - (percent * totalLength);
+            progressCircle.style.strokeDashoffset = offset;
+        }
+
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60).toString().padStart(2, '0');
+            const s = (secs % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function startSimulation() {
+            focusActive = true;
+            timerSeconds = 15 * 60;
+            simBtn.textContent = "Abort Session";
+            simBtn.classList.add('active');
+            countdownLabel.textContent = "Focus Active";
+            countdownText.classList.add('glitch-active');
+            
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                countdownText.textContent = formatTime(timerSeconds);
+                
+                const percentDone = (15 * 60 - timerSeconds) / (15 * 60);
+                updateProgress(percentDone);
+
+                if (timerSeconds <= 0) {
+                    stopSimulation(true);
+                }
+            }, 1000);
+        }
+
+        function stopSimulation(completed = false) {
+            focusActive = false;
+            clearInterval(timerInterval);
+            simBtn.textContent = "Initiate Focus Layer";
+            simBtn.classList.remove('active');
+            countdownText.classList.remove('glitch-active');
+            updateProgress(0);
+            
+            if (completed) {
+                countdownText.textContent = "15:00";
+                countdownLabel.textContent = "Session Complete";
+                alert("Focus session completed successfully! +10 XP awarded.");
+            } else {
+                countdownText.textContent = "15:00";
+                countdownLabel.textContent = "Session Voided";
+            }
+        }
+
+        simBtn.addEventListener('click', () => {
+            if (focusActive) {
+                stopSimulation(false);
+            } else {
+                startSimulation();
+            }
+        });
+
+        // Tab focus detection - triggers security warning glitch
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && focusActive) {
+                alert("WARNING: Distraction detected! Exiting the focus layer voids progress. Tapasya session failed.");
+                stopSimulation(false);
+            }
+        });
+    </script>
 </body>
 </html>
+
