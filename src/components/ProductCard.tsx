@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +17,6 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onListProject }: ProductCardProps) {
-  const navigate = useNavigate();
 
   return (
     <div className="glass-card rounded-2xl overflow-hidden hover:shadow-elevated transition-all duration-500 group">

@@ -119,7 +119,7 @@ const FeaturesSection = () => {
                   transition={{ duration: 0.7, delay: 0.2 }}
                 >
                   <img
-                    src={feature.mockup}
+                    src={feature.mockup.src}
                     alt={feature.alt}
                     className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
