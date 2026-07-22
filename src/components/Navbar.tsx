@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,13 @@ const Navbar = () => {
             href="/" 
             className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300"
           >
+            <Image
+              src="/neubofylogo.png"
+              alt="Neubofy Logo"
+              width={32}
+              height={32}
+              className="rounded-full"
+            />
             <span className="text-2xl font-bold text-foreground">
               Neubofy
             </span>

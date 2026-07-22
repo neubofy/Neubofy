@@ -1,5 +1,6 @@
 import { Mail, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const WhatsAppIcon = () => (
   <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -19,7 +20,16 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-16 md:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           <div>
-            <h3 className="text-2xl font-bold text-gradient-electric mb-4">Neubofy</h3>
+            <div className="flex items-center space-x-3 mb-4">
+              <Image
+                src="/neubofylogo.png"
+                alt="Neubofy Logo"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+              <h3 className="text-2xl font-bold text-gradient-electric">Neubofy</h3>
+            </div>
             <p className="text-muted-foreground mb-4">
               The premier global network empowering student and independent developers to showcase their incredible capabilities and connect directly with clients.
             </p>
