@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import GoToTop from "@/components/GoToTop";
+import HoldOverlay from "@/components/HoldOverlay";
 import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
@@ -33,6 +34,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col relative bg-background text-foreground">
+        <HoldOverlay />
         <ScrollProgress />
         <Navbar />
         <main className="flex-1">
