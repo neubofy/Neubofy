@@ -1,5 +1,7 @@
-import React from 'react';
-import { Mail, MessageCircle } from 'lucide-react';
+"use client";
+
+import React, { useState } from 'react';
+import { Mail, MessageCircle, X } from 'lucide-react';
 
 const WhatsAppIcon = () => (
   <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -14,9 +16,20 @@ const XIcon = () => (
 );
 
 export default function HoldOverlay() {
+  const [isVisible, setIsVisible] = useState(true);
+
+  if (!isVisible) return null;
+
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background/95 backdrop-blur-md p-6 text-center">
-      <div className="max-w-2xl w-full glass-card p-8 rounded-2xl flex flex-col items-center shadow-2xl border border-white/10">
+      <div className="max-w-2xl w-full glass-card p-8 rounded-2xl flex flex-col items-center shadow-2xl border border-white/10 relative">
+        <button
+          onClick={() => setIsVisible(false)}
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors"
+          aria-label="Close overlay"
+        >
+          <X className="w-6 h-6 text-foreground" />
+        </button>
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient-electric">Services on Hold</h2>
         <p className="text-lg md:text-xl text-muted-foreground mb-8">
           We have temporarily put on hold all our services. No new project gonna launch, no new progress gonna be made till <strong>Dev 2027</strong>.
