@@ -7,6 +7,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import GoToTop from "@/components/GoToTop";
 import HoldOverlay from "@/components/HoldOverlay";
 import { Analytics } from '@vercel/analytics/next';
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,10 @@ export default function RootLayout({
         <Footer />
         <GoToTop />
         <Analytics />
+        <Script id="zoho-salesiq-init" strategy="lazyOnload">
+          {`window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}`}
+        </Script>
+        <Script id="zsiqscript" src="https://salesiq.zoho.in/widget?wc=siq9312488e4d8e0df500748f7a2fc1e8769385757ecd612b79f3d0afb943c616a1" strategy="lazyOnload" />
       </body>
     </html>
   );
