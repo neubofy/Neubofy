@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import SmoothScrolling from "@/components/SmoothScrolling";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import GoToTop from "@/components/GoToTop";
@@ -35,19 +36,21 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col relative bg-background text-foreground">
-        <LiquidThreeBackground />
-        <ScrollProgress />
-        <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <GoToTop />
-        <Analytics />
-        <Script id="zoho-salesiq-init" strategy="lazyOnload">
-          {`window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}`}
-        </Script>
-        <Script id="zsiqscript" src="https://salesiq.zoho.in/widget?wc=siq9312488e4d8e0df500748f7a2fc1e8769385757ecd612b79f3d0afb943c616a1" strategy="lazyOnload" />
+        <SmoothScrolling>
+          <LiquidThreeBackground />
+          <ScrollProgress />
+          <Navbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+          <GoToTop />
+          <Analytics />
+          <Script id="zoho-salesiq-init" strategy="lazyOnload">
+            {`window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}`}
+          </Script>
+          <Script id="zsiqscript" src="https://salesiq.zoho.in/widget?wc=siq9312488e4d8e0df500748f7a2fc1e8769385757ecd612b79f3d0afb943c616a1" strategy="lazyOnload" />
+        </SmoothScrolling>
       </body>
     </html>
   );
