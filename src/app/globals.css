@@ -41,42 +41,42 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   
-  /* Custom Gradients & Shadows for Obsidian/Electric Theme */
-  --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.2);
-  --shadow-elevated: 0 20px 40px -10px rgba(0,0,0,0.8);
+  /* Custom Gradients & Shadows for Liquid Glass / Vibrant Theme */
+  --shadow-glow: 0 0 50px rgba(244, 63, 94, 0.3);
+  --shadow-elevated: 0 25px 50px -12px rgba(0,0,0,0.8);
 }
 
 :root {
-  /* Default to Dark Mode as requested */
-  --background: #050505; /* Deep Obsidian Black */
-  --foreground: #F8FAFC; /* Slate 50 */
+  /* Modern Dark Mode with rich deep tones */
+  --background: #06020c; /* Deep Violet Black */
+  --foreground: #F8FAFC;
   
-  --card: #0A0A0A; 
+  --card: rgba(255, 255, 255, 0.02);
   --card-foreground: #F8FAFC;
   
-  --popover: #0A0A0A;
+  --popover: rgba(255, 255, 255, 0.02);
   --popover-foreground: #F8FAFC;
   
-  --primary: #3B82F6; /* Electric Blue */
+  --primary: #F43F5E; /* Neon Rose */
   --primary-foreground: #FFFFFF;
   
-  --secondary: #1E293B; /* Slate 800 */
+  --secondary: #8B5CF6; /* Bright Violet */
   --secondary-foreground: #F8FAFC;
   
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8; /* Slate 400 */
+  --muted: #1e1b2e;
+  --muted-foreground: #94A3B8;
   
-  --accent: #10B981; /* Emerald Green for success/highlights */
+  --accent: #06B6D4; /* Cyan */
   --accent-foreground: #FFFFFF;
   
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
   
-  --border: #1E293B; /* Slate 800 */
-  --input: #1E293B;
-  --ring: #3B82F6;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.05);
+  --ring: #F43F5E;
   
-  --radius: 0.75rem;
+  --radius: 1rem;
 }
 
 @layer base {
@@ -85,39 +85,53 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    /* Subtle radial gradient to prevent pure flat black */
-    background-image: radial-gradient(circle at top center, rgba(30, 41, 59, 0.4) 0%, #050505 40%);
+    /* Subtle radial gradient for depth */
+    background-image: radial-gradient(circle at top right, rgba(139, 92, 246, 0.15) 0%, rgba(6, 2, 12, 1) 40%),
+                      radial-gradient(circle at bottom left, rgba(244, 63, 94, 0.15) 0%, rgba(6, 2, 12, 1) 40%);
     background-attachment: fixed;
     min-height: 100vh;
   }
 }
 
 @layer components {
-  /* Premium Glass Cards */
+  /* Premium Liquid Glass Cards */
   .glass-card {
-    @apply backdrop-blur-md rounded-xl;
-    background: rgba(10, 10, 10, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
-    transition: all 0.3s ease;
+    @apply backdrop-blur-2xl rounded-2xl;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .glass-card:hover {
-    border-color: rgba(59, 130, 246, 0.3); /* Electric Blue hover hint */
-    box-shadow: var(--shadow-glow);
-    transform: translateY(-2px);
+    border-color: rgba(244, 63, 94, 0.4); /* Rose hover hint */
+    box-shadow: 0 15px 45px -10px rgba(244, 63, 94, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px) scale(1.01);
   }
 
   /* Electric Primary Buttons */
   .btn-electric {
-    @apply px-6 py-3 rounded-lg font-medium text-white transition-all;
-    background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    @apply px-6 py-3 rounded-xl font-medium text-white transition-all overflow-hidden relative;
+    background: linear-gradient(135deg, #F43F5E 0%, #8B5CF6 100%);
+    box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
+  .btn-electric::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: all 0.5s;
+  }
+
+  .btn-electric:hover::before {
+    left: 100%;
+  }
+
   .btn-electric:hover {
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
-    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+    transform: translateY(-2px);
   }
   
   /* Outline Buttons */
@@ -135,18 +149,26 @@
 
   /* Text Gradients */
   .text-gradient {
-    background: linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%);
+    background: linear-gradient(135deg, #FFFFFF 0%, #cbd5e1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
   .text-gradient-electric {
-    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+    background: linear-gradient(135deg, #F43F5E 0%, #8B5CF6 50%, #06B6D4 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: gradient-shift 4s linear infinite;
   }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Animations */
