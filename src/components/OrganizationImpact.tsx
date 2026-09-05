@@ -5,52 +5,52 @@ import { Globe2, Brain, Handshake, Code2, Building2, Stars } from "lucide-react"
 const OrganizationImpact = () => {
   const impactMetrics = [
     {
-      metric: "100%",
-      label: "Free to Use",
-      description: "No hidden fees, no subscriptions."
+      metric: "Top",
+      label: "Global Talent",
+      description: "Onboarding the best developers from around the world."
     },
     {
-      metric: "Global",
-      label: "Developer Network",
-      description: "Connecting talent worldwide directly to clients."
+      metric: "Quality",
+      label: "Products",
+      description: "Connecting consumers with developers to build the highest quality apps."
     },
     {
-      metric: "0%",
-      label: "Platform Cut",
-      description: "Keep 100% of what you earn from your clients."
+      metric: "Competitive",
+      label: "Costs",
+      description: "Providing consumers with exceptional products at competitive pricing."
     }
   ];
 
   const uniqueFeatures = [
     {
       icon: <Handshake className="w-12 h-12 text-primary" />,
-      title: "Direct Client Connection",
-      description: "We step out of the way. Consumers contact you directly for your services based on the capabilities you showcase."
+      title: "Connecting Creators & Consumers",
+      description: "We act as the bridge, ensuring consumers get paired with the perfect developer for their project."
     },
     {
       icon: <Brain className="w-12 h-12 text-secondary" />,
       title: "Showcase Capabilities",
-      description: "Use Neubofy Orbit to list your interactive projects and demonstrate your true potential to global clients."
+      description: "A comprehensive network where top talent can list their projects and demonstrate their true potential."
     },
     {
       icon: <Code2 className="w-12 h-12 text-primary" />,
-      title: "Developer First",
-      description: "We're building more than a marketplace - we're creating the ultimate network designed purely for software developers."
+      title: "Developer Network",
+      description: "We're building an incredible platform designed to onboard the best developers from every corner of the globe."
     },
     {
       icon: <Building2 className="w-12 h-12 text-secondary" />,
       title: "Business Transformation",
-      description: "Helping organizations find the exact right talent by reviewing verified project showcases and directly hiring the creator."
+      description: "Helping organizations and consumers find the exact right talent by reviewing verified developer profiles."
     },
     {
       icon: <Globe2 className="w-12 h-12 text-primary" />,
-      title: "Global Distribution",
-      description: "Providing developers worldwide with a powerful platform to reach global markets while maintaining their complete independence."
+      title: "Global Reach",
+      description: "Providing developers worldwide with a powerful platform to reach global markets and consumer needs."
     },
     {
       icon: <Stars className="w-12 h-12 text-secondary" />,
-      title: "Quality Peer Network",
-      description: "Join a community of verified creators, share your work, and elevate your professional developer presence."
+      title: "Exceptional Quality",
+      description: "Join a network focused on delivering the absolute best applications at competitive costs for every consumer."
     }
   ];
 
@@ -74,7 +74,7 @@ const OrganizationImpact = () => {
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Building the most trusted free ecosystem where developers showcase their work and clients hire them directly
+            Building the most trusted network where the best developers connect with consumers to build high-quality products at competitive costs.
           </p>
         </motion.div>
 

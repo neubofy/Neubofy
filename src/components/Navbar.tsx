@@ -23,8 +23,8 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "Projects", path: "/orbit" },
-    { name: "Developers", path: "/developers" }
+    { name: "Developers", path: "/developers" },
+    { name: "Support & Community", path: "https://neubofy.zohodesk.in/portal" }
   ];
 
   return (
@@ -55,22 +55,37 @@ const Navbar = () => {
 
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`font-medium transition-colors duration-300 relative group ${
-                  pathname === item.path 
-                    ? "text-primary" 
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.name}
-                <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${pathname === item.path ? "w-full" : "w-0 group-hover:w-full"}`}></span>
-              </Link>
+              item.path.startsWith("http") ? (
+                <a
+                  key={item.path}
+                  href={item.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium transition-colors duration-300 relative group text-muted-foreground hover:text-foreground"
+                >
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 w-0 group-hover:w-full"></span>
+                </a>
+              ) : (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`font-medium transition-colors duration-300 relative group ${
+                    pathname === item.path
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.name}
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${pathname === item.path ? "w-full" : "w-0 group-hover:w-full"}`}></span>
+                </Link>
+              )
             ))}
-            <Button disabled className="btn-electric rounded-full px-6 opacity-50 cursor-not-allowed">
-              Coming Soon
-            </Button>
+            <Link href="/order">
+              <Button className="btn-electric rounded-full px-6">
+                Order App
+              </Button>
+            </Link>
           </div>
 
           <button
@@ -89,23 +104,38 @@ const Navbar = () => {
           <div className="lg:hidden py-4 glass-card border-x-0 rounded-none absolute top-full left-0 w-full animate-fade-in-up">
             <div className="flex flex-col space-y-2 px-4">
               {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  className={`px-4 py-3 font-medium transition-all duration-300 rounded-lg ${
-                    pathname === item.path 
-                      ? "text-primary bg-primary/10" 
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
+                item.path.startsWith("http") ? (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-3 font-medium transition-all duration-300 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className={`px-4 py-3 font-medium transition-all duration-300 rounded-lg ${
+                      pathname === item.path
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
               <div className="pt-4 pb-2">
-                <Button disabled className="w-full btn-electric opacity-50 cursor-not-allowed">
-                  Coming Soon
-                </Button>
+                <Link href="/order" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button className="w-full btn-electric">
+                    Order App
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
