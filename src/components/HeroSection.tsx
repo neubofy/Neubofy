@@ -1,10 +1,8 @@
 "use client";
 
-import { ArrowRight, Sparkles, Zap, Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Shield } from "lucide-react";
 import ParallaxBackground from "./ParallaxBackground";
-import heroDashboard from "@/assets/hero-dashboard-mockup.jpg";
+import RequestFlowAnimation from "./RequestFlowAnimation";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { motion } from "framer-motion";
@@ -87,53 +85,14 @@ const HeroSection = () => {
             </p>
           </motion.div>
 
-          {/* CTA Buttons */}
+          {/* Dynamic SVG Explainer Animation */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 animate-fade-in"
+            className="w-full mt-16 animate-fade-in"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            <Link href="/order">
-              <motion.button
-                className="btn-3d text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-primary/50"
-                whileHover={{ scale: 1.07 }}
-                whileTap={{ scale: 0.97 }}
-                type="button"
-              >
-                <Sparkles className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform" />
-                Order Your App
-                <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
-              </motion.button>
-            </Link>
-            
-            <Link href="/developers">
-              <motion.button
-                className="btn-3d bg-transparent border-2 border-primary text-xl px-10 py-5 group focus:outline-none"
-                whileHover={{ scale: 1.07 }}
-                whileTap={{ scale: 0.97 }}
-                type="button"
-              >
-                <Zap className="w-6 h-6 mr-3" />
-                Register as Developer
-              </motion.button>
-            </Link>
-          </motion.div>
-
-          {/* Hero Dashboard Mockup */}
-          <motion.div
-            className="relative animate-fade-in"
-            initial={{ opacity: 0, y: 40 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <div className="glass-card p-4 md:p-8 rounded-3xl shadow-elevated max-w-6xl mx-auto glow-effect card-3d">
-              <img
-                src={heroDashboard.src}
-                alt="Neubofy AI Dashboard - Custom automation interface showing analytics, workflows, and AI chat features"
-                className="w-full h-auto rounded-2xl shadow-card card-3d-content"
-              />
-            </div>
+            <RequestFlowAnimation />
           </motion.div>
 
           {/* Enhanced Stats */}
