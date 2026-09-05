@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Neubofy | Global Developer Network",
-  description: "The ultimate global platform for independent and student developers to showcase their capabilities and connect directly with clients without any middleman.",
+  title: "Neubofy | Network of Top Developers",
+  description: "Neubofy is a platform that connects you with the world's top developers, helping consumers find the best talent to build high-quality products at competitive costs.",
 };
 
 export default function RootLayout({

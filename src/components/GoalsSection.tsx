@@ -7,32 +7,32 @@ const GoalsSection = () => {
     {
       icon: <Blocks className="w-8 h-8 text-primary" />,
       title: "Global Developer Network",
-      description: "Building the most comprehensive and verified network of software developers worldwide"
+      description: "Building the most comprehensive and verified network of top software developers worldwide"
     },
     {
       icon: <Users className="w-8 h-8 text-secondary" />,
-      title: "Developer Empowerment",
-      description: "Providing a completely free platform for creators to showcase their capabilities and get hired directly"
+      title: "Finding Top Talent",
+      description: "Onboarding the best developers to help consumers build high-quality applications"
     },
     {
       icon: <BarChart3 className="w-8 h-8 text-primary" />,
-      title: "Direct Value",
-      description: "Eliminating middlemen and platform fees so that talent and consumers connect seamlessly"
+      title: "Competitive Costs",
+      description: "Connecting consumers with top talent to deliver the best products at competitive pricing"
     },
     {
       icon: <Share2 className="w-8 h-8 text-secondary" />,
-      title: "Community-Driven",
-      description: "Fostering a thriving ecosystem where developers collaborate, share projects, and grow together"
+      title: "Connecting as the Bridge",
+      description: "Acting as the middleman to seamlessly pair consumers with the exact right developer for their needs"
     },
     {
       icon: <Rocket className="w-8 h-8 text-primary" />,
       title: "Innovation Showcase",
-      description: "Accelerating technology adoption by making it easy to find developers who build cutting-edge tools"
+      description: "Accelerating technology adoption by making it easy to find developers who build exceptional products"
     },
     {
       icon: <Lock className="w-8 h-8 text-secondary" />,
       title: "Trust & Quality",
-      description: "Ensuring high standards by allowing clients to view actual live projects before contacting developers"
+      description: "Ensuring high standards by connecting consumers only with verified and exceptional developers"
     }
   ];
 
@@ -44,8 +44,7 @@ const GoalsSection = () => {
             Our Mission
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Building the premier global network for developers,
-            where showcasing capabilities leads directly to business opportunities
+            Providing a comprehensive network of top developers to deliver exceptional products to consumers at competitive costs.
           </p>
         </div>
 

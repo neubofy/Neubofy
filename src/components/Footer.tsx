@@ -56,7 +56,8 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-foreground">Pages</h3>
             <div className="space-y-3">
               <Link href="/" className="block text-muted-foreground hover:text-primary transition-colors">Home</Link>
-              <Link href="/orbit" className="block text-muted-foreground hover:text-primary transition-colors">Projects</Link>
+              <Link href="/developers" className="block text-muted-foreground hover:text-primary transition-colors">Developers</Link>
+              <a href="https://neubofy.zohodesk.in/portal" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Support & Community</a>
             </div>
           </div>
 

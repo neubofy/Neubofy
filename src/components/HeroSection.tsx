@@ -55,7 +55,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <Shield className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold">100% Privacy-First AI Platform</span>
+            <span className="text-sm font-semibold">Connecting Talent With Consumers</span>
           </motion.div>
 
           {/* Main Headline */}
@@ -80,10 +80,10 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <p className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-              Showcase your capabilities, list your projects, and get hired directly.
+              Finding the best developers to provide consumers with the highest quality products at competitive costs.
             </p>
             <p className="text-xl text-muted-foreground">
-              Our goal is to create the ultimate free ecosystem—like LinkedIn for developers—where consumers find and contact top talent globally without platform interference.
+              Neubofy acts as the bridge, onboarding the world's top talent and connecting them with consumers to build exceptional, affordable applications.
             </p>
           </motion.div>
 
@@ -94,7 +94,7 @@ const HeroSection = () => {
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            <Link href="/orbit">
+            <Link href="/order">
               <motion.button
                 className="btn-3d text-xl px-10 py-5 group focus:outline-none focus:ring-2 focus:ring-primary/50"
                 whileHover={{ scale: 1.07 }}
@@ -102,19 +102,22 @@ const HeroSection = () => {
                 type="button"
               >
                 <Sparkles className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform" />
-                Explore Neubofy Orbit
+                Order Your App
                 <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
               </motion.button>
             </Link>
             
-            <motion.button
-              disabled
-              className="btn-3d bg-transparent border-2 border-primary text-xl px-10 py-5 group focus:outline-none opacity-50 cursor-not-allowed"
-              type="button"
-            >
-              <Zap className="w-6 h-6 mr-3" />
-              Coming Soon
-            </motion.button>
+            <Link href="/developers">
+              <motion.button
+                className="btn-3d bg-transparent border-2 border-primary text-xl px-10 py-5 group focus:outline-none"
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.97 }}
+                type="button"
+              >
+                <Zap className="w-6 h-6 mr-3" />
+                Register as Developer
+              </motion.button>
+            </Link>
           </motion.div>
 
           {/* Hero Dashboard Mockup */}
@@ -141,16 +144,16 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.7 }}
           >
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">100%</div>
-              <div className="text-muted-foreground font-medium">Free to Use</div>
+              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Top</div>
+              <div className="text-muted-foreground font-medium">Global Developers</div>
             </div>
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">0%</div>
-              <div className="text-muted-foreground font-medium">Platform Fees</div>
+              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Competitive</div>
+              <div className="text-muted-foreground font-medium">Pricing</div>
             </div>
             <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Direct</div>
-              <div className="text-muted-foreground font-medium">Client Contact</div>
+              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Best</div>
+              <div className="text-muted-foreground font-medium">Quality Products</div>
             </div>
           </motion.div>
         </motion.div>

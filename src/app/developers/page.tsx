@@ -18,14 +18,14 @@ export default function DevelopersPage() {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-primary mb-8 animate-fade-in-up">
           <Sparkles className="w-4 h-4" />
-          <span className="text-sm font-semibold tracking-wide uppercase">New Infrastructure</span>
+          <span className="text-sm font-semibold tracking-wide uppercase">Join The Network</span>
         </div>
 
         {/* Hero Section */}
         <div className="space-y-6 mb-16">
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight animate-fade-in-up" style={{ animationDelay: "100ms" }}>
             <span className="bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text text-transparent">
-              Developer Profiles
+              Register as a Developer
             </span>
             <br />
             <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent mt-2 inline-block">
@@ -34,7 +34,7 @@ export default function DevelopersPage() {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-            We're building the ultimate global platform for independent and student developers to showcase their capabilities and connect directly with clients.
+            We're building a comprehensive global network of the best software developers to connect you directly with consumers looking for high-quality products.
           </p>
         </div>
 
@@ -44,8 +44,8 @@ export default function DevelopersPage() {
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
               <TerminalSquare className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Showcase Portfolios</h3>
-            <p className="text-muted-foreground">List your best projects and let your capabilities speak for themselves on a global stage.</p>
+            <h3 className="text-xl font-semibold text-foreground mb-2">Showcase Expertise</h3>
+            <p className="text-muted-foreground">List your best projects and demonstrate your true potential to a worldwide audience of consumers.</p>
           </div>
 
           <div className="glass-card p-6 rounded-2xl hover:border-primary/30 transition-all duration-300 relative overflow-hidden group">
@@ -53,29 +53,24 @@ export default function DevelopersPage() {
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
               <Rocket className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Direct Networking</h3>
-            <p className="text-muted-foreground">Connect with clients instantly. Zero platform fees, zero middleman interference.</p>
+            <h3 className="text-xl font-semibold text-foreground mb-2">Build Exceptional Apps</h3>
+            <p className="text-muted-foreground">Neubofy acts as the bridge to connect you with consumers seeking high-quality applications at competitive costs.</p>
           </div>
 
           <div className="glass-card p-6 rounded-2xl hover:border-primary/30 transition-all duration-300">
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
               <Hammer className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Robust Backend</h3>
-            <p className="text-muted-foreground">We are engineering a powerful infrastructure to manage and scale your developer content seamlessly.</p>
+            <h3 className="text-xl font-semibold text-foreground mb-2">Robust Platform</h3>
+            <p className="text-muted-foreground">We are engineering a powerful infrastructure to support top talent and match you with the right opportunities.</p>
           </div>
         </div>
 
         {/* Action */}
         <div className="animate-fade-in-up flex flex-col sm:flex-row items-center justify-center gap-4" style={{ animationDelay: "400ms" }}>
           <Button disabled className="btn-electric rounded-full px-8 py-6 text-lg w-full sm:w-auto cursor-not-allowed opacity-50">
-            Register Developer (Coming Soon)
+            Registration Form (Coming Soon)
           </Button>
-          <Link href="/orbit">
-            <Button variant="outline" className="rounded-full px-8 py-6 text-lg border-primary/20 hover:border-primary hover:bg-primary/5 w-full sm:w-auto">
-              Explore Projects
-            </Button>
-          </Link>
         </div>
       </div>
     </div>
