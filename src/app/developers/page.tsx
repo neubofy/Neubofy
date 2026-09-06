@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Sparkles, User, ExternalLink, Code2 } from "lucide-react";
+import { Sparkles, User, ExternalLink, Code2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { collection, onSnapshot, query, where, limit, orderBy } from "firebase/firestore";
@@ -11,9 +11,10 @@ import { User as FirebaseUser } from "firebase/auth";
 interface DeveloperProfile {
   id: string;
   name: string;
+  photoURL?: string;
   bio: string;
   portfolioUrl?: string;
-  projects?: { title: string; link?: string; description?: string }[];
+  projects?: { title: string; link?: string; description?: string; stars?: number }[];
 }
 
 export default function DevelopersPage() {
@@ -56,6 +57,7 @@ export default function DevelopersPage() {
             return {
               id: doc.id,
               name: data.name,
+            photoURL: data.photoURL,
               bio: data.bio,
               portfolioUrl: data.portfolioUrl,
               projects: data.projects,
@@ -148,8 +150,12 @@ export default function DevelopersPage() {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
-                      {dev.name.charAt(0).toUpperCase()}
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden shrink-0">
+                      {dev.photoURL ? (
+                        <img src={dev.photoURL} alt={dev.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      ) : (
+                        <span className="text-primary font-bold text-xl">{dev.name.charAt(0).toUpperCase()}</span>
+                      )}
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{dev.name}</h3>
@@ -174,10 +180,17 @@ export default function DevelopersPage() {
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border pb-1">Featured Projects</h4>
                     {dev.projects.slice(0, 2).map((proj, pIdx) => (
                       <div key={pIdx} className="bg-background/40 p-3 rounded-lg text-sm">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="font-semibold text-foreground">{proj.title}</span>
+                        <div className="flex justify-between items-center mb-1 gap-2">
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <span className="font-semibold text-foreground truncate">{proj.title}</span>
+                            {proj.stars !== undefined && (
+                               <span className="text-[10px] bg-background/50 text-yellow-500 border border-yellow-500/20 px-1.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                                 <Star size={10} className="fill-yellow-500" /> {proj.stars}
+                               </span>
+                            )}
+                          </div>
                           {proj.link && (
-                            <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-xs flex items-center gap-1">
+                            <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-xs flex items-center gap-1 shrink-0">
                               View <ExternalLink size={10} />
                             </a>
                           )}

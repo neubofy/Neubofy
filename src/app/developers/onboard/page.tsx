@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, OAuthProvider } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import ReCAPTCHA from "react-google-recaptcha";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
@@ -64,12 +64,16 @@ export default function OnboardDeveloperPage() {
     }
   };
 
-  const handleProviderJoin = async (provider: 'google' | 'github') => {
+  const handleProviderJoin = async (provider: 'google' | 'github' | 'apple') => {
     setLoading(true);
     setError("");
     try {
       const auth = getFirebaseAuth();
-      const authProvider = provider === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
+      let authProvider;
+      if (provider === 'google') authProvider = new GoogleAuthProvider();
+      else if (provider === 'github') authProvider = new GithubAuthProvider();
+      else authProvider = new OAuthProvider('apple.com');
+
       const userCredential = await signInWithPopup(auth, authProvider);
       const user = userCredential.user;
 
@@ -79,6 +83,7 @@ export default function OnboardDeveloperPage() {
       if (!docSnap.exists()) {
         await setDoc(docRef, {
           name: user.displayName || "New Developer",
+          photoURL: user.photoURL || "",
           bio: "I just joined!",
           portfolioUrl: "",
           verified: true,
@@ -188,7 +193,7 @@ export default function OnboardDeveloperPage() {
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <Button
               type="button"
               variant="outline"
@@ -206,6 +211,15 @@ export default function OnboardDeveloperPage() {
               className="w-full"
             >
               GitHub
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={() => handleProviderJoin('apple')}
+              className="w-full"
+            >
+              Apple
             </Button>
           </div>
         </form>

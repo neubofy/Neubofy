@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, OAuthProvider } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -35,12 +35,16 @@ export default function LoginPage() {
     }
   };
 
-  const handleProviderLogin = async (provider: 'google' | 'github') => {
+  const handleProviderLogin = async (provider: 'google' | 'github' | 'apple') => {
     setLoading(true);
     setError("");
     try {
       const auth = getFirebaseAuth();
-      const authProvider = provider === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
+      let authProvider;
+      if (provider === 'google') authProvider = new GoogleAuthProvider();
+      else if (provider === 'github') authProvider = new GithubAuthProvider();
+      else authProvider = new OAuthProvider('apple.com');
+
       await signInWithPopup(auth, authProvider);
       router.push("/developers/profile");
     } catch (err: unknown) {
@@ -102,7 +106,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <Button
               type="button"
               variant="outline"
@@ -120,6 +124,15 @@ export default function LoginPage() {
               className="w-full"
             >
               GitHub
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={() => handleProviderLogin('apple')}
+              className="w-full"
+            >
+              Apple
             </Button>
           </div>
 
