@@ -62,7 +62,7 @@ const RequestFlowAnimation = () => {
 
         {/* Center: Animated Flow */}
         <div className="flex-1 relative min-h-[300px] w-full flex items-center justify-center">
-          {/* Central Hub representing Neubofy Platform */}
+          {/* Central Hub representing Neubofy™ Platform */}
           <motion.div
             className="absolute z-10 w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20"
             animate={{
@@ -70,7 +70,7 @@ const RequestFlowAnimation = () => {
             }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <div className="text-white font-bold text-xl">Neubofy</div>
+            <div className="text-white font-bold text-xl">Neubofy™</div>
           </motion.div>
 
           {/* Floating Request Nodes */}

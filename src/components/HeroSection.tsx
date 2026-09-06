@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 
 const HeroSection = () => {
   const { elementRef, isVisible } = useScrollAnimation();
-  const { elementRef: observerRef, isIntersecting } = useIntersectionObserver();
 
   return (
     <ParallaxBackground>
@@ -27,14 +26,14 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
             className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse-slow"
-            style={{ animationDelay: '1s' }}
+            style={{ animationDelay: "1s" }}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
             className="absolute top-1/2 left-1/2 w-32 h-32 bg-tertiary/10 rounded-full blur-2xl animate-pulse-slow"
-            style={{ animationDelay: '2s' }}
+            style={{ animationDelay: "2s" }}
           />
         </div>
 
@@ -43,7 +42,7 @@ const HeroSection = () => {
           className="text-center"
           initial={{ opacity: 0, y: 40 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
           {/* Badge */}
           <motion.div
@@ -81,7 +80,7 @@ const HeroSection = () => {
               Finding the best developers to provide consumers with the highest quality products at competitive costs.
             </p>
             <p className="text-xl text-muted-foreground">
-              Neubofy acts as the bridge, onboarding the world's top talent and connecting them with consumers to build exceptional, affordable applications.
+              Neubofy™ acts as the bridge, onboarding the world&apos;s top talent and connecting them with consumers to build exceptional, affordable applications.
             </p>
           </motion.div>
 
