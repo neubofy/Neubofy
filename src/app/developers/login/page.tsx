@@ -6,6 +6,7 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Github
 import { getFirebaseAuth } from "@/lib/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { X } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -61,6 +62,9 @@ export default function LoginPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md p-8 rounded-2xl glass-card">
+        <Link href="/developers" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
+          <X size={20} />
+        </Link>
         <h1 className="text-3xl font-bold text-center mb-6">Developer Login</h1>
 
         {error && (
