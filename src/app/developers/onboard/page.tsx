@@ -48,7 +48,7 @@ function OnboardForm() {
       const userCredential = await createUserWithEmailAndPassword(getFirebaseAuth(), form.email, form.password);
       const user = userCredential.user;
 
-      await setDoc(doc(getFirebaseDb(), "developers", user.uid), {
+      await setDoc(doc(getFirebaseDb(), "users", user.uid), {
         name: form.name,
         bio: form.bio,
         portfolioUrl: form.portfolioUrl,
@@ -78,7 +78,7 @@ function OnboardForm() {
       const userCredential = await signInWithPopup(auth, authProvider);
       const user = userCredential.user;
 
-      const docRef = doc(getFirebaseDb(), "developers", user.uid);
+      const docRef = doc(getFirebaseDb(), "users", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
@@ -102,7 +102,7 @@ function OnboardForm() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] mix-blend-screen animate-blob" />
       </div>
@@ -229,7 +229,7 @@ export default function OnboardDeveloperPage() {
 
   if (!siteKey) {
     return (
-       <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
+       <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
          <div className="glass-card p-8 rounded-2xl max-w-md text-center">
             <h2 className="text-xl font-bold text-destructive mb-2">Configuration Error</h2>
             <p className="text-muted-foreground text-sm">reCAPTCHA site key is missing.</p>

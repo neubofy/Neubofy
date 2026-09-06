@@ -1,39 +1,46 @@
 "use server";
 
-import { RecaptchaEnterpriseServiceClient } from "@google-cloud/recaptcha-enterprise";
-
 export async function verifyRecaptcha(token: string): Promise<boolean> {
   const projectID = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  const apiKey = process.env.apiKey || process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
-  if (!projectID || !recaptchaKey) {
-    console.error("Project ID or Recaptcha Site Key is missing.");
+  if (!projectID || !recaptchaKey || !apiKey) {
+    console.error("Project ID, Recaptcha Site Key, or API Key is missing.");
     return false;
   }
 
-  const client = new RecaptchaEnterpriseServiceClient();
-
   try {
-    const projectPath = client.projectPath(projectID);
-    const request = {
-      assessment: {
-        event: {
-          token: token,
-          siteKey: recaptchaKey,
-        },
-      },
-      parent: projectPath,
+    const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${projectID}/assessments?key=${apiKey}`;
+    const payload = {
+      event: {
+        token: token,
+        siteKey: recaptchaKey,
+      }
     };
 
-    const [response] = await client.createAssessment(request);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-    if (!response.tokenProperties || !response.tokenProperties.valid) {
-      console.error(`CreateAssessment failed: ${response.tokenProperties?.invalidReason}`);
+    if (!response.ok) {
+      console.error(`reCAPTCHA API request failed with status: ${response.status}`);
       return false;
     }
 
-    if (response.tokenProperties.action === "signup") {
-      const score = response.riskAnalysis?.score ?? 0;
+    const data = await response.json();
+
+    if (!data.tokenProperties || !data.tokenProperties.valid) {
+      console.error(`CreateAssessment failed: ${data.tokenProperties?.invalidReason}`);
+      return false;
+    }
+
+    if (data.tokenProperties.action === "signup") {
+      const score = data.riskAnalysis?.score ?? 0;
       console.log(`reCAPTCHA score: ${score}`);
       // Typically score >= 0.5 is considered a legitimate human.
       return score >= 0.5;
@@ -44,8 +51,5 @@ export async function verifyRecaptcha(token: string): Promise<boolean> {
   } catch (error) {
     console.error("Error verifying reCAPTCHA Enterprise:", error);
     return false;
-  } finally {
-    // Avoid leaking clients / connections in serverless functions
-    client.close();
   }
 }

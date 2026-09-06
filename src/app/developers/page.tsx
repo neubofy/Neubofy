@@ -46,7 +46,7 @@ export default function DevelopersPage() {
     const timer = setTimeout(() => {
       try {
         const q = query(
-          collection(getFirebaseDb(), "developers"),
+          collection(getFirebaseDb(), "users"),
           where("verified", "==", true),
           limit(50)
         );
@@ -82,7 +82,7 @@ export default function DevelopersPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center pt-24 pb-16">
+    <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center pt-24 pb-16">
       {/* Background Effects */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] mix-blend-screen animate-blob" />
