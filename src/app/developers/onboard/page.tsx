@@ -1,17 +1,19 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, OAuthProvider } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import ReCAPTCHA from "react-google-recaptcha";
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { verifyRecaptcha } from "@/app/actions/verifyRecaptcha";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import Link from "next/link";
 
-export default function OnboardDeveloperPage() {
+function OnboardForm() {
   const router = useRouter();
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -33,10 +35,10 @@ export default function OnboardDeveloperPage() {
     setError("");
 
     try {
-      const token = recaptchaRef.current?.getValue();
-      if (!token) {
-        throw new Error("Please complete the reCAPTCHA.");
+      if (!executeRecaptcha) {
+        throw new Error("reCAPTCHA has not been loaded.");
       }
+      const token = await executeRecaptcha("signup");
 
       const isValid = await verifyRecaptcha(token);
       if (!isValid) {
@@ -58,7 +60,6 @@ export default function OnboardDeveloperPage() {
       router.push("/developers");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred during registration.");
-      recaptchaRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -107,6 +108,9 @@ export default function OnboardDeveloperPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md p-8 rounded-2xl glass-card">
+        <Link href="/developers" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
+          <X size={20} />
+        </Link>
         <h1 className="text-3xl font-bold text-center mb-6">Join as Developer</h1>
 
         {error && (
@@ -172,15 +176,7 @@ export default function OnboardDeveloperPage() {
             />
           </div>
 
-          <div className="flex justify-center my-4">
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LcTAKwtAAAAAARRswvVeCt-q-ELRqEoPydi43ra"}
-              theme="dark"
-            />
-          </div>
-
-          <Button type="submit" disabled={loading} className="w-full btn-electric">
+          <Button type="submit" disabled={loading} className="w-full btn-electric mt-4">
             {loading ? "Registering..." : "Submit Registration"}
           </Button>
 
@@ -225,5 +221,26 @@ export default function OnboardDeveloperPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function OnboardDeveloperPage() {
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
+
+  if (!siteKey) {
+    return (
+       <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
+         <div className="glass-card p-8 rounded-2xl max-w-md text-center">
+            <h2 className="text-xl font-bold text-destructive mb-2">Configuration Error</h2>
+            <p className="text-muted-foreground text-sm">reCAPTCHA site key is missing.</p>
+         </div>
+       </div>
+    );
+  }
+
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={siteKey} useEnterprise={true}>
+      <OnboardForm />
+    </GoogleReCaptchaProvider>
   );
 }
