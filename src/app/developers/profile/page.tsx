@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { LogOut, Plus, Trash2, Save } from "lucide-react";
 import { signOut, User } from "firebase/auth";
@@ -48,12 +48,12 @@ export default function ProfilePage() {
   }, []);
 
   useEffect(() => {
+    let unsubscribe: () => void;
     if (!loading && !user) {
       router.push("/developers/login");
     } else if (user) {
-      const fetchProfile = async () => {
-        const docRef = doc(getFirebaseDb(), "developers", user.uid);
-        const docSnap = await getDoc(docRef);
+      const docRef = doc(getFirebaseDb(), "developers", user.uid);
+      unsubscribe = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setProfileData({
@@ -63,9 +63,12 @@ export default function ProfilePage() {
             projects: data.projects || [],
           });
         }
-      };
-      fetchProfile();
+      });
     }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [user, loading, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
