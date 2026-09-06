@@ -153,7 +153,7 @@ export default function ProfilePage() {
       }
 
       const provider = new GithubAuthProvider();
-      provider.addScope('repo');
+      // Omitting 'repo' scope so it only requests basic profile and public repo access
 
       try {
         const result = await linkWithPopup(user, provider);
@@ -297,8 +297,13 @@ export default function ProfilePage() {
   };
 
   const handleLogout = async () => {
-    await signOut(getFirebaseAuth());
-    router.push("/developers");
+    try {
+      await signOut(getFirebaseAuth());
+      setUser(null);
+      router.push("/developers");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
   };
 
   if (loading || !user) {
@@ -307,10 +312,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden pt-24 pb-16 px-4">
-       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px] mix-blend-screen animate-blob" />
-      </div>
-
       <div className="container relative z-10 mx-auto max-w-3xl">
         <div className="mb-4">
           <Link href="/developers" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">

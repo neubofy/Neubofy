@@ -93,12 +93,6 @@ export default function DevelopersPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center pt-24 pb-16">
-      {/* Background Effects */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] mix-blend-screen animate-blob" />
-        <div className="absolute top-[40%] -right-[20%] w-[60%] h-[60%] rounded-full bg-purple-500/10 blur-[150px] mix-blend-screen animate-blob animation-delay-2000" />
-      </div>
-
       <div className="container relative z-10 mx-auto px-4 w-full max-w-6xl">
 
         {/* Top Banner Auth Actions */}
