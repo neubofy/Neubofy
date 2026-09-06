@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Sparkles, User, ExternalLink, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where, limit, orderBy } from "firebase/firestore";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { User as FirebaseUser } from "firebase/auth";
 
@@ -39,22 +39,44 @@ export default function DevelopersPage() {
   }, [currentUser]);
 
   useEffect(() => {
-    const fetchDevs = async () => {
+    let unsubscribe: () => void;
+
+    // Defer setup slightly to ensure Firebase is initialized if we reached here fast
+    const timer = setTimeout(() => {
       try {
-        const q = query(collection(getFirebaseDb(), "developers"), where("verified", "==", true));
-        const snapshot = await getDocs(q);
-        const devsData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as DeveloperProfile[];
-        setDevelopers(devsData);
+        const q = query(
+          collection(getFirebaseDb(), "developers"),
+          where("verified", "==", true),
+          limit(50)
+        );
+
+        unsubscribe = onSnapshot(q, (snapshot) => {
+          const devsData = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              name: data.name,
+              bio: data.bio,
+              portfolioUrl: data.portfolioUrl,
+              projects: data.projects,
+            };
+          }) as DeveloperProfile[];
+          setDevelopers(devsData);
+          setLoading(false);
+        }, (err) => {
+          console.error("Failed to load developers:", err);
+          setLoading(false);
+        });
       } catch (err) {
-        console.error("Failed to load developers:", err);
-      } finally {
+        console.error("Failed to setup listener for developers:", err);
         setLoading(false);
       }
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+      if (unsubscribe) unsubscribe();
     };
-    fetchDevs();
   }, []);
 
   return (

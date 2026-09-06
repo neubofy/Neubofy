@@ -2,8 +2,8 @@
 
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import ReCAPTCHA from "react-google-recaptcha";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { verifyRecaptcha } from "@/app/actions/verifyRecaptcha";
@@ -47,9 +47,7 @@ export default function OnboardDeveloperPage() {
       const user = userCredential.user;
 
       await setDoc(doc(getFirebaseDb(), "developers", user.uid), {
-        uid: user.uid,
         name: form.name,
-        email: form.email,
         bio: form.bio,
         portfolioUrl: form.portfolioUrl,
         verified: true, // We auto-verify them so they show on the list for this demo
@@ -61,6 +59,37 @@ export default function OnboardDeveloperPage() {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred during registration.");
       recaptchaRef.current?.reset();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProviderJoin = async (provider: 'google' | 'github') => {
+    setLoading(true);
+    setError("");
+    try {
+      const auth = getFirebaseAuth();
+      const authProvider = provider === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
+      const userCredential = await signInWithPopup(auth, authProvider);
+      const user = userCredential.user;
+
+      const docRef = doc(getFirebaseDb(), "developers", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        await setDoc(docRef, {
+          name: user.displayName || "New Developer",
+          bio: "I just joined!",
+          portfolioUrl: "",
+          verified: true,
+          projects: [],
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      router.push("/developers");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : `Failed to join with ${provider}.`);
     } finally {
       setLoading(false);
     }
@@ -141,7 +170,7 @@ export default function OnboardDeveloperPage() {
           <div className="flex justify-center my-4">
             <ReCAPTCHA
               ref={recaptchaRef}
-              sitekey="6LcTAKwtAAAAAARRswvVeCt-q-ELRqEoPydi43ra"
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LcTAKwtAAAAAARRswvVeCt-q-ELRqEoPydi43ra"}
               theme="dark"
             />
           </div>
@@ -149,6 +178,36 @@ export default function OnboardDeveloperPage() {
           <Button type="submit" disabled={loading} className="w-full btn-electric">
             {loading ? "Registering..." : "Submit Registration"}
           </Button>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={() => handleProviderJoin('google')}
+              className="w-full"
+            >
+              Google
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={() => handleProviderJoin('github')}
+              className="w-full"
+            >
+              GitHub
+            </Button>
+          </div>
         </form>
       </div>
     </div>

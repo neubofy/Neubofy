@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -30,6 +30,21 @@ export default function LoginPage() {
       router.push("/developers/profile");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Invalid email or password.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProviderLogin = async (provider: 'google' | 'github') => {
+    setLoading(true);
+    setError("");
+    try {
+      const auth = getFirebaseAuth();
+      const authProvider = provider === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
+      await signInWithPopup(auth, authProvider);
+      router.push("/developers/profile");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : `Failed to sign in with ${provider}.`);
     } finally {
       setLoading(false);
     }
@@ -77,6 +92,36 @@ export default function LoginPage() {
           <Button type="submit" disabled={loading} className="w-full btn-electric mt-6">
             {loading ? "Logging in..." : "Login"}
           </Button>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={() => handleProviderLogin('google')}
+              className="w-full"
+            >
+              Google
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={loading}
+              onClick={() => handleProviderLogin('github')}
+              className="w-full"
+            >
+              GitHub
+            </Button>
+          </div>
 
           <div className="mt-4 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
