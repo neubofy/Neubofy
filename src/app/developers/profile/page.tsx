@@ -7,7 +7,7 @@ import { doc, onSnapshot, updateDoc, deleteDoc, setDoc } from "firebase/firestor
 import { Button } from "@/components/ui/button";
 import { LogOut, Plus, Trash2, Save, AlertTriangle, Github, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { signOut, User, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser, GithubAuthProvider, linkWithPopup } from "firebase/auth";
+import { signOut, User, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser, GithubAuthProvider, linkWithPopup, GoogleAuthProvider, OAuthProvider } from "firebase/auth";
 
 interface Project {
   title: string;
@@ -141,54 +141,17 @@ export default function ProfilePage() {
   };
 
   const fetchGithubRepos = async () => {
+    if (!githubUsername) return;
     setIsFetchingGithub(true);
     setGithubError("");
 
     try {
-      let token = "";
-      const auth = getFirebaseAuth();
+      const res = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=10`);
 
-      if (!user) {
-        throw new Error("Must be logged in to connect GitHub.");
+      if (!res.ok) {
+        throw new Error("User not found or API limit reached.");
       }
 
-      const provider = new GithubAuthProvider();
-      // Omitting 'repo' scope so it only requests basic profile and public repo access
-
-      try {
-        const result = await linkWithPopup(user, provider);
-        const credential = GithubAuthProvider.credentialFromResult(result);
-        if (credential?.accessToken) {
-            token = credential.accessToken;
-        }
-      } catch (err: any) {
-        if (err.code === 'auth/credential-already-in-use') {
-           const reauthResult = await linkWithPopup(auth.currentUser!, provider).catch(async () => {
-               return null;
-           });
-
-           if(reauthResult) {
-               const cred = GithubAuthProvider.credentialFromResult(reauthResult);
-               token = cred?.accessToken || "";
-           } else {
-              throw new Error("Could not retrieve GitHub access token. Try logging in with GitHub directly.");
-           }
-        } else {
-            throw err;
-        }
-      }
-
-      if (!token) {
-        throw new Error("Could not retrieve GitHub access token.");
-      }
-
-      const res = await fetch(`https://api.github.com/user/repos?sort=updated&per_page=10`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (!res.ok) throw new Error("Failed to fetch repos from GitHub");
       const data = await res.json();
       setGithubRepos(data);
     } catch (err: any) {
@@ -306,6 +269,36 @@ export default function ProfilePage() {
     }
   };
 
+  const handleLinkProvider = async (providerName: 'google' | 'github' | 'apple') => {
+    if (!user) return;
+    setAuthError("");
+    setAuthSuccess("");
+    try {
+      let provider;
+      if (providerName === 'google') {
+        provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+      } else if (providerName === 'github') {
+        provider = new GithubAuthProvider();
+      } else {
+        provider = new OAuthProvider('apple.com');
+      }
+
+      await linkWithPopup(user, provider);
+      setAuthSuccess(`Successfully linked ${providerName} account!`);
+      // Force refresh user object
+      setUser({ ...getFirebaseAuth().currentUser } as User);
+    } catch (err: any) {
+      if (err.code === 'auth/credential-already-in-use') {
+        setAuthError(`This ${providerName} account is already linked to another profile.`);
+      } else if (err.code === 'auth/provider-already-linked') {
+        setAuthError(`You have already linked a ${providerName} account.`);
+      } else {
+        setAuthError(err.message || `Failed to link ${providerName} account.`);
+      }
+    }
+  };
+
   if (loading || !user) {
     return <div className="min-h-screen flex items-center justify-center pt-24"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>;
   }
@@ -325,8 +318,8 @@ export default function ProfilePage() {
           </Button>
         </div>
 
-        <div className="glass-card p-8 rounded-2xl mb-8">
-          <h2 className="text-xl font-semibold border-b border-border pb-2 mb-4">Account Credentials</h2>
+        <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-primary/10 mb-8 backdrop-blur-xl bg-background/40">
+          <h2 className="text-2xl font-bold tracking-tight border-b border-border/50 pb-3 mb-4 text-foreground/90">Account Credentials</h2>
           {authError && (
             <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-lg">
               {authError}
@@ -375,14 +368,46 @@ export default function ProfilePage() {
               {updatingAuth ? "Updating..." : "Update Credentials"}
             </Button>
           </form>
+
+          {/* Social Provider Linking */}
+          <div className="mt-8 pt-6 border-t border-border/50">
+            <h3 className="text-lg font-medium mb-3">Linked Accounts</h3>
+            <p className="text-sm text-muted-foreground mb-4">Link additional providers to sign in with any of them.</p>
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant="outline"
+                onClick={() => handleLinkProvider('google')}
+                disabled={user?.providerData.some(p => p.providerId === 'google.com')}
+                className="gap-2"
+              >
+                {user?.providerData.some(p => p.providerId === 'google.com') ? "Google Linked ✓" : "Link Google"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleLinkProvider('github')}
+                disabled={user?.providerData.some(p => p.providerId === 'github.com')}
+                className="gap-2"
+              >
+                {user?.providerData.some(p => p.providerId === 'github.com') ? "GitHub Linked ✓" : "Link GitHub"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleLinkProvider('apple')}
+                disabled={user?.providerData.some(p => p.providerId === 'apple.com')}
+                className="gap-2"
+              >
+                {user?.providerData.some(p => p.providerId === 'apple.com') ? "Apple Linked ✓" : "Link Apple"}
+              </Button>
+            </div>
+          </div>
         </div>
 
-        <div className="glass-card p-8 rounded-2xl">
+        <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-primary/10 mb-8 backdrop-blur-xl bg-background/40">
           <form onSubmit={handleSave} className="space-y-6">
 
             {/* Basic Info */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold border-b border-border pb-2">Basic Information</h2>
+              <h2 className="text-2xl font-bold tracking-tight border-b border-border/50 pb-3 mb-4 text-foreground/90">Basic Information</h2>
               <div>
                 <label className="block text-sm font-medium mb-1">Name</label>
                 <input
@@ -419,7 +444,7 @@ export default function ProfilePage() {
 
             {/* Contacts & Socials */}
             <div className="space-y-4 pt-6">
-              <h2 className="text-xl font-semibold border-b border-border pb-2">Contact & Social Links</h2>
+              <h2 className="text-2xl font-bold tracking-tight border-b border-border/50 pb-3 mb-4 text-foreground/90">Contact & Social Links</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Contact Email</label>
@@ -468,8 +493,8 @@ export default function ProfilePage() {
 
             {/* Projects */}
             <div className="space-y-4 pt-6">
-              <div className="flex justify-between items-center border-b border-border pb-2">
-                <h2 className="text-xl font-semibold">Featured Projects</h2>
+              <div className="flex justify-between items-center border-b border-border/50 pb-3 mb-4">
+                <h2 className="text-2xl font-bold tracking-tight text-foreground/90">Featured Projects</h2>
                 <div className="flex gap-2">
                   <Button type="button" variant="secondary" size="sm" onClick={addProject} className="gap-1">
                     <Plus size={14} /> Add Manual
@@ -479,15 +504,21 @@ export default function ProfilePage() {
 
               {/* GitHub Import Section */}
               <div className="bg-background/30 p-4 rounded-xl border border-border/50">
-                <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row gap-3 items-end">
+                  <div className="flex-1 w-full">
                     <label className="block text-sm font-medium mb-1 flex items-center gap-1">
                       <Github size={14} /> Import from GitHub
                     </label>
-                    <p className="text-xs text-muted-foreground">Connect your GitHub account to import your repositories.</p>
+                    <input
+                      type="text"
+                      placeholder="GitHub Username"
+                      value={githubUsername}
+                      onChange={(e) => setGithubUsername(e.target.value)}
+                      className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                    />
                   </div>
-                  <Button type="button" onClick={fetchGithubRepos} disabled={isFetchingGithub} className="w-full sm:w-auto gap-2">
-                    {isFetchingGithub ? <Loader2 size={16} className="animate-spin" /> : <><Github size={16}/> Connect GitHub</>}
+                  <Button type="button" onClick={fetchGithubRepos} disabled={isFetchingGithub || !githubUsername} className="w-full sm:w-auto">
+                    {isFetchingGithub ? <Loader2 size={16} className="animate-spin" /> : "Fetch Repos"}
                   </Button>
                 </div>
 
@@ -581,10 +612,10 @@ export default function ProfilePage() {
           </form>
         </div>
 
-        <div className="glass-card p-8 rounded-2xl border-destructive/20 mt-8 mb-8">
-          <div className="flex items-center gap-2 text-destructive mb-4">
-            <AlertTriangle size={20} />
-            <h2 className="text-xl font-semibold">Danger Zone</h2>
+        <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-destructive/30 mt-8 mb-8 backdrop-blur-xl bg-background/40">
+          <div className="flex items-center gap-2 text-destructive mb-4 border-b border-destructive/20 pb-3">
+            <AlertTriangle size={24} />
+            <h2 className="text-2xl font-bold tracking-tight">Danger Zone</h2>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
             Once you delete your account, there is no going back. Please be certain.

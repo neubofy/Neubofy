@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, OAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, OAuthProvider, getAdditionalUserInfo } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -51,7 +51,16 @@ export default function LoginPage() {
         authProvider = new OAuthProvider('apple.com');
       }
 
-      await signInWithPopup(auth, authProvider);
+      const result = await signInWithPopup(auth, authProvider);
+
+      const additionalUserInfo = getAdditionalUserInfo(result);
+      if (additionalUserInfo?.isNewUser) {
+        // If it's a new user, they shouldn't use the login page.
+        // Delete the newly auto-created Auth record so they can onboard properly.
+        await result.user.delete();
+        throw new Error("We can't find your account. Please join as a developer first.");
+      }
+
       router.push("/developers/profile");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : `Failed to sign in with ${provider}.`);
