@@ -28,7 +28,7 @@ const Footer = () => {
                 height={32}
                 className="rounded-full"
               />
-              <h3 className="text-2xl font-bold text-gradient-electric">Neubofy</h3>
+              <h3 className="text-2xl font-bold text-gradient-electric">Neubofy™</h3>
             </div>
             <p className="text-muted-foreground mb-4">
               The premier global network empowering student and independent developers to showcase their incredible capabilities and connect directly with clients.
@@ -87,7 +87,7 @@ const Footer = () => {
         <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-muted-foreground text-sm">
-              © {new Date().getFullYear()} Neubofy. All rights reserved.
+              © {new Date().getFullYear()} Neubofy™. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="text-muted-foreground hover:text-primary text-sm transition-colors">Privacy Policy</Link>

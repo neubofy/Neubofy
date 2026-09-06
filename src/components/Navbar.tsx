@@ -49,7 +49,7 @@ const Navbar = () => {
               className="rounded-full"
             />
             <span className="text-2xl font-bold text-foreground">
-              Neubofy
+              Neubofy™
             </span>
           </Link>
 

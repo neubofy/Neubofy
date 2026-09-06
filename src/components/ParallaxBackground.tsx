@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface ParallaxBackgroundProps {
   children: React.ReactNode;
@@ -12,14 +12,27 @@ const ParallaxBackground = ({ children }: ParallaxBackgroundProps) => {
   const [press, setPress] = useState<{x: number, y: number} | null>(null);
 
   useEffect(() => {
-    // Set initial position safely on client side
-    setMousePosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    // Only access window on the client side
+    let isMounted = true;
     
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (isMounted) {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      }
     };
+
+    // Safely set initial position on first run only, wrapped in setTimeout to avoid synchronous setState inside effect
+    setTimeout(() => {
+      if (isMounted) {
+        setMousePosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+      }
+    }, 0);
+
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => {
+      isMounted = false;
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   // Reset press after animation

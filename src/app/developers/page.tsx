@@ -34,7 +34,7 @@ export default function DevelopersPage() {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-            We're building a comprehensive global network of the best software developers to connect you directly with consumers looking for high-quality products.
+            We&apos;re building a comprehensive global network of the best software developers to connect you directly with consumers looking for high-quality products.
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export default function DevelopersPage() {
               <Rocket className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">Build Exceptional Apps</h3>
-            <p className="text-muted-foreground">Neubofy acts as the bridge to connect you with consumers seeking high-quality applications at competitive costs.</p>
+            <p className="text-muted-foreground">Neubofy™ acts as the bridge to connect you with consumers seeking high-quality applications at competitive costs.</p>
           </div>
 
           <div className="glass-card p-6 rounded-2xl hover:border-primary/30 transition-all duration-300">
