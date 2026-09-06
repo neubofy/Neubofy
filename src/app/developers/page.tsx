@@ -1,76 +1,178 @@
 "use client";
 
-import React from "react";
-import { Hammer, Sparkles, TerminalSquare, Rocket } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Sparkles, User, ExternalLink, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
+import { User as FirebaseUser } from "firebase/auth";
+
+interface DeveloperProfile {
+  id: string;
+  name: string;
+  bio: string;
+  portfolioUrl?: string;
+  projects?: { title: string; link?: string; description?: string }[];
+}
 
 export default function DevelopersPage() {
+  const [developers, setDevelopers] = useState<DeveloperProfile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+
+  useEffect(() => {
+    // Only subscribe on client side
+    if (typeof window !== "undefined") {
+      try {
+        const authObj = getFirebaseAuth();
+        const unsubscribe = authObj.onAuthStateChanged((user) => {
+          if (currentUser !== user) {
+            setCurrentUser(user);
+          }
+        });
+        return () => unsubscribe();
+      } catch (e) {
+        // App might not be initialized immediately
+      }
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    const fetchDevs = async () => {
+      try {
+        const q = query(collection(getFirebaseDb(), "developers"), where("verified", "==", true));
+        const snapshot = await getDocs(q);
+        const devsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as DeveloperProfile[];
+        setDevelopers(devsData);
+      } catch (err) {
+        console.error("Failed to load developers:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDevs();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center pt-24 pb-16">
+    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center pt-24 pb-16">
       {/* Background Effects */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] mix-blend-screen animate-blob" />
         <div className="absolute top-[40%] -right-[20%] w-[60%] h-[60%] rounded-full bg-purple-500/10 blur-[150px] mix-blend-screen animate-blob animation-delay-2000" />
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 text-center max-w-4xl">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-primary mb-8 animate-fade-in-up">
-          <Sparkles className="w-4 h-4" />
-          <span className="text-sm font-semibold tracking-wide uppercase">Join The Network</span>
+      <div className="container relative z-10 mx-auto px-4 w-full max-w-6xl">
+
+        {/* Top Banner Auth Actions */}
+        <div className="flex justify-end mb-8 animate-fade-in-up">
+          {currentUser ? (
+            <Link href="/developers/profile">
+              <Button className="btn-electric gap-2">
+                <User size={16} /> Manage Profile
+              </Button>
+            </Link>
+          ) : (
+            <div className="flex gap-4">
+              <Link href="/developers/login">
+                <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
+                  Developer Login
+                </Button>
+              </Link>
+              <Link href="/developers/onboard">
+                <Button className="btn-electric">
+                  Join as Developer
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
 
-        {/* Hero Section */}
-        <div className="space-y-6 mb-16">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+        {/* Header */}
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-primary mb-4 animate-fade-in-up">
+            <Sparkles className="w-4 h-4" />
+            <span className="text-sm font-semibold tracking-wide uppercase">Top Talent Network</span>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight animate-fade-in-up" style={{ animationDelay: "100ms" }}>
             <span className="bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text text-transparent">
-              Register as a Developer
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent mt-2 inline-block">
-              Coming Soon
+              Verified Developers
             </span>
           </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-            We&apos;re building a comprehensive global network of the best software developers to connect you directly with consumers looking for high-quality products.
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+            Connect with our curated network of exceptional software engineers. Review their projects and see what they can build for you.
           </p>
         </div>
 
-        {/* Features Preview */}
-        <div className="grid md:grid-cols-3 gap-6 text-left mb-16 animate-fade-in-up" style={{ animationDelay: "300ms" }}>
-          <div className="glass-card p-6 rounded-2xl hover:border-primary/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
-              <TerminalSquare className="w-6 h-6" />
+        {/* Developers Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {loading ? (
+            <div className="col-span-full flex justify-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Showcase Expertise</h3>
-            <p className="text-muted-foreground">List your best projects and demonstrate your true potential to a worldwide audience of consumers.</p>
-          </div>
-
-          <div className="glass-card p-6 rounded-2xl hover:border-primary/30 transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
-              <Rocket className="w-6 h-6" />
+          ) : developers.length === 0 ? (
+            <div className="col-span-full text-center py-20 glass-card rounded-xl">
+              <p className="text-muted-foreground text-lg">No verified developers found yet. Be the first to join!</p>
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Build Exceptional Apps</h3>
-            <p className="text-muted-foreground">Neubofy™ acts as the bridge to connect you with consumers seeking high-quality applications at competitive costs.</p>
-          </div>
+          ) : (
+            developers.map((dev, idx) => (
+              <div
+                key={dev.id}
+                className="glass-card p-6 rounded-2xl hover:border-primary/40 transition-all duration-300 animate-fade-in-up group flex flex-col h-full"
+                style={{ animationDelay: `${300 + (idx * 100)}ms` }}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
+                      {dev.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{dev.name}</h3>
+                      <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Code2 size={14}/> Developer
+                      </p>
+                    </div>
+                  </div>
+                  {dev.portfolioUrl && (
+                    <a href={dev.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors p-2 bg-background/50 rounded-full">
+                      <ExternalLink size={16} />
+                    </a>
+                  )}
+                </div>
 
-          <div className="glass-card p-6 rounded-2xl hover:border-primary/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
-              <Hammer className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">Robust Platform</h3>
-            <p className="text-muted-foreground">We are engineering a powerful infrastructure to support top talent and match you with the right opportunities.</p>
-          </div>
-        </div>
+                <p className="text-muted-foreground text-sm line-clamp-3 mb-6 flex-grow">
+                  {dev.bio}
+                </p>
 
-        {/* Action */}
-        <div className="animate-fade-in-up flex flex-col sm:flex-row items-center justify-center gap-4" style={{ animationDelay: "400ms" }}>
-          <Button disabled className="btn-electric rounded-full px-8 py-6 text-lg w-full sm:w-auto cursor-not-allowed opacity-50">
-            Registration Form (Coming Soon)
-          </Button>
+                {dev.projects && dev.projects.length > 0 && (
+                  <div className="space-y-3 mt-auto">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border pb-1">Featured Projects</h4>
+                    {dev.projects.slice(0, 2).map((proj, pIdx) => (
+                      <div key={pIdx} className="bg-background/40 p-3 rounded-lg text-sm">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="font-semibold text-foreground">{proj.title}</span>
+                          {proj.link && (
+                            <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-xs flex items-center gap-1">
+                              View <ExternalLink size={10} />
+                            </a>
+                          )}
+                        </div>
+                        {proj.description && (
+                          <p className="text-xs text-muted-foreground line-clamp-1">{proj.description}</p>
+                        )}
+                      </div>
+                    ))}
+                    {dev.projects.length > 2 && (
+                      <p className="text-xs text-center text-muted-foreground pt-1">+{dev.projects.length - 2} more projects</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
