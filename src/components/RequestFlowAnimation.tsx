@@ -3,7 +3,18 @@
 import { motion } from "framer-motion";
 import { Layers, Globe, Smartphone, BrainCircuit, Workflow, Code, CheckCircle2 } from "lucide-react";
 
+import { useState, useEffect } from "react";
+
 const RequestFlowAnimation = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Icons mapped to software requests
   const requests = [
     { id: 1, icon: Smartphone, label: "Android App", delay: 0 },
@@ -15,7 +26,7 @@ const RequestFlowAnimation = () => {
   ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto my-16 p-8 relative">
+    <div className="w-full max-w-5xl mx-auto my-8 md:my-16 p-4 md:p-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-primary/5 rounded-3xl blur-3xl -z-10" />
 
       <div className="text-center mb-12">
@@ -61,7 +72,7 @@ const RequestFlowAnimation = () => {
         </div>
 
         {/* Center: Animated Flow */}
-        <div className="flex-1 relative min-h-[300px] w-full flex items-center justify-center">
+        <div className="flex-1 relative min-h-[250px] md:min-h-[300px] w-full flex items-center justify-center my-8 md:my-0">
           {/* Central Hub representing Neubofy™ Platform */}
           <motion.div
             className="absolute z-10 w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20"
@@ -76,7 +87,7 @@ const RequestFlowAnimation = () => {
           {/* Floating Request Nodes */}
           {requests.map((req, index) => {
             const angle = (index / requests.length) * Math.PI * 2;
-            const radius = 140;
+            const radius = isMobile ? 80 : 140;
             const x = Math.cos(angle) * radius;
             const y = Math.sin(angle) * radius;
 
@@ -98,9 +109,20 @@ const RequestFlowAnimation = () => {
                   stiffness: 100
                 }}
               >
-                <div className="w-12 h-12 rounded-full glass-card flex items-center justify-center text-foreground border border-primary/20">
-                  <req.icon className="w-6 h-6" />
-                </div>
+                <motion.div
+                  className="w-12 h-12 rounded-full glass-card flex items-center justify-center text-foreground border border-primary/20 relative"
+                  whileHover={{ scale: 1.1, boxShadow: "0 0 15px rgba(244,63,94,0.5)" }}
+                >
+                  {/* Glowing SVG aura */}
+                  <motion.svg className="absolute inset-0 w-full h-full text-primary opacity-50" viewBox="0 0 100 100">
+                    <motion.circle
+                      cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="15 15"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                    />
+                  </motion.svg>
+                  <req.icon className="w-6 h-6 relative z-10" />
+                </motion.div>
                 <span className="text-xs font-medium bg-background/50 backdrop-blur-sm px-2 py-1 rounded-md border border-white/5">
                   {req.label}
                 </span>
@@ -113,12 +135,15 @@ const RequestFlowAnimation = () => {
                     x2={-x}
                     y2={-y}
                     stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeDasharray="4 4"
-                    className="text-primary/30"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 1, delay: req.delay + 0.5 }}
+                    strokeWidth="2"
+                    strokeDasharray="6 6"
+                    className="text-primary/40"
+                    initial={{ pathLength: 0, strokeDashoffset: 0 }}
+                    animate={{ pathLength: 1, strokeDashoffset: -20 }}
+                    transition={{
+                      pathLength: { duration: 1, delay: req.delay + 0.5 },
+                      strokeDashoffset: { duration: 1, repeat: Infinity, ease: "linear", delay: req.delay + 1.5 }
+                    }}
                   />
                 </svg>
               </motion.div>
