@@ -8,6 +8,8 @@ import { collection, onSnapshot, query, where, limit, orderBy } from "firebase/f
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { User as FirebaseUser } from "firebase/auth";
 
+import { X, Mail, MessageCircle, Share2 } from "lucide-react";
+
 interface DeveloperProfile {
   id: string;
   name: string;
@@ -15,12 +17,19 @@ interface DeveloperProfile {
   bio: string;
   portfolioUrl?: string;
   projects?: { title: string; link?: string; description?: string; stars?: number }[];
+  contacts?: {
+    email?: string;
+    telegram?: string;
+    whatsapp?: string;
+    socialUrl?: string;
+  };
 }
 
 export default function DevelopersPage() {
   const [developers, setDevelopers] = useState<DeveloperProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+  const [selectedDev, setSelectedDev] = useState<DeveloperProfile | null>(null);
 
   useEffect(() => {
     // Only subscribe on client side
@@ -61,6 +70,7 @@ export default function DevelopersPage() {
               bio: data.bio,
               portfolioUrl: data.portfolioUrl,
               projects: data.projects,
+              contacts: data.contacts,
             };
           }) as DeveloperProfile[];
           setDevelopers(devsData);
@@ -145,7 +155,8 @@ export default function DevelopersPage() {
             developers.map((dev, idx) => (
               <div
                 key={dev.id}
-                className="glass-card p-6 rounded-2xl hover:border-primary/40 transition-all duration-300 animate-fade-in-up group flex flex-col h-full"
+                onClick={() => setSelectedDev(dev)}
+                className="glass-card p-6 rounded-2xl hover:border-primary/40 transition-all duration-300 animate-fade-in-up group flex flex-col h-full cursor-pointer"
                 style={{ animationDelay: `${300 + (idx * 100)}ms` }}
               >
                 <div className="flex items-start justify-between mb-4">
@@ -210,6 +221,95 @@ export default function DevelopersPage() {
           )}
         </div>
       </div>
+
+      {/* Developer Details Modal */}
+      {selectedDev && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm overflow-y-auto">
+          <div className="glass-card relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-8 animate-fade-in-up mt-8 mb-8" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setSelectedDev(null)}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-background/50 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="flex flex-col md:flex-row gap-6 mb-8">
+              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden shrink-0 border border-primary/30">
+                {selectedDev.photoURL ? (
+                  <img src={selectedDev.photoURL} alt={selectedDev.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                ) : (
+                  <span className="text-primary font-bold text-4xl">{selectedDev.name.charAt(0).toUpperCase()}</span>
+                )}
+              </div>
+              <div className="flex-1">
+                <h2 className="text-3xl font-bold mb-2">{selectedDev.name}</h2>
+                <div className="flex flex-wrap gap-3 mb-4">
+                  {selectedDev.portfolioUrl && (
+                    <a href={selectedDev.portfolioUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-primary/10 text-primary px-3 py-1 rounded-full hover:bg-primary/20 transition-colors">
+                      <ExternalLink size={14} /> Portfolio
+                    </a>
+                  )}
+                  {selectedDev.contacts?.email && (
+                    <a href={`mailto:${selectedDev.contacts.email}`} className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
+                      <Mail size={14} /> Email
+                    </a>
+                  )}
+                  {selectedDev.contacts?.telegram && (
+                    <a href={`https://t.me/${selectedDev.contacts.telegram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
+                      <MessageCircle size={14} /> Telegram
+                    </a>
+                  )}
+                  {selectedDev.contacts?.whatsapp && (
+                    <a href={`https://wa.me/${selectedDev.contacts.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
+                      <MessageCircle size={14} /> WhatsApp
+                    </a>
+                  )}
+                  {selectedDev.contacts?.socialUrl && (
+                    <a href={selectedDev.contacts.socialUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
+                      <Share2 size={14} /> Social Profile
+                    </a>
+                  )}
+                </div>
+                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground whitespace-pre-wrap">
+                  {selectedDev.bio}
+                </div>
+              </div>
+            </div>
+
+            {selectedDev.projects && selectedDev.projects.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold border-b border-border pb-2">Projects & Experience</h3>
+                <div className="grid gap-4">
+                  {selectedDev.projects.map((proj, pIdx) => (
+                    <div key={pIdx} className="bg-background/40 p-4 rounded-xl border border-border/50">
+                      <div className="flex justify-between items-start gap-4 mb-2">
+                        <h4 className="font-semibold text-lg">{proj.title}</h4>
+                        <div className="flex items-center gap-3 shrink-0">
+                          {proj.stars !== undefined && (
+                            <span className="text-xs font-medium text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded-full flex items-center gap-1">
+                              <Star size={12} className="fill-yellow-500" /> {proj.stars}
+                            </span>
+                          )}
+                          {proj.link && (
+                            <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm flex items-center gap-1">
+                              Visit <ExternalLink size={12} />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      {proj.description && (
+                        <p className="text-sm text-muted-foreground">{proj.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Backdrop click to close */}
+          <div className="fixed inset-0 -z-10" onClick={() => setSelectedDev(null)}></div>
+        </div>
+      )}
     </div>
   );
 }

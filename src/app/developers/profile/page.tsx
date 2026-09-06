@@ -7,7 +7,7 @@ import { doc, onSnapshot, updateDoc, deleteDoc, setDoc } from "firebase/firestor
 import { Button } from "@/components/ui/button";
 import { LogOut, Plus, Trash2, Save, AlertTriangle, Github, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { signOut, User, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
+import { signOut, User, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser, GithubAuthProvider, linkWithPopup } from "firebase/auth";
 
 interface Project {
   title: string;
@@ -43,6 +43,12 @@ export default function ProfilePage() {
     bio: "",
     portfolioUrl: "",
     projects: [] as Project[],
+    contacts: {
+      email: "",
+      telegram: "",
+      whatsapp: "",
+      socialUrl: "",
+    },
   });
 
   const [githubUsername, setGithubUsername] = useState("");
@@ -85,6 +91,12 @@ export default function ProfilePage() {
             bio: data.bio || "",
             portfolioUrl: data.portfolioUrl || "",
             projects: data.projects || [],
+            contacts: {
+              email: data.contacts?.email || "",
+              telegram: data.contacts?.telegram || "",
+              whatsapp: data.contacts?.whatsapp || "",
+              socialUrl: data.contacts?.socialUrl || "",
+            }
           });
         }
       });
@@ -97,6 +109,16 @@ export default function ProfilePage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
+  };
+
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProfileData({
+      ...profileData,
+      contacts: {
+        ...profileData.contacts,
+        [e.target.name]: e.target.value,
+      },
+    });
   };
 
   const handleProjectChange = (index: number, field: keyof Project, value: string) => {
@@ -119,18 +141,58 @@ export default function ProfilePage() {
   };
 
   const fetchGithubRepos = async () => {
-    if (!githubUsername) return;
     setIsFetchingGithub(true);
     setGithubError("");
+
     try {
-      const res = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=10`);
-      if (!res.ok) {
-        throw new Error("User not found or API limit reached.");
+      let token = "";
+      const auth = getFirebaseAuth();
+
+      if (!user) {
+        throw new Error("Must be logged in to connect GitHub.");
       }
+
+      const provider = new GithubAuthProvider();
+      provider.addScope('repo');
+
+      try {
+        const result = await linkWithPopup(user, provider);
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        if (credential?.accessToken) {
+            token = credential.accessToken;
+        }
+      } catch (err: any) {
+        if (err.code === 'auth/credential-already-in-use') {
+           const reauthResult = await linkWithPopup(auth.currentUser!, provider).catch(async () => {
+               return null;
+           });
+
+           if(reauthResult) {
+               const cred = GithubAuthProvider.credentialFromResult(reauthResult);
+               token = cred?.accessToken || "";
+           } else {
+              throw new Error("Could not retrieve GitHub access token. Try logging in with GitHub directly.");
+           }
+        } else {
+            throw err;
+        }
+      }
+
+      if (!token) {
+        throw new Error("Could not retrieve GitHub access token.");
+      }
+
+      const res = await fetch(`https://api.github.com/user/repos?sort=updated&per_page=10`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch repos from GitHub");
       const data = await res.json();
       setGithubRepos(data);
-    } catch (err) {
-      setGithubError(err instanceof Error ? err.message : "Failed to fetch repositories.");
+    } catch (err: any) {
+      setGithubError(err.message || "Error fetching repos. Please try again.");
     } finally {
       setIsFetchingGithub(false);
     }
@@ -222,6 +284,7 @@ export default function ProfilePage() {
         bio: profileData.bio,
         portfolioUrl: profileData.portfolioUrl,
         projects: profileData.projects,
+        contacts: profileData.contacts,
         verified: true,
       }, { merge: true });
       alert("Profile updated successfully!");
@@ -353,6 +416,55 @@ export default function ProfilePage() {
               </div>
             </div>
 
+            {/* Contacts & Socials */}
+            <div className="space-y-4 pt-6">
+              <h2 className="text-xl font-semibold border-b border-border pb-2">Contact & Social Links</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Contact Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={profileData.contacts.email}
+                    onChange={handleContactChange}
+                    className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Telegram Handle</label>
+                  <input
+                    type="text"
+                    name="telegram"
+                    placeholder="@username"
+                    value={profileData.contacts.telegram}
+                    onChange={handleContactChange}
+                    className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">WhatsApp Number</label>
+                  <input
+                    type="text"
+                    name="whatsapp"
+                    placeholder="+1234567890"
+                    value={profileData.contacts.whatsapp}
+                    onChange={handleContactChange}
+                    className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Social Profile URL (Twitter/LinkedIn)</label>
+                  <input
+                    type="url"
+                    name="socialUrl"
+                    value={profileData.contacts.socialUrl}
+                    onChange={handleContactChange}
+                    className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Projects */}
             <div className="space-y-4 pt-6">
               <div className="flex justify-between items-center border-b border-border pb-2">
@@ -366,21 +478,15 @@ export default function ProfilePage() {
 
               {/* GitHub Import Section */}
               <div className="bg-background/30 p-4 rounded-xl border border-border/50">
-                <div className="flex flex-col sm:flex-row gap-3 items-end">
-                  <div className="flex-1 w-full">
+                <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                  <div>
                     <label className="block text-sm font-medium mb-1 flex items-center gap-1">
                       <Github size={14} /> Import from GitHub
                     </label>
-                    <input
-                      type="text"
-                      placeholder="GitHub Username"
-                      value={githubUsername}
-                      onChange={(e) => setGithubUsername(e.target.value)}
-                      className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    />
+                    <p className="text-xs text-muted-foreground">Connect your GitHub account to import your repositories.</p>
                   </div>
-                  <Button type="button" onClick={fetchGithubRepos} disabled={isFetchingGithub || !githubUsername} className="w-full sm:w-auto">
-                    {isFetchingGithub ? <Loader2 size={16} className="animate-spin" /> : "Fetch Repos"}
+                  <Button type="button" onClick={fetchGithubRepos} disabled={isFetchingGithub} className="w-full sm:w-auto gap-2">
+                    {isFetchingGithub ? <Loader2 size={16} className="animate-spin" /> : <><Github size={16}/> Connect GitHub</>}
                   </Button>
                 </div>
 

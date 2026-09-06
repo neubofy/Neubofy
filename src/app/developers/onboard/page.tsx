@@ -54,6 +54,12 @@ function OnboardForm() {
         portfolioUrl: form.portfolioUrl,
         verified: true, // We auto-verify them so they show on the list for this demo
         projects: [],
+        contacts: {
+          email: form.email,
+          telegram: "",
+          whatsapp: "",
+          socialUrl: ""
+        },
         createdAt: new Date().toISOString()
       });
 
@@ -89,6 +95,12 @@ function OnboardForm() {
           portfolioUrl: "",
           verified: true,
           projects: [],
+          contacts: {
+            email: user.email || "",
+            telegram: "",
+            whatsapp: "",
+            socialUrl: ""
+          },
           createdAt: new Date().toISOString()
         });
       }
