@@ -304,7 +304,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden pt-24 pb-16 px-4">
+    <div className="min-h-screen relative overflow-x-hidden pt-24 pb-16 px-4">
       <div className="container relative z-10 mx-auto max-w-3xl">
         <div className="mb-4">
           <Link href="/developers" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -318,7 +318,7 @@ export default function ProfilePage() {
           </Button>
         </div>
 
-        <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-primary/10 mb-8 backdrop-blur-xl bg-background/40">
+        <div className="glass-card card-3d p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-primary/10 mb-8 backdrop-blur-xl bg-background/40 card-3d">
           <h2 className="text-2xl font-bold tracking-tight border-b border-border/50 pb-3 mb-4 text-foreground/90">Account Credentials</h2>
           {authError && (
             <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-lg">
@@ -402,7 +402,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-primary/10 mb-8 backdrop-blur-xl bg-background/40">
+        <div className="glass-card card-3d p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-primary/10 mb-8 backdrop-blur-xl bg-background/40 card-3d">
           <form onSubmit={handleSave} className="space-y-6">
 
             {/* Basic Info */}
@@ -612,7 +612,7 @@ export default function ProfilePage() {
           </form>
         </div>
 
-        <div className="glass-card p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-destructive/30 mt-8 mb-8 backdrop-blur-xl bg-background/40">
+        <div className="glass-card card-3d p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-destructive/30 mt-8 mb-8 backdrop-blur-xl bg-background/40 card-3d">
           <div className="flex items-center gap-2 text-destructive mb-4 border-b border-destructive/20 pb-3">
             <AlertTriangle size={24} />
             <h2 className="text-2xl font-bold tracking-tight">Danger Zone</h2>

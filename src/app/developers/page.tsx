@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Sparkles, User, ExternalLink, Code2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { collection, onSnapshot, query, where, limit } from "firebase/firestore";
+import { collection, onSnapshot, query, where, limit, orderBy } from "firebase/firestore";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { User as FirebaseUser } from "firebase/auth";
 
@@ -26,25 +26,8 @@ interface DeveloperProfile {
 }
 
 export default function DevelopersPage() {
-  const [developers, setDevelopers] = useState<DeveloperProfile[]>(() => {
-    if (typeof window !== "undefined") {
-      const cached = sessionStorage.getItem("cachedDevelopers");
-      if (cached) {
-        try {
-          return JSON.parse(cached);
-        } catch (_e) {
-          return [];
-        }
-      }
-    }
-    return [];
-  });
-  const [loading, setLoading] = useState(() => {
-    if (typeof window !== "undefined") {
-      return !sessionStorage.getItem("cachedDevelopers");
-    }
-    return true;
-  });
+  const [developers, setDevelopers] = useState<DeveloperProfile[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [selectedDev, setSelectedDev] = useState<DeveloperProfile | null>(null);
 
@@ -59,7 +42,7 @@ export default function DevelopersPage() {
           }
         });
         return () => unsubscribe();
-      } catch (_e) {
+      } catch (e) {
         // App might not be initialized immediately
       }
     }
@@ -83,7 +66,7 @@ export default function DevelopersPage() {
             return {
               id: doc.id,
               name: data.name,
-              photoURL: data.photoURL,
+            photoURL: data.photoURL,
               bio: data.bio,
               portfolioUrl: data.portfolioUrl,
               projects: data.projects,
@@ -91,9 +74,6 @@ export default function DevelopersPage() {
             };
           }) as DeveloperProfile[];
           setDevelopers(devsData);
-          if (typeof window !== "undefined") {
-            sessionStorage.setItem("cachedDevelopers", JSON.stringify(devsData));
-          }
           setLoading(false);
         }, (err) => {
           console.error("Failed to load developers:", err);
@@ -112,7 +92,7 @@ export default function DevelopersPage() {
   }, []);
 
   return (
-    <div className="min-h-[50vh] md:min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center pt-20 md:pt-24 pb-10 md:pb-16">
+    <div className="min-h-screen relative overflow-x-hidden flex flex-col items-center pt-24 pb-16">
       <div className="container relative z-10 mx-auto px-4 w-full max-w-6xl">
 
         {/* Top Banner Auth Actions */}
@@ -170,10 +150,10 @@ export default function DevelopersPage() {
               <div
                 key={dev.id}
                 onClick={() => setSelectedDev(dev)}
-                className="glass-card p-6 rounded-2xl hover:border-primary/40 transition-all duration-300 animate-fade-in-up group flex flex-col h-full cursor-pointer card-3d"
+                className="glass-card p-6 rounded-2xl hover:border-primary/40 transition-all duration-300 animate-fade-in-up group flex flex-col h-full cursor-pointer"
                 style={{ animationDelay: `${300 + (idx * 100)}ms` }}
               >
-                <div className="flex items-start justify-between mb-4 card-3d-content">
+                <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden shrink-0">
                       {dev.photoURL ? (
@@ -183,7 +163,7 @@ export default function DevelopersPage() {
                       )}
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-[#F43F5E] group-hover:text-primary transition-colors">{dev.name}</h3>
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{dev.name}</h3>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <Code2 size={14}/> Developer
                       </p>
@@ -196,12 +176,12 @@ export default function DevelopersPage() {
                   )}
                 </div>
 
-                <p className="text-muted-foreground text-sm line-clamp-3 mb-6 flex-grow card-3d-content">
+                <p className="text-muted-foreground text-sm line-clamp-3 mb-6 flex-grow">
                   {dev.bio}
                 </p>
 
                 {dev.projects && dev.projects.length > 0 && (
-                  <div className="space-y-3 mt-auto card-3d-content">
+                  <div className="space-y-3 mt-auto">
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border pb-1">Featured Projects</h4>
                     {dev.projects.slice(0, 2).map((proj, pIdx) => (
                       <div key={pIdx} className="bg-background/40 p-3 rounded-lg text-sm">
@@ -239,7 +219,7 @@ export default function DevelopersPage() {
       {/* Developer Details Modal */}
       {selectedDev && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm overflow-y-auto">
-          <div className="glass-card relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-8 animate-fade-in-up mt-8 mb-8 card-3d" onClick={(e) => e.stopPropagation()}>
+          <div className="glass-card relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-8 animate-fade-in-up mt-8 mb-8" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setSelectedDev(null)}
               className="absolute top-4 right-4 p-2 rounded-full hover:bg-background/50 text-muted-foreground hover:text-foreground transition-colors"
@@ -247,7 +227,7 @@ export default function DevelopersPage() {
               <X size={20} />
             </button>
 
-            <div className="flex flex-col md:flex-row gap-6 mb-8 card-3d-content">
+            <div className="flex flex-col md:flex-row gap-6 mb-8">
               <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden shrink-0 border border-primary/30">
                 {selectedDev.photoURL ? (
                   <img src={selectedDev.photoURL} alt={selectedDev.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
@@ -256,7 +236,7 @@ export default function DevelopersPage() {
                 )}
               </div>
               <div className="flex-1">
-                <h2 className="text-3xl font-bold mb-2 text-[#F43F5E]">{selectedDev.name}</h2>
+                <h2 className="text-3xl font-bold mb-2">{selectedDev.name}</h2>
                 <div className="flex flex-wrap gap-3 mb-4">
                   {selectedDev.portfolioUrl && (
                     <a href={selectedDev.portfolioUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-primary/10 text-primary px-3 py-1 rounded-full hover:bg-primary/20 transition-colors">
@@ -284,14 +264,14 @@ export default function DevelopersPage() {
                     </a>
                   )}
                 </div>
-                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground whitespace-pre-wrap card-3d-content">
+                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground whitespace-pre-wrap">
                   {selectedDev.bio}
                 </div>
               </div>
             </div>
 
             {selectedDev.projects && selectedDev.projects.length > 0 && (
-              <div className="space-y-4 card-3d-content">
+              <div className="space-y-4">
                 <h3 className="text-lg font-semibold border-b border-border pb-2">Projects & Experience</h3>
                 <div className="grid gap-4">
                   {selectedDev.projects.map((proj, pIdx) => (
