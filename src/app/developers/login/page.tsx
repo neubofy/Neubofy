@@ -70,12 +70,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
-      <div className="relative z-10 w-full max-w-md p-8 rounded-2xl glass-card">
+    <div className="min-h-screen relative overflow-x-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
+      <div className="relative z-10 w-full max-w-md p-8 rounded-2xl glass-card card-3d">
         <Link href="/developers" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
           <X size={20} />
         </Link>
-        <h1 className="text-3xl font-bold text-center mb-6">Developer Login</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 card-3d-content">Developer Login</h1>
 
         {error && (
           <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-lg">

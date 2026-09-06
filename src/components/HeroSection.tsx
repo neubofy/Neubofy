@@ -12,7 +12,7 @@ const HeroSection = () => {
 
   return (
     <ParallaxBackground>
-      <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+      <section className="min-h-[50vh] md:min-h-screen flex items-center justify-center relative overflow-hidden pt-20 md:pt-32">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <motion.div
@@ -57,7 +57,7 @@ const HeroSection = () => {
 
           {/* Main Headline */}
           <motion.h1
-            className="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-8 animate-fade-in text-3d"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-4 md:mb-8 animate-fade-in text-3d"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -76,10 +76,10 @@ const HeroSection = () => {
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <p className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
+            <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-foreground mb-4 px-4">
               Finding the best developers to provide consumers with the highest quality products at competitive costs.
             </p>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-lg sm:text-xl text-muted-foreground px-4">
               Neubofy™ acts as the bridge, onboarding the world&apos;s top talent and connecting them with consumers to build exceptional, affordable applications.
             </p>
           </motion.div>

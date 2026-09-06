@@ -92,7 +92,7 @@ export default function DevelopersPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center pt-24 pb-16">
+    <div className="min-h-screen relative overflow-x-hidden flex flex-col items-center pt-24 pb-16">
       <div className="container relative z-10 mx-auto px-4 w-full max-w-6xl">
 
         {/* Top Banner Auth Actions */}
