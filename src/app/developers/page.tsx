@@ -46,7 +46,7 @@ export default function DevelopersPage() {
     const timer = setTimeout(() => {
       try {
         const q = query(
-          collection(getFirebaseDb(), "developers"),
+          collection(getFirebaseDb(), "users"),
           where("verified", "==", true),
           limit(50)
         );

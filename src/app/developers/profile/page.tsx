@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { doc, onSnapshot, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
-import { LogOut, Plus, Trash2, Save, AlertTriangle, Github, Loader2 } from "lucide-react";
+import { LogOut, Plus, Trash2, Save, AlertTriangle, Github, Loader2, ArrowLeft } from "lucide-react";
 import { signOut, User, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
+import Link from "next/link";
 
 interface Project {
   title: string;
@@ -75,7 +76,7 @@ export default function ProfilePage() {
     if (!loading && !user) {
       router.push("/developers/login");
     } else if (user) {
-      const docRef = doc(getFirebaseDb(), "developers", user.uid);
+      const docRef = doc(getFirebaseDb(), "users", user.uid);
       unsubscribe = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
@@ -158,7 +159,7 @@ export default function ProfilePage() {
       }
 
       // Delete firestore doc first
-      const docRef = doc(getFirebaseDb(), "developers", user.uid);
+      const docRef = doc(getFirebaseDb(), "users", user.uid);
       await deleteDoc(docRef);
 
       // Delete auth user
@@ -215,7 +216,7 @@ export default function ProfilePage() {
     if (!user) return;
     setSaving(true);
     try {
-      const docRef = doc(getFirebaseDb(), "developers", user.uid);
+      const docRef = doc(getFirebaseDb(), "users", user.uid);
       await setDoc(docRef, {
         name: profileData.name,
         bio: profileData.bio,
@@ -242,12 +243,15 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-background relative pt-24 pb-16 px-4 overflow-y-auto">
        <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px] mix-blend-screen animate-blob" />
       </div>
 
       <div className="container relative z-10 mx-auto max-w-3xl">
+        <Link href="/developers" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6">
+          <ArrowLeft size={16} /> Back to Developers
+        </Link>
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Manage Profile</h1>
           <Button variant="outline" onClick={handleLogout} className="gap-2">

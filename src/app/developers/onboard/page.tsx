@@ -46,7 +46,7 @@ export default function OnboardDeveloperPage() {
       const userCredential = await createUserWithEmailAndPassword(getFirebaseAuth(), form.email, form.password);
       const user = userCredential.user;
 
-      await setDoc(doc(getFirebaseDb(), "developers", user.uid), {
+      await setDoc(doc(getFirebaseDb(), "users", user.uid), {
         name: form.name,
         bio: form.bio,
         portfolioUrl: form.portfolioUrl,
@@ -77,7 +77,7 @@ export default function OnboardDeveloperPage() {
       const userCredential = await signInWithPopup(auth, authProvider);
       const user = userCredential.user;
 
-      const docRef = doc(getFirebaseDb(), "developers", user.uid);
+      const docRef = doc(getFirebaseDb(), "users", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
