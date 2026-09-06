@@ -77,9 +77,14 @@ function OnboardForm() {
     try {
       const auth = getFirebaseAuth();
       let authProvider;
-      if (provider === 'google') authProvider = new GoogleAuthProvider();
-      else if (provider === 'github') authProvider = new GithubAuthProvider();
-      else authProvider = new OAuthProvider('apple.com');
+      if (provider === 'google') {
+        authProvider = new GoogleAuthProvider();
+        authProvider.setCustomParameters({ prompt: 'select_account' });
+      } else if (provider === 'github') {
+        authProvider = new GithubAuthProvider();
+      } else {
+        authProvider = new OAuthProvider('apple.com');
+      }
 
       const userCredential = await signInWithPopup(auth, authProvider);
       const user = userCredential.user;
@@ -115,10 +120,6 @@ function OnboardForm() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] mix-blend-screen animate-blob" />
-      </div>
-
       <div className="relative z-10 w-full max-w-md p-8 rounded-2xl glass-card">
         <Link href="/developers" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
           <X size={20} />
