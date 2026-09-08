@@ -19,11 +19,34 @@ const TrustVerificationSection = () => {
             <span className="text-sm font-semibold tracking-wide uppercase text-white/70">Trust / Verification</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-            Software is checked before delivery.
+            An Extra Layer of Trust.
           </h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto">
-            Our verification structure ensures the delivered software aligns with the original agreed requirements before handover.
+          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-10">
+            Your developer builds the software. Neubofy verifies the delivered product against the agreed requirements before handover.
           </p>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm font-semibold text-white/80 max-w-xl mx-auto mb-6 bg-white/5 border border-white/10 rounded-2xl p-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <SearchCode className="w-4 h-4" />
+              </div>
+              Developer
+            </div>
+            <div className="text-white/30 hidden md:block">→</div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              Neubofy Verification
+            </div>
+            <div className="text-white/30 hidden md:block">→</div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <ServerCog className="w-4 h-4" />
+              </div>
+              Customer
+            </div>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 text-left">
