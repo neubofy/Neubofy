@@ -8,7 +8,7 @@ import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recapt
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { verifyRecaptcha } from "@/app/actions/verifyRecaptcha";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, Apple, Github, Chrome } from "lucide-react";
 import Link from "next/link";
 
 function OnboardForm() {
@@ -202,14 +202,15 @@ function OnboardForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button
               type="button"
               variant="outline"
               disabled={loading}
               onClick={() => handleProviderJoin('google')}
-              className="w-full"
+              className="w-full flex items-center justify-center gap-2"
             >
+              <Chrome size={18} />
               Google
             </Button>
             <Button
@@ -217,8 +218,9 @@ function OnboardForm() {
               variant="outline"
               disabled={loading}
               onClick={() => handleProviderJoin('github')}
-              className="w-full"
+              className="w-full flex items-center justify-center gap-2"
             >
+              <Github size={18} />
               GitHub
             </Button>
             <Button
@@ -226,8 +228,9 @@ function OnboardForm() {
               variant="outline"
               disabled={loading}
               onClick={() => handleProviderJoin('apple')}
-              className="w-full"
+              className="w-full flex items-center justify-center gap-2"
             >
+              <Apple size={18} />
               Apple
             </Button>
           </div>
