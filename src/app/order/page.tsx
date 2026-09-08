@@ -51,11 +51,20 @@ export default function OrderPage() {
         `}} />
 
         <div className="glass-card p-8 rounded-3xl text-center" id='zohoSupportWebToCase'>
+          <noscript>
+            <div className="bg-destructive/10 text-destructive border border-destructive rounded-md p-4 mb-6 text-left">
+              <strong>JavaScript is disabled.</strong> Please enable JavaScript to use this form smoothly (e.g. for dynamic fields and attachments). You can still try submitting the form, but some features may not work.
+            </div>
+          </noscript>
+          <div id="zoho-error-message" style={{display: 'none'}} className="bg-destructive/10 text-destructive border border-destructive rounded-md p-4 mb-6 text-left"></div>
+
           <form name='zsWebToCase_275442000000495001' id='zsWebToCase_275442000000495001' action='https://desk.zoho.in/support/WebToCase' method='POST' onSubmit={(e) => {
             // @ts-ignore
             if (typeof window !== 'undefined' && (window as any).zsValidateMandatoryFields) {
               // @ts-ignore
-              return (window as any).zsValidateMandatoryFields();
+              const isValid = (window as any).zsValidateMandatoryFields();
+              if (isValid === false) e.preventDefault();
+              return true;
             }
             return true;
           }} encType='multipart/form-data'>
@@ -65,7 +74,7 @@ export default function OrderPage() {
             <input type='hidden' name='actionType' value='Q2FzZXM='/>
             <input type="hidden" id="property(module)" value="Cases"/>
             <input type="hidden" id="dependent_field_values_Cases" value='{"JSON_VALUES":{},"JSON_SELECT_VALUES":{},"JSON_MAP_DEP_LABELS":[]}'/>
-            <input type='hidden' name='returnURL' value='https://neubofy.in/order'/>
+            <input type='hidden' name='returnURL' value='https://neubofy.in/order/success'/>
 
             <table border={0} cellSpacing='0' className='zsFormClass'>
               <tbody>
@@ -193,69 +202,7 @@ export default function OrderPage() {
 
         {/* Global Zoho Scripts required for form operation */}
         <Script src="https://static.zohocdn.com/zohodeskstatic/app/js/jqueryandencoder.ef05974972bf3bca1b87.js" strategy="lazyOnload" />
-        <Script id="zoho-form-script" strategy="lazyOnload">
-          {`
-            window.zsWebFormMandatoryFields = new Array("Contact Name","Email","Subject");
-            window.zsFieldsDisplayLabelArray = new Array("Last Name","Email","Subject");
-            window.zsValidateMandatoryFields = function(){
-              var isError = 0;
-              for(var index = 0; index < zsWebFormMandatoryFields.length; index++){
-                isError = 0;
-                var fieldObject = document.forms['zsWebToCase_275442000000495001'][zsWebFormMandatoryFields[index]];
-                if(fieldObject){
-                  if(((fieldObject.value).replace(/^\\s+|\\s+$/g, '')).length == 0){
-                    alert(zsFieldsDisplayLabelArray[index] +' cannot be empty ');
-                    fieldObject.focus();
-                    return false;
-                  }else{
-                    if(fieldObject.name == 'Email'){
-                      if(!fieldObject.value.match(/^([\\w_][\\w\\-_.+\\'&]*)@(?=.{4,256}$)(([\\w]+)([\\-_]*[\\w])*[\\.])+[a-zA-Z]{2,22}$/)){
-                        alert('Enter a valid email-Id');
-                        fieldObject.focus();
-                        return false;
-                      }
-                    }
-                  }
-                }
-              }
-              if(document.forms['zsWebToCase_275442000000495001']['zsWebFormCaptchaWord'].value.replace(/^\\s+|\\s+$/g, '').length == 0){
-                alert('Please enter the captcha code.');
-                document.forms['zsWebToCase_275442000000495001']['zsWebFormCaptchaWord'].focus();
-                return false;
-              }
-              document.getElementById('zsSubmitButton_275442000000495001').setAttribute('disabled', 'disabled');
-              return true;
-            };
-
-            window.zsRegenerateCaptcha = function(){
-              var webFormxhr = new XMLHttpRequest();
-              webFormxhr.open('GET','https://desk.zoho.in/support/GenerateCaptcha?action=getNewCaptcha&_='+new Date().getTime(),true);
-              webFormxhr.onreadystatechange = function () {
-                if(webFormxhr.readyState === 4 && webFormxhr.status === 200) {
-                  try{
-                    var response = JSON.parse(webFormxhr.responseText);
-                    document.getElementById('zsCaptchaLoading').style.display = 'none';
-                    document.getElementById('zsCaptcha').style.display = 'block';
-                    document.getElementById('zsCaptchaUrl').src = response.captchaUrl;
-                    document.getElementsByName('xJdfEaS')[0].value = response.captchaDigest;
-                  }catch(e){}
-                }
-              };
-              webFormxhr.send();
-            };
-
-            setTimeout(function(){
-              if(window.zsRegenerateCaptcha){
-                window.zsRegenerateCaptcha();
-              }
-            }, 1500);
-
-            window.zsResetWebForm = function(webFormId){
-              document.forms['zsWebToCase_'+webFormId].reset();
-              document.getElementById('zsSubmitButton_275442000000495001').removeAttribute('disabled');
-            };
-          `}
-        </Script>
+        <Script src="/zoho/scripts.js" strategy="lazyOnload" />
       </div>
     </PageTransition>
   );
