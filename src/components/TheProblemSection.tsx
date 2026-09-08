@@ -35,7 +35,7 @@ const TheProblemSection = () => {
               "I don't know what technology I need."
             </h3>
             <p className="text-xl font-semibold text-foreground">
-              Neubofy™ translates your business requirement.
+              Neubofy translates your business requirement.
             </p>
           </motion.div>
 
@@ -51,7 +51,7 @@ const TheProblemSection = () => {
               "I don't know who can actually build it."
             </h3>
             <p className="text-xl font-semibold text-foreground">
-              Neubofy™ selects the appropriate builder.
+              Neubofy selects the appropriate builder.
             </p>
           </motion.div>
 
@@ -67,7 +67,7 @@ const TheProblemSection = () => {
               "How do I know what I received actually works?"
             </h3>
             <p className="text-xl font-semibold text-foreground">
-              Neubofy™ verifies the delivered software.
+              Neubofy verifies the delivered software.
             </p>
           </motion.div>
         </div>

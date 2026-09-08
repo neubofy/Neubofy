@@ -22,8 +22,38 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Neubofy™ | Your Technology Department, Without Building One",
-  description: "Neubofy™ is your technology department. Tell us what your business needs, and we translate your idea into the right technical plan, select the builder, and verify the software before delivery.",
+  title: {
+    default: "Neubofy | Your Technology Department, Without Building One",
+    template: "%s | Neubofy",
+  },
+  description: "Neubofy is your on-demand technology department. We bridge the gap between business ideas and flawless execution by translating requirements, selecting expert builders, managing architecture, and verifying software before delivery.",
+  keywords: ["Technology Department as a Service", "Software Development Management", "App Builder Verification", "Tech Architecture", "Outsourced CTO", "Software Engineering", "Business Technology Solution", "Neubofy"],
+  authors: [{ name: "Neubofy" }],
+  creator: "Neubofy",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://neubofy.in",
+    title: "Neubofy | Your Technology Department",
+    description: "Build the right software, not just software. Neubofy translates your business needs into technical reality with expert builders and rigorous verification.",
+    siteName: "Neubofy",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Neubofy | Technology Department as a Service",
+    description: "We translate your idea into the right technical plan, select the right builder, manage the project, and verify the software before delivery.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

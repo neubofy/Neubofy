@@ -1,15 +1,56 @@
 "use client";
 
-import React from "react";
-import { Shield, Lock, Terminal, Brain, Code2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Shield, Lock, Terminal, Brain, Code2, User } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getFirebaseAuth } from "@/lib/firebase/firebase";
+import { User as FirebaseUser } from "firebase/auth";
 
 export default function DevelopersPage() {
+  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const authObj = getFirebaseAuth();
+        const unsubscribe = authObj.onAuthStateChanged((user) => {
+          setCurrentUser(user);
+        });
+        return () => unsubscribe();
+      } catch (e) {
+        console.error("Firebase auth error", e);
+      }
+    }
+  }, []);
+
   return (
     <PageTransition>
       <div className="container mx-auto py-24 px-4 max-w-5xl">
+        <div className="flex justify-end mb-8 animate-fade-in-up">
+          {currentUser ? (
+            <Link href="/developers/profile">
+              <Button className="btn-electric gap-2">
+                <User size={16} /> Manage Profile
+              </Button>
+            </Link>
+          ) : (
+            <div className="flex gap-4">
+              <Link href="/developers/login">
+                <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
+                  Developer Login
+                </Button>
+              </Link>
+              <Link href="/developers/onboard">
+                <Button className="btn-electric">
+                  Join as Developer
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -21,7 +62,7 @@ export default function DevelopersPage() {
               <span className="text-sm font-semibold">Strictly Private Network</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Join the Neubofy™ <br />
+              Join the Neubofy <br />
               <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Builder Intelligence
               </span>
@@ -91,9 +132,9 @@ export default function DevelopersPage() {
             Register your interest to join our private network. Our team reviews all applications and will contact you when a project matches your exact skill set. You get qualified projects without having to become the salesperson.
           </p>
           <a
-            href="https://neubofy.zohodesk.in/portal"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/order"
+
+
             className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 rounded-full h-12"
           >
             Register Interest

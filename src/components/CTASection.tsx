@@ -21,9 +21,9 @@ const CTASection = () => {
             Stop worrying about technical terminology and developer management. Let us handle the technology while you handle your business.
           </p>
           <a
-            href="https://neubofy.zohodesk.in/portal"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/order"
+
+
             className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-medium transition-transform hover:scale-105 bg-white text-black shadow-xl hover:shadow-2xl hover:shadow-white/20 rounded-full"
           >
             Start Your Project <ArrowRight className="w-5 h-5" />

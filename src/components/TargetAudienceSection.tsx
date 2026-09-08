@@ -26,9 +26,9 @@ const TargetAudienceSection = () => {
               Focus on growing your business while we handle the technical translation, execution, and verification of your software.
             </p>
             <a
-              href="https://neubofy.zohodesk.in/portal"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/order"
+
+
               className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium transition-colors bg-white text-black shadow hover:bg-white/90 rounded-full w-fit"
             >
               Start a Project

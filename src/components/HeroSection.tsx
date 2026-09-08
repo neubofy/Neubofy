@@ -68,7 +68,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
-              Tell Neubofy™ what your business needs. We translate your idea into the right technical plan, select the right builder, manage the project, and verify the software before delivery.
+              Tell Neubofy what your business needs. We translate your idea into the right technical plan, select the right builder, manage the project, and verify the software before delivery.
             </p>
           </motion.div>
 

@@ -71,7 +71,7 @@ export default function OrderPage() {
               <tbody>
                 <tr>
                   <td colSpan={2} className='zsFontClass text-center'>
-                    <strong className="text-3xl font-display mb-6 block">Order App</strong>
+                    <strong className="text-3xl font-display mb-6 block">Start Project</strong>
                   </td>
                 </tr>
                 <tr>

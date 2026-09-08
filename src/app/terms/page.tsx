@@ -17,7 +17,7 @@ export default function TermsOfService() {
 
           <h2 className="text-2xl font-semibold mt-8 mb-4 text-foreground">2. Description of Service</h2>
           <p className="mb-4">
-            Neubofy™ acts as your technology department. We provide services including but not limited to translating business ideas into technical requirements, architecting solutions, selecting appropriate builders, managing the development process, and verifying the completed software before delivery.
+            Neubofy acts as your technology department. We provide services including but not limited to translating business ideas into technical requirements, architecting solutions, selecting appropriate builders, managing the development process, and verifying the completed software before delivery.
           </p>
 
           <h2 className="text-2xl font-semibold mt-8 mb-4 text-foreground">3. User Conduct</h2>
@@ -27,7 +27,7 @@ export default function TermsOfService() {
 
           <h2 className="text-2xl font-semibold mt-8 mb-4 text-foreground">4. Intellectual Property</h2>
           <p className="mb-4">
-            The service and its original content, features, and functionality are and will remain the exclusive property of Neubofy™ and its licensors. The service is protected by copyright, trademark, and other laws of both the United States and foreign countries.
+            The service and its original content, features, and functionality are and will remain the exclusive property of Neubofy and its licensors. The service is protected by copyright, trademark, and other laws of both the United States and foreign countries.
           </p>
 
           <h2 className="text-2xl font-semibold mt-8 mb-4 text-foreground">5. Termination</h2>
