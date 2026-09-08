@@ -139,6 +139,19 @@ export default function DevelopersPage() {
                  </div>
                </div>
             </motion.div>
+
+            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up">
+              <a href="https://neubofy.zohorecruit.in/" target="_blank" rel="noopener noreferrer">
+                <Button className="w-full sm:w-auto btn-electric">
+                  Go Neubofy career site
+                </Button>
+              </a>
+              <a href="https://zrec.in/ATf5v?source=CareerSite" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" className="w-full sm:w-auto border-primary/50 text-primary hover:bg-primary/10">
+                  Join Neubofy Devloper Network
+                </Button>
+              </a>
+            </div>
           </div>
         ) : (
           <>
