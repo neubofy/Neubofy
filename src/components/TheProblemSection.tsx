@@ -15,10 +15,10 @@ const TheProblemSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
-            Why Not Just Hire an AI Developer Directly?
+            Building software is not the same as solving a business problem.
           </h2>
           <p className="text-xl md:text-2xl text-muted-foreground font-light max-w-3xl mx-auto">
-            AI has made software development faster. But writing code is only one part of building the right software.
+            A founder may know they need a solution, but identifying what to build, who should build it, and how to verify it requires orchestration.
           </p>
         </motion.div>
 
@@ -80,10 +80,10 @@ const TheProblemSection = () => {
           >
             <CheckCircle className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">
-              Communication
+              Why not just hire an AI developer?
             </h3>
             <p className="text-sm text-muted-foreground">
-              Neubofy becomes the communication layer between business language and technical language.
+              Because the hardest part is increasingly not writing code. The difficult questions are what should be built, who is qualified, and who verifies the result.
             </p>
           </motion.div>
 
@@ -99,7 +99,7 @@ const TheProblemSection = () => {
               Verification
             </h3>
             <p className="text-sm text-muted-foreground">
-              The developer builds the software. Neubofy verifies the delivered product against the agreed requirements before handover.
+              The builder executes the work. Neubofy independently verifies the delivered product against the agreed requirements before handover.
             </p>
           </motion.div>
         </div>

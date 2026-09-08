@@ -31,7 +31,7 @@ const Footer = () => {
               <h3 className="text-2xl font-bold text-gradient-electric">Neubofy™</h3>
             </div>
             <p className="text-muted-foreground mb-4">
-              The premier global network empowering student and independent developers to showcase their incredible capabilities and connect directly with clients.
+              Neubofy is a technology department for founders and businesses. We orchestrate independent technology specialists, coordinate delivery, and help businesses build the right technology without building an internal technology department.
             </p>
             <div className="flex space-x-4">
               <a href="mailto:support@neubofy.in" className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center hover:bg-primary/40 transition-colors">
@@ -56,7 +56,7 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-foreground">Pages</h3>
             <div className="space-y-3">
               <Link href="/" className="block text-muted-foreground hover:text-primary transition-colors">Home</Link>
-              <Link href="/developers" className="block text-muted-foreground hover:text-primary transition-colors">Developers</Link>
+              <Link href="/developers" className="block text-muted-foreground hover:text-primary transition-colors">Partners</Link>
             </div>
           </div>
 

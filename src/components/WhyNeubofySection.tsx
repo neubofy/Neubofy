@@ -27,8 +27,8 @@ const WhyNeubofySection = () => {
     },
     {
       icon: PiggyBank,
-      title: "Right-Sized Development. Better Economics.",
-      desc: "Not every project needs the most expensive developer available. Structured requirements, an efficient builder network and centralized coordination can reduce unnecessary development cost."
+      title: "Right-sized technology, not unnecessary technology.",
+      desc: "Neubofy evaluates scope, complexity, and risk before determining an appropriate delivery structure, creating a stronger cost narrative than simply promising cheaper development."
     }
   ];
 
