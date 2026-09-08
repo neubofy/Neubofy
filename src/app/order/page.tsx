@@ -197,7 +197,7 @@ export default function OrderPage() {
           {`
             window.zsWebFormMandatoryFields = new Array("Contact Name","Email","Subject");
             window.zsFieldsDisplayLabelArray = new Array("Last Name","Email","Subject");
-            (window as any).zsValidateMandatoryFields = function(){
+            window.zsValidateMandatoryFields = function(){
               var isError = 0;
               for(var index = 0; index < zsWebFormMandatoryFields.length; index++){
                 isError = 0;
@@ -227,7 +227,7 @@ export default function OrderPage() {
               return true;
             };
 
-            (window as any).zsRegenerateCaptcha = function(){
+            window.zsRegenerateCaptcha = function(){
               var webFormxhr = new XMLHttpRequest();
               webFormxhr.open('GET','https://desk.zoho.in/support/GenerateCaptcha?action=getNewCaptcha&_='+new Date().getTime(),true);
               webFormxhr.onreadystatechange = function () {
@@ -245,12 +245,12 @@ export default function OrderPage() {
             };
 
             setTimeout(function(){
-              if((window as any).zsRegenerateCaptcha){
-                (window as any).zsRegenerateCaptcha();
+              if(window.zsRegenerateCaptcha){
+                window.zsRegenerateCaptcha();
               }
             }, 1500);
 
-            (window as any).zsResetWebForm = function(webFormId){
+            window.zsResetWebForm = function(webFormId){
               document.forms['zsWebToCase_'+webFormId].reset();
               document.getElementById('zsSubmitButton_275442000000495001').removeAttribute('disabled');
             };
