@@ -16,19 +16,19 @@ export default function OrderPage() {
       <div className="min-h-screen pt-32 pb-24 flex justify-center">
         {/* Zoho Styles */}
         <style dangerouslySetInnerHTML={{__html: `
-          #zohoSupportWebToCase textarea, #zohoSupportWebToCase input[type='text'], #zohoSupportWebToCase input[type='date'], #zohoSupportWebToCase select, .wb_common{width: 280px;}
+          #zohoSupportWebToCase textarea, #zohoSupportWebToCase input[type='text'], #zohoSupportWebToCase input[type='date'], #zohoSupportWebToCase select, .wb_common{width: 100%; max-width: 280px;}
           #zohoSupportWebToCase td {padding: 11px 5px;}
-          #zohoSupportWebToCase textarea, #zohoSupportWebToCase input[type='text'], #zohoSupportWebToCase input[type='date'], #zohoSupportWebToCase select{border: 1px solid #ddd;padding: 3px 5px;border-radius: 3px; background: transparent; color: inherit;}
-          #zohoSupportWebToCase select {box-sizing: unset}
+          #zohoSupportWebToCase textarea, #zohoSupportWebToCase input[type='text'], #zohoSupportWebToCase input[type='date'], #zohoSupportWebToCase select{border: 1px solid #ddd;padding: 3px 5px;border-radius: 3px; background: transparent; color: inherit; box-sizing: border-box;}
+          #zohoSupportWebToCase select {box-sizing: border-box}
           #zohoSupportWebToCase .wb_selectDate {width: auto}
-          #zohoSupportWebToCase input.wb_cusInput {width: 108px}
+          #zohoSupportWebToCase input.wb_cusInput {width: 100%; max-width: 108px}
           .wb_FtCon{display: flex;align-items: center;justify-content: flex-end;margin-top: 15px;padding-left: 10px}
           .wb_logoCon{display: flex;margin-left: 5px}
           .wb_logo{max-width: 16px;max-height: 16px;}
-          #zohoSupportWebToCase .wb_multi_pick {border: 1px solid #ddd;padding: 3px 5px;border-radius: 3px;width: 280px;height: 95px;overflow-y:auto;}
+          #zohoSupportWebToCase .wb_multi_pick {border: 1px solid #ddd;padding: 3px 5px;border-radius: 3px;width: 100%; max-width: 280px;height: 95px;overflow-y:auto;}
           #zohoSupportWebToCase .wb_multi_pick_label {display: block;}
           #zohoSupportWebToCase .wb_multi_pick_input,  .wb_multi_pick_input_all{vertical-align: middle;margin-right: 5px;}
-          .zsFormClass{background-color: transparent; width:600px}
+          .zsFormClass{background-color: transparent; width: 100%; max-width: 600px; margin: 0 auto;}
           .zsFontClass{color: inherit; font-family: inherit; font-size: 15px}
           .manfieldbdr{border-left: 1px solid #ff6448!important}
           .hleft{text-align:left;}
@@ -75,7 +75,7 @@ export default function OrderPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='25%'>Language &nbsp;&nbsp;<br/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Language &nbsp;&nbsp;<br/>
                     <select name='Language' id='Language' onChange={(e) => {
                       // @ts-ignore
                       if(typeof window !== 'undefined' && (window as any).setDependent) (window as any).setDependent(e.target, false)
@@ -93,32 +93,53 @@ export default function OrderPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='25%'>First Name&nbsp;&nbsp;<br/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>First Name&nbsp;&nbsp;<br/>
                     <input type='text' maxLength={120} name='First Name' defaultValue='' />
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='25%'>Last Name&nbsp;&nbsp;<br/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Last Name&nbsp;&nbsp;<br/>
                     <input type='text' maxLength={120} name='Contact Name' className='manfieldbdr'/>
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='25%'>Email&nbsp;&nbsp;<br/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Email&nbsp;&nbsp;<br/>
                     <input type='text' maxLength={120} name='Email' defaultValue='' className='manfieldbdr'/>
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='25%'>Phone&nbsp;&nbsp;<br/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Phone&nbsp;&nbsp;<br/>
                     <input type='text' maxLength={120} name='Phone' defaultValue='' />
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='25%'>Subject&nbsp;&nbsp;<br/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Subject&nbsp;&nbsp;<br/>
                     <input type='text' maxLength={255} name='Subject' defaultValue='' className='manfieldbdr'/>
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='25%'>Attachment &nbsp;&nbsp;<br/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Description &nbsp;&nbsp;<br/>
+                    <textarea name='Description' maxLength={3000} rows={5} />
+                  </td>
+                </tr>
+                <tr>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Due Date &nbsp;&nbsp;<br/>
+                    <input type='date' min='1000-01-01' max='9999-12-31' maxLength={20} name='Due Date' defaultValue='' className='dob-field wb_cusInput' style={{marginBottom: "5px"}}/>
+                    <div style={{display: "inline-block", marginLeft: "5px"}}>
+                      <select name='Due Datehour' className='wb_selectDate'>
+                        <option value='01'>01</option><option value='02'>02</option><option value='03'>03</option><option value='04'>04</option><option value='05'>05</option><option value='06'>06</option><option value='07'>07</option><option value='08'>08</option><option value='09'>09</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option>
+                      </select>&nbsp;
+                      <select name='Due Dateminute' className='wb_selectDate'>
+                        <option value='00'>00</option><option value='15'>15</option><option value='30'>30</option><option value='45'>45</option>
+                      </select>&nbsp;
+                      <select name='Due Dateampm' className='wb_selectDate'>
+                        <option value='AM'>AM</option><option value='PM'>PM</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Attachment &nbsp;&nbsp;<br/>
                     <span className="zsFontClass wtcuploadfile" id="zsBrowseAttachment">Attach files</span>
                     {/* @ts-ignore */}
                     <input className="wtcuploadinput" type='file' name='attachment_1' id='zsattachment_1' style={{display:'block'}} onClick={(e) => { if(typeof window !== 'undefined' && (window as any).zsOpenFileBrowseAttachment) (window as any).zsOpenFileBrowseAttachment(e) }} onChange={(e) => { if(typeof window !== 'undefined' && (window as any).zsRenderBrowseFileAttachment) (window as any).zsRenderBrowseFileAttachment(e.target.value, e.target) }}/>
@@ -131,16 +152,16 @@ export default function OrderPage() {
                     {/* @ts-ignore */}
                     <input className="wtcuploadinput" type='file' name='attachment_5' id='zsattachment_5' style={{display:'none'}} onClick={(e) => { if(typeof window !== 'undefined' && (window as any).zsOpenFileBrowseAttachment) (window as any).zsOpenFileBrowseAttachment(e) }} onChange={(e) => { if(typeof window !== 'undefined' && (window as any).zsRenderBrowseFileAttachment) (window as any).zsRenderBrowseFileAttachment(e.target.value, e.target) }}/>
                     <div className="clboth"></div>
-                    <span id='zsMaxSizeMessage' style={{color:'black', fontSize: '8px', float: 'left'}}>Each of your file(s) can be up to 20MB in size.</span>
-                    <span id='zsMaxLimitMessage' style={{color:'black', fontSize: '8px', float: 'left', marginLeft: '14px', display: 'none'}}>You can attach as many as 5 files at a time.</span>
+                    <span id='zsMaxSizeMessage' style={{color:'gray', fontSize: '10px', float: 'left', display: 'block', marginTop: '5px'}}>Each of your file(s) can be up to 20MB in size.</span>
+                    <span id='zsMaxLimitMessage' style={{color:'gray', fontSize: '10px', float: 'left', marginLeft: '14px', display: 'none', marginTop: '5px'}}>You can attach as many as 5 files at a time.</span>
                     <div id='zsFileBrowseAttachments'></div>
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass' width='25%'>Captcha&nbsp;
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Captcha&nbsp;
                     <div id='zsCaptchaLoading'><strong>Loading...<br/><br/></strong></div>
-                    <div id='zsCaptcha' style={{display:'none'}}>
-                      <img src='#' id='zsCaptchaUrl' alt="captcha" />
+                    <div id='zsCaptcha' style={{display:'none', marginBottom: '10px'}}>
+                      <img src='#' id='zsCaptchaUrl' alt="captcha" style={{display: 'inline-block'}}/>
                       <a href='javascript:;' style={{color:'#00a3fe', cursor:'pointer', marginLeft:'10px', verticalAlign:'middle', textDecoration: 'none'}} className='zsFontClass' onClick={(e) => { /* @ts-ignore */ if(typeof window !== 'undefined' && (window as any).zsRegenerateCaptcha) (window as any).zsRegenerateCaptcha() }}>Refresh</a>
                     </div>
                     <div>
@@ -150,9 +171,19 @@ export default function OrderPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td style={{padding: '11px 5px 0px 5px'}} colSpan={2} align='center' width='25%'>
+                  <td style={{padding: '20px 5px 0px 5px'}} colSpan={2} align='center' width='100%'>
                     <input type='submit' id="zsSubmitButton_275442000000495001" className='px-6 py-2 bg-primary text-primary-foreground rounded-md cursor-pointer hover:bg-primary/90 transition-colors mr-4' value='Submit' />
                     <input type='button' className='px-6 py-2 bg-background border border-border rounded-md cursor-pointer hover:bg-accent transition-colors' value='Reset' onClick={(e) => { /* @ts-ignore */ if(typeof window !== 'undefined' && (window as any).zsResetWebForm) (window as any).zsResetWebForm('275442000000495001') }} />
+                  </td>
+                </tr>
+                <tr>
+                  <td width='100%' colSpan={2} align='left'>
+                    <div className='wb_FtCon wb_common' style={{justifyContent: 'center', marginTop: '20px'}}>
+                      <span style={{fontSize: '12px', color: 'gray'}}>powered by </span>
+                      <a target='_blank' rel='noopener noreferrer' href='https://zoho.in/desk' className='wb_logoCon'>
+                        <img className='wb_logo' src='https://static.zohocdn.com/zohodeskstatic/app/images/portalLogo.de847024ebc0131731a3.png' alt="Zoho" />
+                      </a>
+                    </div>
                   </td>
                 </tr>
               </tbody>

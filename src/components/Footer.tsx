@@ -57,7 +57,6 @@ const Footer = () => {
             <div className="space-y-3">
               <Link href="/" className="block text-muted-foreground hover:text-primary transition-colors">Home</Link>
               <Link href="/developers" className="block text-muted-foreground hover:text-primary transition-colors">Developers</Link>
-              <a href="/order" className="block text-muted-foreground hover:text-primary transition-colors">Start Project</a>
             </div>
           </div>
 
