@@ -131,14 +131,12 @@ export default function DevelopersPage() {
           <p className="text-muted-foreground mb-8">
             Register your interest to join our private network. Our team reviews all applications and will contact you when a project matches your exact skill set. You get qualified projects without having to become the salesperson.
           </p>
-          <a
-            href="/order"
-
-
+          <Link
+            href="/developers/onboard"
             className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 rounded-full h-12"
           >
-            Register Interest
-          </a>
+            Join as Developer
+          </Link>
         </motion.div>
       </div>
     </PageTransition>

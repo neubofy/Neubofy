@@ -52,10 +52,10 @@ const TargetAudienceSection = () => {
               Join our private network. We handle client acquisition and requirements engineering so you can focus on writing excellent code.
             </p>
             <Link
-              href="/developers"
+              href="/developers/onboard"
               className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium transition-colors bg-white/10 text-white shadow hover:bg-white/20 border border-white/20 rounded-full w-fit"
             >
-              Register Interest
+              Join as Developer
             </Link>
           </motion.div>
         </div>
