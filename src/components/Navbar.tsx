@@ -101,7 +101,7 @@ const Navbar = () => {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 glass-card border-x-0 rounded-none absolute top-full left-0 w-full animate-fade-in-up">
+          <div className="lg:hidden py-4 glass-card border-x-0 rounded-none absolute top-full left-0 w-full animate-fade-in-up backdrop-blur-3xl bg-background/95">
             <div className="flex flex-col space-y-2 px-4">
               {navItems.map((item) => (
                 item.path.startsWith("http") ? (
