@@ -1,4 +1,5 @@
 import HeroSection from "@/components/HeroSection";
+import WhatWeBuildSection from "@/components/WhatWeBuildSection";
 import TheProblemSection from "@/components/TheProblemSection";
 import WorkflowSection from "@/components/WorkflowSection";
 import WhyNeubofySection from "@/components/WhyNeubofySection";
@@ -15,6 +16,7 @@ export default function Home() {
       <div className="min-h-screen relative">
         <div className="relative z-10">
           <HeroSection />
+          <WhatWeBuildSection />
           <TheProblemSection />
           <WorkflowSection />
           <WhyNeubofySection />

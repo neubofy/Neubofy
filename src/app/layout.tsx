@@ -23,11 +23,23 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Neubofy | Your Technology Department, Without Building One",
+    default: "Custom Software Development & Technology Solutions | Neubofy",
     template: "%s | Neubofy",
   },
-  description: "Neubofy is your on-demand technology department. We bridge the gap between business ideas and flawless execution by translating requirements, selecting expert builders, managing architecture, and verifying software before delivery.",
-  keywords: ["Technology Department as a Service", "Software Development Management", "App Builder Verification", "Tech Architecture", "Outsourced CTO", "Software Engineering", "Business Technology Solution", "Neubofy"],
+  description: "Neubofy helps businesses turn ideas into software—from websites and web apps to custom business systems, AI workflows and local AI solutions. We translate requirements, coordinate development and verify delivery.",
+  keywords: [
+    "custom software development",
+    "custom software solutions",
+    "business software",
+    "web applications",
+    "mobile applications",
+    "AI workflows",
+    "AI automation",
+    "local AI solutions",
+    "business automation",
+    "software development for businesses",
+    "Neubofy"
+  ],
   authors: [{ name: "Neubofy" }],
   creator: "Neubofy",
   openGraph: {
@@ -61,6 +73,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
   const firebaseConfig = {
     apiKey: process.env.apiKey || process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.authDomain || process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -88,6 +102,20 @@ export default function RootLayout({
           <Footer />
           <GoToTop />
           <Analytics />
+          {gaId && (
+            <>
+              <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){window.dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', '${gaId}');
+                `}
+              </Script>
+            </>
+          )}
           <Script id="zoho-salesiq-init" strategy="lazyOnload">
             {`window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}`}
           </Script>

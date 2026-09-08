@@ -24,7 +24,7 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Developers", path: "/developers" },
-    { name: "Support & Community", path: "https://neubofy.zohodesk.in/portal" }
+    { name: "Help Centre", path: "https://neubofy.zohodesk.in/portal" }
   ];
 
   return (

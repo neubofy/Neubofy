@@ -22,13 +22,13 @@ const WhyNeubofySection = () => {
     },
     {
       icon: UserCog,
-      title: "One accountable interface",
-      desc: "You don't have to manage developers, technical terminology and coordination yourself."
+      title: "Real People Between You and the Technology",
+      desc: "Tell Neubofy what your business needs. Our team helps turn that requirement into a practical technology plan."
     },
     {
       icon: PiggyBank,
-      title: "Efficient economics",
-      desc: "We match the project with the appropriate level of builder instead of automatically using the most expensive developer."
+      title: "Right-Sized Development. Better Economics.",
+      desc: "Not every project needs the most expensive developer available. Structured requirements, an efficient builder network and centralized coordination can reduce unnecessary development cost."
     }
   ];
 

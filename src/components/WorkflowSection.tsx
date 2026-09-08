@@ -25,9 +25,47 @@ const WorkflowSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            The Neubofy Workflow
+            More Than a Developer Marketplace.
           </h2>
-          <p className="text-muted-foreground">How we bridge the gap between business and technology.</p>
+          <p className="text-muted-foreground mb-8">
+            A marketplace helps you find a developer. <br className="hidden md:block"/>
+            Neubofy helps you understand what should be built, determines the right approach, connects the project with an appropriate builder, coordinates development and verifies the result.
+          </p>
+
+          <div className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 mb-16 text-left">
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Typical Marketplace</h3>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-white/70">
+                <span>Find</span>
+                <span className="text-white/30">→</span>
+                <span>Hire</span>
+                <span className="text-white/30">→</span>
+                <span>Manage</span>
+                <span className="text-white/30">→</span>
+                <span className="text-white/50 line-through">Hope</span>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-3">Neubofy Workflow</h3>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-white font-medium">
+                <span>Understand</span>
+                <span className="text-white/30">→</span>
+                <span>Translate</span>
+                <span className="text-white/30">→</span>
+                <span>Plan</span>
+                <span className="text-white/30">→</span>
+                <span>Select</span>
+                <span className="text-white/30">→</span>
+                <span>Build</span>
+                <span className="text-white/30">→</span>
+                <span>Verify</span>
+                <span className="text-white/30">→</span>
+                <span className="text-green-400">Deliver</span>
+              </div>
+            </div>
+          </div>
+
         </motion.div>
 
         <div className="space-y-4">
