@@ -1,309 +1,105 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Sparkles, User, ExternalLink, Code2, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { Shield, Lock, Terminal, Brain, Code2 } from "lucide-react";
+import PageTransition from "@/components/PageTransition";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { collection, onSnapshot, query, where, limit, orderBy } from "firebase/firestore";
-import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
-import { User as FirebaseUser } from "firebase/auth";
-
-import { X, Mail, MessageCircle, Share2 } from "lucide-react";
-
-interface DeveloperProfile {
-  id: string;
-  name: string;
-  photoURL?: string;
-  bio: string;
-  portfolioUrl?: string;
-  projects?: { title: string; link?: string; description?: string; stars?: number }[];
-  contacts?: {
-    email?: string;
-    telegram?: string;
-    whatsapp?: string;
-    socialUrl?: string;
-  };
-}
 
 export default function DevelopersPage() {
-  const [developers, setDevelopers] = useState<DeveloperProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
-  const [selectedDev, setSelectedDev] = useState<DeveloperProfile | null>(null);
-
-  useEffect(() => {
-    // Only subscribe on client side
-    if (typeof window !== "undefined") {
-      try {
-        const authObj = getFirebaseAuth();
-        const unsubscribe = authObj.onAuthStateChanged((user) => {
-          if (currentUser !== user) {
-            setCurrentUser(user);
-          }
-        });
-        return () => unsubscribe();
-      } catch (e) {
-        // App might not be initialized immediately
-      }
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    let unsubscribe: () => void;
-
-    // Defer setup slightly to ensure Firebase is initialized if we reached here fast
-    const timer = setTimeout(() => {
-      try {
-        const q = query(
-          collection(getFirebaseDb(), "users"),
-          where("verified", "==", true),
-          limit(50)
-        );
-
-        unsubscribe = onSnapshot(q, (snapshot) => {
-          const devsData = snapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-              id: doc.id,
-              name: data.name,
-            photoURL: data.photoURL,
-              bio: data.bio,
-              portfolioUrl: data.portfolioUrl,
-              projects: data.projects,
-              contacts: data.contacts,
-            };
-          }) as DeveloperProfile[];
-          setDevelopers(devsData);
-          setLoading(false);
-        }, (err) => {
-          console.error("Failed to load developers:", err);
-          setLoading(false);
-        });
-      } catch (err) {
-        console.error("Failed to setup listener for developers:", err);
-        setLoading(false);
-      }
-    }, 0);
-
-    return () => {
-      clearTimeout(timer);
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
-
   return (
-    <div className="min-h-screen relative overflow-x-hidden flex flex-col items-center pt-24 pb-16">
-      <div className="container relative z-10 mx-auto px-4 w-full max-w-6xl">
-
-        {/* Top Banner Auth Actions */}
-        <div className="flex justify-end mb-8 animate-fade-in-up">
-          {currentUser ? (
-            <Link href="/developers/profile">
-              <Button className="btn-electric gap-2">
-                <User size={16} /> Manage Profile
-              </Button>
-            </Link>
-          ) : (
-            <div className="flex gap-4">
-              <Link href="/developers/login">
-                <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
-                  Developer Login
-                </Button>
-              </Link>
-              <Link href="/developers/onboard">
-                <Button className="btn-electric">
-                  Join as Developer
-                </Button>
-              </Link>
+    <PageTransition>
+      <div className="container mx-auto py-24 px-4 max-w-5xl">
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 glass-card px-4 py-2 rounded-full mb-6">
+              <Lock className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold">Strictly Private Network</span>
             </div>
-          )}
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Join the Neubofy™ <br />
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Builder Intelligence
+              </span>
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              We do not publicly expose our developers. All data is completely private. We hand-select appropriate builders for verified client projects.
+            </p>
+          </motion.div>
         </div>
 
-        {/* Header */}
-        <div className="text-center mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-primary mb-4 animate-fade-in-up">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-semibold tracking-wide uppercase">Top Talent Network</span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-            <span className="bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text text-transparent">
-              Verified Developers
-            </span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-            Connect with our curated network of exceptional software engineers. Review their projects and see what they can build for you.
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="glass-card p-8 rounded-2xl text-center"
+          >
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+              <Brain className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">AI Developers</h3>
+            <p className="text-muted-foreground text-sm">
+              Machine learning engineers, LLM orchestrators, and data scientists building next-gen solutions.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="glass-card p-8 rounded-2xl text-center"
+          >
+            <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-6">
+              <Shield className="w-8 h-8 text-secondary" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Security Analysts</h3>
+            <p className="text-muted-foreground text-sm">
+              Security researchers and code analysts verifying the integrity and safety of delivered software.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="glass-card p-8 rounded-2xl text-center"
+          >
+            <div className="w-16 h-16 rounded-full bg-tertiary/10 flex items-center justify-center mx-auto mb-6">
+              <Code2 className="w-8 h-8 text-tertiary" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Software Engineers</h3>
+            <p className="text-muted-foreground text-sm">
+              Frontend, backend, mobile, and full-stack developers architecting robust applications.
+            </p>
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="glass-card p-10 rounded-3xl text-center max-w-3xl mx-auto border border-primary/20"
+        >
+          <Terminal className="w-10 h-10 text-primary mx-auto mb-6" />
+          <h2 className="text-3xl font-bold mb-4">Ready to build?</h2>
+          <p className="text-muted-foreground mb-8">
+            Register your interest to join our private network. Our team reviews all applications and will contact you when a project matches your exact skill set. You get qualified projects without having to become the salesperson.
           </p>
-        </div>
-
-        {/* Developers Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loading ? (
-            <div className="col-span-full flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-          ) : developers.length === 0 ? (
-            <div className="col-span-full text-center py-20 glass-card rounded-xl">
-              <p className="text-muted-foreground text-lg">No verified developers found yet. Be the first to join!</p>
-            </div>
-          ) : (
-            developers.map((dev, idx) => (
-              <div
-                key={dev.id}
-                onClick={() => setSelectedDev(dev)}
-                className="glass-card p-6 rounded-2xl hover:border-primary/40 transition-all duration-300 animate-fade-in-up group flex flex-col h-full cursor-pointer"
-                style={{ animationDelay: `${300 + (idx * 100)}ms` }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden shrink-0">
-                      {dev.photoURL ? (
-                        <img src={dev.photoURL} alt={dev.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                      ) : (
-                        <span className="text-primary font-bold text-xl">{dev.name.charAt(0).toUpperCase()}</span>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{dev.name}</h3>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <Code2 size={14}/> Developer
-                      </p>
-                    </div>
-                  </div>
-                  {dev.portfolioUrl && (
-                    <a href={dev.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors p-2 bg-background/50 rounded-full">
-                      <ExternalLink size={16} />
-                    </a>
-                  )}
-                </div>
-
-                <p className="text-muted-foreground text-sm line-clamp-3 mb-6 flex-grow">
-                  {dev.bio}
-                </p>
-
-                {dev.projects && dev.projects.length > 0 && (
-                  <div className="space-y-3 mt-auto">
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border pb-1">Featured Projects</h4>
-                    {dev.projects.slice(0, 2).map((proj, pIdx) => (
-                      <div key={pIdx} className="bg-background/40 p-3 rounded-lg text-sm">
-                        <div className="flex justify-between items-center mb-1 gap-2">
-                          <div className="flex items-center gap-2 overflow-hidden">
-                            <span className="font-semibold text-foreground truncate">{proj.title}</span>
-                            {proj.stars !== undefined && (
-                               <span className="text-[10px] bg-background/50 text-yellow-500 border border-yellow-500/20 px-1.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
-                                 <Star size={10} className="fill-yellow-500" /> {proj.stars}
-                               </span>
-                            )}
-                          </div>
-                          {proj.link && (
-                            <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-xs flex items-center gap-1 shrink-0">
-                              View <ExternalLink size={10} />
-                            </a>
-                          )}
-                        </div>
-                        {proj.description && (
-                          <p className="text-xs text-muted-foreground line-clamp-1">{proj.description}</p>
-                        )}
-                      </div>
-                    ))}
-                    {dev.projects.length > 2 && (
-                      <p className="text-xs text-center text-muted-foreground pt-1">+{dev.projects.length - 2} more projects</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))
-          )}
-        </div>
+          <a
+            href="https://neubofy.zohodesk.in/portal"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 rounded-full h-12"
+          >
+            Register Interest
+          </a>
+        </motion.div>
       </div>
-
-      {/* Developer Details Modal */}
-      {selectedDev && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm overflow-y-auto">
-          <div className="glass-card relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-8 animate-fade-in-up mt-8 mb-8" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => setSelectedDev(null)}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-background/50 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="flex flex-col md:flex-row gap-6 mb-8">
-              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden shrink-0 border border-primary/30">
-                {selectedDev.photoURL ? (
-                  <img src={selectedDev.photoURL} alt={selectedDev.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                ) : (
-                  <span className="text-primary font-bold text-4xl">{selectedDev.name.charAt(0).toUpperCase()}</span>
-                )}
-              </div>
-              <div className="flex-1">
-                <h2 className="text-3xl font-bold mb-2">{selectedDev.name}</h2>
-                <div className="flex flex-wrap gap-3 mb-4">
-                  {selectedDev.portfolioUrl && (
-                    <a href={selectedDev.portfolioUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-primary/10 text-primary px-3 py-1 rounded-full hover:bg-primary/20 transition-colors">
-                      <ExternalLink size={14} /> Portfolio
-                    </a>
-                  )}
-                  {selectedDev.contacts?.email && (
-                    <a href={`mailto:${selectedDev.contacts.email}`} className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
-                      <Mail size={14} /> Email
-                    </a>
-                  )}
-                  {selectedDev.contacts?.telegram && (
-                    <a href={`https://t.me/${selectedDev.contacts.telegram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
-                      <MessageCircle size={14} /> Telegram
-                    </a>
-                  )}
-                  {selectedDev.contacts?.whatsapp && (
-                    <a href={`https://wa.me/${selectedDev.contacts.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
-                      <MessageCircle size={14} /> WhatsApp
-                    </a>
-                  )}
-                  {selectedDev.contacts?.socialUrl && (
-                    <a href={selectedDev.contacts.socialUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm bg-background/50 px-3 py-1 rounded-full border border-border hover:border-primary/50 transition-colors">
-                      <Share2 size={14} /> Social Profile
-                    </a>
-                  )}
-                </div>
-                <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground whitespace-pre-wrap">
-                  {selectedDev.bio}
-                </div>
-              </div>
-            </div>
-
-            {selectedDev.projects && selectedDev.projects.length > 0 && (
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b border-border pb-2">Projects & Experience</h3>
-                <div className="grid gap-4">
-                  {selectedDev.projects.map((proj, pIdx) => (
-                    <div key={pIdx} className="bg-background/40 p-4 rounded-xl border border-border/50">
-                      <div className="flex justify-between items-start gap-4 mb-2">
-                        <h4 className="font-semibold text-lg">{proj.title}</h4>
-                        <div className="flex items-center gap-3 shrink-0">
-                          {proj.stars !== undefined && (
-                            <span className="text-xs font-medium text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded-full flex items-center gap-1">
-                              <Star size={12} className="fill-yellow-500" /> {proj.stars}
-                            </span>
-                          )}
-                          {proj.link && (
-                            <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm flex items-center gap-1">
-                              Visit <ExternalLink size={12} />
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                      {proj.description && (
-                        <p className="text-sm text-muted-foreground">{proj.description}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-          {/* Backdrop click to close */}
-          <div className="fixed inset-0 -z-10" onClick={() => setSelectedDev(null)}></div>
-        </div>
-      )}
-    </div>
+    </PageTransition>
   );
 }

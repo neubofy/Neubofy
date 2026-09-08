@@ -10,9 +10,8 @@ service cloud.firestore {
     // Match all documents under a specific user ID
     match /users/{userId} {
       // The user can read and write their own top-level document
-      // Also allow ANY authenticated user (or public) to read so they can see the dev list
-      allow read: if true;
-      allow write: if isOwner(userId);
+      // Developer profiles are private and only the owner can read or write
+      allow read, write: if isOwner(userId);
 
       // Match any subcollections under the user's document
       match /{subcollection}/{document=**} {
