@@ -61,6 +61,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
   const firebaseConfig = {
     apiKey: process.env.apiKey || process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.authDomain || process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -88,6 +90,20 @@ export default function RootLayout({
           <Footer />
           <GoToTop />
           <Analytics />
+          {gaId && (
+            <>
+              <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){window.dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', '${gaId}');
+                `}
+              </Script>
+            </>
+          )}
           <Script id="zoho-salesiq-init" strategy="lazyOnload">
             {`window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}`}
           </Script>

@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Github
 import { getFirebaseAuth } from "@/lib/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { X, Apple, Github, Chrome } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -120,14 +120,15 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button
               type="button"
               variant="outline"
               disabled={loading}
               onClick={() => handleProviderLogin('google')}
-              className="w-full"
+              className="w-full flex items-center justify-center gap-2"
             >
+              <Chrome size={18} />
               Google
             </Button>
             <Button
@@ -135,8 +136,9 @@ export default function LoginPage() {
               variant="outline"
               disabled={loading}
               onClick={() => handleProviderLogin('github')}
-              className="w-full"
+              className="w-full flex items-center justify-center gap-2"
             >
+              <Github size={18} />
               GitHub
             </Button>
             <Button
@@ -144,8 +146,9 @@ export default function LoginPage() {
               variant="outline"
               disabled={loading}
               onClick={() => handleProviderLogin('apple')}
-              className="w-full"
+              className="w-full flex items-center justify-center gap-2"
             >
+              <Apple size={18} />
               Apple
             </Button>
           </div>
