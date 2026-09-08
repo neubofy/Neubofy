@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
 
           <h2 className="text-2xl font-semibold mt-8 mb-4 text-foreground">1. Introduction</h2>
           <p className="mb-4">
-            Welcome to Neubofy™. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
+            Welcome to Neubofy. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
           </p>
 
           <h2 className="text-2xl font-semibold mt-8 mb-4 text-foreground">2. The Data We Collect About You</h2>

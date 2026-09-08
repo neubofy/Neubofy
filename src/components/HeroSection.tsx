@@ -2,9 +2,7 @@
 
 import { Shield } from "lucide-react";
 import ParallaxBackground from "./ParallaxBackground";
-import RequestFlowAnimation from "./RequestFlowAnimation";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
-import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { motion } from "framer-motion";
 
 const HeroSection = () => {
@@ -12,108 +10,68 @@ const HeroSection = () => {
 
   return (
     <ParallaxBackground>
-      <section className="min-h-[50vh] md:min-h-screen flex items-center justify-center relative overflow-hidden pt-20 md:pt-32">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
+      <section className="min-h-[70vh] md:min-h-screen flex items-center justify-center relative overflow-hidden pt-20 md:pt-32">
+        {/* Animated Background Elements - Subtle Premium Theme */}
+        <div className="absolute inset-0 z-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0 }}
-            className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse-slow"
+            className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse-slow"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse-slow"
+            className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white/5 rounded-full blur-[80px] animate-pulse-slow"
             style={{ animationDelay: "1s" }}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="absolute top-1/2 left-1/2 w-32 h-32 bg-tertiary/10 rounded-full blur-2xl animate-pulse-slow"
-            style={{ animationDelay: "2s" }}
           />
         </div>
 
         <motion.div
           ref={elementRef}
-          className="text-center"
+          className="text-center relative z-10 w-full max-w-5xl mx-auto px-4"
           initial={{ opacity: 0, y: 40 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: "easeOut" }}
         >
           {/* Badge */}
           <motion.div
-            className="inline-flex items-center gap-2 glass-card px-6 py-3 rounded-full mb-8 animate-fade-in pulse-glow"
+            className="inline-flex items-center gap-2 glass-card px-6 py-3 rounded-full mb-8 animate-fade-in border border-white/10"
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <Shield className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold">Connecting Talent With Consumers</span>
+            <Shield className="w-5 h-5 text-foreground" />
+            <span className="text-sm font-semibold tracking-wide uppercase">Your Technology Department, Without Building One</span>
           </motion.div>
 
           {/* Main Headline */}
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-4 md:mb-8 animate-fade-in text-3d"
+            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-bold mb-6 md:mb-10 animate-fade-in tracking-tight text-foreground leading-[1.1]"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <span className="gradient-text">The Global Network</span>
+            Build the <span className="text-white/60">right</span>
             <br />
-            <span className="text-foreground">For Top</span>
+            software.
             <br />
-            <span className="gradient-text">Developers</span>
+            <span className="text-white/40 text-4xl sm:text-5xl md:text-7xl lg:text-8xl">Not just software.</span>
           </motion.h1>
 
           {/* Value Proposition */}
           <motion.div
-            className="max-w-4xl mx-auto mb-8 animate-fade-in"
+            className="max-w-3xl mx-auto mb-12 animate-fade-in"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-foreground mb-4 px-4">
-              Finding the best developers to provide consumers with the highest quality products at competitive costs.
-            </p>
-            <p className="text-lg sm:text-xl text-muted-foreground px-4">
-              Neubofy™ acts as the bridge, onboarding the world&apos;s top talent and connecting them with consumers to build exceptional, affordable applications.
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
+              Tell Neubofy what your business needs. We translate your idea into the right technical plan, select the right builder, manage the project, and verify the software before delivery.
             </p>
           </motion.div>
 
-          {/* Dynamic SVG Explainer Animation */}
-          <motion.div
-            className="w-full mt-16 animate-fade-in"
-            initial={{ opacity: 0, y: 40 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <RequestFlowAnimation />
-          </motion.div>
-
-          {/* Enhanced Stats */}
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16 animate-fade-in"
-            initial={{ opacity: 0, y: 40 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.7 }}
-          >
-            <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Top</div>
-              <div className="text-muted-foreground font-medium">Global Developers</div>
-            </div>
-            <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Competitive</div>
-              <div className="text-muted-foreground font-medium">Pricing</div>
-            </div>
-            <div className="text-center group">
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 group-hover:scale-110 transition-transform">Best</div>
-              <div className="text-muted-foreground font-medium">Quality Products</div>
-            </div>
-          </motion.div>
         </motion.div>
       </section>
     </ParallaxBackground>

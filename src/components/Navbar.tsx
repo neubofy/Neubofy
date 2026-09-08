@@ -83,7 +83,7 @@ const Navbar = () => {
             ))}
             <Link href="/order">
               <Button className="btn-electric rounded-full px-6">
-                Order App
+                Start Project
               </Button>
             </Link>
           </div>
@@ -133,7 +133,7 @@ const Navbar = () => {
               <div className="pt-4 pb-2">
                 <Link href="/order" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button className="w-full btn-electric">
-                    Order App
+                    Start Project
                   </Button>
                 </Link>
               </div>
