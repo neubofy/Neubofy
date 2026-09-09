@@ -2,6 +2,7 @@
 
 import { Shield } from "lucide-react";
 import ParallaxBackground from "./ParallaxBackground";
+import OrchestrationSystem from "./OrchestrationSystem";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { motion } from "framer-motion";
 
@@ -11,21 +12,9 @@ const HeroSection = () => {
   return (
     <ParallaxBackground>
       <section className="min-h-[70vh] md:min-h-screen flex items-center justify-center relative overflow-hidden pt-20 md:pt-32">
-        {/* Animated Background Elements - Subtle Premium Theme */}
-        <div className="absolute inset-0 z-0">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0 }}
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse-slow"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-white/5 rounded-full blur-[80px] animate-pulse-slow"
-            style={{ animationDelay: "1s" }}
-          />
+        {/* Live SVG Orchestration System */}
+        <div className="absolute inset-0 z-0 flex items-center justify-center">
+          <OrchestrationSystem />
         </div>
 
         <motion.div
