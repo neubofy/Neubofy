@@ -73,7 +73,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID;
+  const gaId = process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID;
 
   const firebaseConfig = {
     apiKey: process.env.apiKey || process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
