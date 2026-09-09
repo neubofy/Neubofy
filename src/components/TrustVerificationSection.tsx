@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ShieldCheck, SearchCode, ServerCog } from "lucide-react";
+import VerificationGate from "./VerificationGate";
 
 const TrustVerificationSection = () => {
   return (
@@ -21,42 +22,22 @@ const TrustVerificationSection = () => {
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
             The person who builds it shouldn't be the only person who decides it's ready.
           </h2>
-          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-10">
+          <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-16">
             Verification is structured according to the risk and requirements of each project.
           </p>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm font-semibold text-white/80 max-w-3xl mx-auto mb-6 bg-white/5 border border-white/10 rounded-2xl p-4 flex-wrap">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                <SearchCode className="w-4 h-4" />
-              </div>
-              Builder
-            </div>
-            <div className="text-white/30 hidden md:block">→</div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                <SearchCode className="w-4 h-4" />
-              </div>
-              Independent Review
-            </div>
-            <div className="text-white/30 hidden md:block">→</div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              Neubofy Delivery Control
-            </div>
-            <div className="text-white/30 hidden md:block">→</div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                <ServerCog className="w-4 h-4" />
-              </div>
-              Client
-            </div>
+          <div className="w-full relative py-8 hidden md:block mb-10">
+            <VerificationGate />
           </div>
+
+          <div className="flex flex-col md:hidden items-center justify-center gap-4 text-sm font-semibold text-white/80 max-w-3xl mx-auto mb-10 bg-white/5 border border-white/10 rounded-2xl p-4 flex-wrap">
+             {/* Mobile Fallback if SVG is too complex for small screens, though the SVG has overflow-x-auto. Keep this simple. */}
+             <span>Build → Test → Security → Review → Acceptance → Delivery</span>
+          </div>
+
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

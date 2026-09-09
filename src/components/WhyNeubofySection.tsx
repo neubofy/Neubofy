@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Briefcase, BrainCircuit, ShieldCheck, UserCog, PiggyBank } from "lucide-react";
+import OrchestrationDimensions from "./OrchestrationDimensions";
 
 const WhyNeubofySection = () => {
   const advantages = [
@@ -40,7 +41,7 @@ const WhyNeubofySection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-10 text-center"
         >
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
             Why Neubofy?
@@ -48,7 +49,9 @@ const WhyNeubofySection = () => {
           <p className="text-xl text-muted-foreground">The structural advantages of using a technology department.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <OrchestrationDimensions />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
           {advantages.map((adv, index) => (
             <motion.div
               key={index}
