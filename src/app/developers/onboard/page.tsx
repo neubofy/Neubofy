@@ -71,6 +71,15 @@ function OnboardForm() {
         createdAt: new Date().toISOString()
       });
 
+      const profileObj = {
+        name: form.name,
+        bio: form.bio,
+        portfolioUrl: form.portfolioUrl,
+        contacts: { email: form.email },
+        verified: true
+      };
+      localStorage.setItem(`developerProfile_${user.uid}`, JSON.stringify(profileObj));
+
       router.push("/developers");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred during registration.");
@@ -117,6 +126,15 @@ function OnboardForm() {
           createdAt: new Date().toISOString()
         });
       }
+
+      const profileObj = {
+        name: user.displayName || "New Developer",
+        bio: "I just joined!",
+        portfolioUrl: "",
+        contacts: { email: user.email || "" },
+        verified: true
+      };
+      localStorage.setItem(`developerProfile_${user.uid}`, JSON.stringify(profileObj));
 
       router.push("/developers");
     } catch (err: unknown) {

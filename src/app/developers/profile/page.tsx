@@ -187,6 +187,9 @@ export default function ProfilePage() {
       const docRef = doc(getFirebaseDb(), "users", user.uid);
       await deleteDoc(docRef);
 
+      // Delete local storage profile cache
+      localStorage.removeItem(`developerProfile_${user.uid}`);
+
       // Delete auth user
       await deleteUser(user);
       router.push("/");
@@ -250,6 +253,16 @@ export default function ProfilePage() {
         contacts: profileData.contacts,
         verified: true,
       }, { merge: true });
+
+      const profileObj = {
+        name: profileData.name,
+        bio: profileData.bio,
+        portfolioUrl: profileData.portfolioUrl,
+        contacts: { email: profileData.contacts.email },
+        verified: true
+      };
+      localStorage.setItem(`developerProfile_${user.uid}`, JSON.stringify(profileObj));
+
       alert("Profile updated successfully!");
     } catch (err) {
       console.error(err);
