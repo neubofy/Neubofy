@@ -23,9 +23,11 @@ function OnboardForm() {
     password: "",
     bio: "",
     portfolioUrl: "",
+    specialization: "",
+    experienceLevel: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -52,6 +54,8 @@ function OnboardForm() {
         name: form.name,
         bio: form.bio,
         portfolioUrl: form.portfolioUrl,
+        specialization: form.specialization,
+        experienceLevel: form.experienceLevel,
         verified: true, // We auto-verify them so they show on the list for this demo
         projects: [],
         contacts: {
@@ -124,7 +128,10 @@ function OnboardForm() {
         <Link href="/developers" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
           <X size={20} />
         </Link>
-        <h1 className="text-3xl font-bold text-center mb-6 card-3d-content">Join as Developer</h1>
+        <h1 className="text-3xl font-bold text-center mb-2 card-3d-content">Become a Partner</h1>
+        <p className="text-center text-muted-foreground mb-6 text-sm">
+          Work independently. Build with your expertise. Join the Neubofy orchestration network.
+        </p>
 
         {error && (
           <div className="mb-4 p-3 bg-destructive/10 text-destructive text-sm rounded-lg">
@@ -143,6 +150,40 @@ function OnboardForm() {
               onChange={handleChange}
               className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Primary Specialization</label>
+            <select
+              name="specialization"
+              value={form.specialization}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-foreground"
+            >
+              <option value="">Select Specialization</option>
+              <option value="Frontend Development">Frontend Development</option>
+              <option value="Backend Development">Backend Development</option>
+              <option value="Full-Stack Development">Full-Stack Development</option>
+              <option value="AI / ML Engineering">AI / ML Engineering</option>
+              <option value="Security Auditing">Security Auditing</option>
+              <option value="QA / Testing">QA / Testing</option>
+              <option value="UI/UX Design">UI/UX Design</option>
+              <option value="DevOps & Cloud">DevOps & Cloud</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Experience Level</label>
+            <select
+              name="experienceLevel"
+              value={form.experienceLevel}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-foreground"
+            >
+              <option value="">Select Level</option>
+              <option value="Junior (1-3 yrs)">Junior (1-3 yrs)</option>
+              <option value="Mid-Level (3-5 yrs)">Mid-Level (3-5 yrs)</option>
+              <option value="Senior (5-8 yrs)">Senior (5-8 yrs)</option>
+              <option value="Expert (8+ yrs)">Expert (8+ yrs)</option>
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>

@@ -15,19 +15,27 @@ const CTASection = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-7xl font-bold tracking-tight mb-8">
-            Tell Neubofy What You Need
+            Have a business problem that needs technology?
           </h2>
           <p className="text-xl text-muted-foreground font-light mb-12 max-w-2xl mx-auto">
-            Stop worrying about technical terminology and developer management. Let us handle the technology while you handle your business.
+            You don't need a technical specification. Tell us what you're trying to achieve. Neubofy will help determine what technology work is actually required.
           </p>
-          <a
-            href="/order"
-
-
-            className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-medium transition-transform hover:scale-105 bg-white text-black shadow-xl hover:shadow-2xl hover:shadow-white/20 rounded-full"
-          >
-            Start Your Project <ArrowRight className="w-5 h-5" />
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/order"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-medium transition-transform hover:scale-105 bg-white text-black shadow-xl hover:shadow-2xl hover:shadow-white/20 rounded-full"
+            >
+              Start a Project <ArrowRight className="w-5 h-5" />
+            </a>
+            <a
+              href="https://neubofy.zohodesk.in/portal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-medium transition-transform hover:scale-105 bg-white/10 text-white shadow-xl hover:shadow-2xl hover:shadow-white/20 border border-white/20 rounded-full"
+            >
+              Talk to Neubofy
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>

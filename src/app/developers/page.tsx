@@ -86,12 +86,12 @@ export default function DevelopersPage() {
             <div className="flex gap-4">
               <Link href="/developers/login">
                 <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
-                  Developer Login
+                  Partner Login
                 </Button>
               </Link>
               <Link href="/developers/onboard">
                 <Button className="btn-electric">
-                  Join as Developer
+                  Become a Partner
                 </Button>
               </Link>
             </div>
@@ -166,13 +166,10 @@ export default function DevelopersPage() {
                   <span className="text-sm font-semibold">Strictly Private Network</span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                  Join the Neubofy <br />
-                  <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    Builder Intelligence
-                  </span>
+                  Become a Neubofy Partner
                 </h1>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  We do not publicly expose our developers. All data is completely private. We hand-select appropriate builders for verified client projects.
+                  Work independently. Build with your expertise. Let Neubofy handle client acquisition, requirements coordination, project orchestration, and delivery accountability.
                 </p>
               </motion.div>
             </div>
@@ -231,15 +228,15 @@ export default function DevelopersPage() {
               className="glass-card p-10 rounded-3xl text-center max-w-3xl mx-auto border border-primary/20"
             >
               <Terminal className="w-10 h-10 text-primary mx-auto mb-6" />
-              <h2 className="text-3xl font-bold mb-4">Ready to build?</h2>
+              <h2 className="text-3xl font-bold mb-4">Ready to partner?</h2>
               <p className="text-muted-foreground mb-8">
-                Register your interest to join our private network. Our team reviews all applications and will contact you when a project matches your exact skill set. You get qualified projects without having to become the salesperson.
+                You remain independent. You receive qualified opportunities matching your actual skills. Requirements and acceptance criteria are clearly defined, and you don't have to become the salesperson.
               </p>
               <Link
                 href="/developers/onboard"
                 className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 rounded-full h-12"
               >
-                Join as Developer
+                Become a Partner
               </Link>
             </motion.div>
           </>

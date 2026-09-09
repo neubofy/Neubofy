@@ -5,17 +5,18 @@ import { ArrowDown } from "lucide-react";
 
 const WorkflowSection = () => {
   const steps = [
-    { num: "01", title: "Understand", desc: "You explain your business in normal language." },
-    { num: "02", title: "Translate", desc: "Neubofy turns your idea into clear technical requirements." },
-    { num: "03", title: "Architect", desc: "We determine what actually needs to be built." },
-    { num: "04", title: "Select", desc: "We choose the appropriate developer/builder." },
-    { num: "05", title: "Build", desc: "The selected builder develops your software." },
-    { num: "06", title: "Verify", desc: "Neubofy checks the delivered product against the agreed requirements." },
-    { num: "07", title: "Handover", desc: "You receive the completed software." }
+    { num: "01", title: "Understand", desc: "You explain your business problem in normal language." },
+    { num: "02", title: "Translate", desc: "Neubofy converts the business problem into structured technical requirements." },
+    { num: "03", title: "Architect", desc: "We determine what should actually be built and how it should work." },
+    { num: "04", title: "Orchestrate", desc: "Neubofy determines which specialists are required and how their responsibilities fit together." },
+    { num: "05", title: "Build", desc: "Independent Neubofy partners execute their assigned responsibilities." },
+    { num: "06", title: "Verify", desc: "The work is reviewed against requirements, quality expectations and project-specific risk." },
+    { num: "07", title: "Deliver", desc: "Neubofy coordinates the final handover." },
+    { num: "08", title: "Support / Evolve", desc: "Where applicable, Neubofy can coordinate future improvements, maintenance and additional technology work." }
   ];
 
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section id="workflow" className="py-24 relative overflow-hidden">
       <div className="container mx-auto px-4 max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -25,46 +26,11 @@ const WorkflowSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            More Than a Developer Marketplace.
+            Technology Orchestration
           </h2>
           <p className="text-muted-foreground mb-8">
-            A marketplace helps you find a developer. <br className="hidden md:block"/>
-            Neubofy helps you understand what should be built, determines the right approach, connects the project with an appropriate builder, coordinates development and verifies the result.
+            Neubofy determines what should be built, assembles the right independent specialists, coordinates the work, and verifies the result before delivery.
           </p>
-
-          <div className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 mb-16 text-left">
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Typical Marketplace</h3>
-              <div className="flex flex-wrap items-center gap-2 text-sm text-white/70">
-                <span>Find</span>
-                <span className="text-white/30">→</span>
-                <span>Hire</span>
-                <span className="text-white/30">→</span>
-                <span>Manage</span>
-                <span className="text-white/30">→</span>
-                <span className="text-white/50 line-through">Hope</span>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-3">Neubofy Workflow</h3>
-              <div className="flex flex-wrap items-center gap-2 text-sm text-white font-medium">
-                <span>Understand</span>
-                <span className="text-white/30">→</span>
-                <span>Translate</span>
-                <span className="text-white/30">→</span>
-                <span>Plan</span>
-                <span className="text-white/30">→</span>
-                <span>Select</span>
-                <span className="text-white/30">→</span>
-                <span>Build</span>
-                <span className="text-white/30">→</span>
-                <span>Verify</span>
-                <span className="text-white/30">→</span>
-                <span className="text-green-400">Deliver</span>
-              </div>
-            </div>
-          </div>
 
         </motion.div>
 

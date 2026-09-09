@@ -51,6 +51,8 @@ export default function OrderPage() {
         `}} />
 
         <div className="glass-card p-8 rounded-3xl text-center" id='zohoSupportWebToCase'>
+          <h1 className="text-3xl font-bold mb-4">What are you trying to achieve?</h1>
+          <p className="text-muted-foreground mb-8 text-sm">You don't need to know exactly what to ask for. Tell us what your business needs, and Neubofy will help determine what technology work is actually required.</p>
           <noscript>
             <div className="bg-destructive/10 text-destructive border border-destructive rounded-md p-4 mb-6 text-left">
               <strong>JavaScript is disabled.</strong> Please enable JavaScript to use this form smoothly (e.g. for dynamic fields and attachments). You can still try submitting the form, but some features may not work.
@@ -122,13 +124,13 @@ export default function OrderPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Subject&nbsp;&nbsp;<br/>
-                    <input type='text' maxLength={255} name='Subject' defaultValue='' className='manfieldbdr'/>
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>What are you trying to achieve? (Subject)&nbsp;&nbsp;<br/>
+                    <input type='text' maxLength={255} name='Subject' defaultValue='' className='manfieldbdr' placeholder='e.g., I want to automate customer support'/>
                   </td>
                 </tr>
                 <tr>
-                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Description &nbsp;&nbsp;<br/>
-                    <textarea name='Description' maxLength={3000} rows={5} />
+                  <td className='zsFontClass hleft' width='100%' colSpan={2}>Business Problem / Desired Outcome &nbsp;&nbsp;<br/>
+                    <textarea name='Description' maxLength={3000} rows={5} placeholder='Describe your business problem, desired outcome, or existing technology...' />
                   </td>
                 </tr>
                 <tr>

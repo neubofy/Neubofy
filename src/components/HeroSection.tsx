@@ -48,16 +48,14 @@ const HeroSection = () => {
 
           {/* Main Headline */}
           <motion.h1
-            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-bold mb-6 md:mb-10 animate-fade-in tracking-tight text-foreground leading-[1.1]"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold mb-6 md:mb-10 animate-fade-in tracking-tight text-foreground leading-[1.1]"
             initial={{ opacity: 0, y: 40 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            Build the <span className="text-white/60">right</span>
+            Your Technology Department,
             <br />
-            software.
-            <br />
-            <span className="text-white/40 text-4xl sm:text-5xl md:text-7xl lg:text-8xl">Not just software.</span>
+            <span className="text-white/40">Without Building One.</span>
           </motion.h1>
 
           {/* Value Proposition */}
@@ -67,9 +65,27 @@ const HeroSection = () => {
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
-              Tell Neubofy what your business needs. We translate your idea into the right technical plan, select the right builder, manage the project, and verify the software before delivery.
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-light leading-relaxed mb-8">
+              Tell Neubofy what your business needs. We determine what should be built, assemble the right independent specialists, coordinate the work, and verify the result before delivery.
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/order"
+                className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors bg-white text-black shadow hover:bg-white/90 rounded-full"
+              >
+                Start a Project
+              </a>
+              <a
+                href="#workflow"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector('#workflow')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors bg-white/10 text-white shadow hover:bg-white/20 border border-white/20 rounded-full"
+              >
+                See How Neubofy Works
+              </a>
+            </div>
           </motion.div>
 
         </motion.div>
