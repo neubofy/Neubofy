@@ -18,7 +18,7 @@ const Footer = () => {
   return (
     <footer className="glass-card mt-20 rounded-none border-b-0 border-x-0">
       <div className="container mx-auto px-4 py-16 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <Image
@@ -57,6 +57,16 @@ const Footer = () => {
             <div className="space-y-3">
               <Link href="/" className="block text-muted-foreground hover:text-primary transition-colors">Home</Link>
               <Link href="/developers" className="block text-muted-foreground hover:text-primary transition-colors">Partners</Link>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-4 text-foreground">Portals</h3>
+            <div className="space-y-3">
+              <Link href="/help" className="block text-muted-foreground hover:text-primary transition-colors">Help Desk</Link>
+              <Link href="/careers" className="block text-muted-foreground hover:text-primary transition-colors">Career</Link>
+              <a href="https://books.zohosecure.in/portal/neubofyon" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Customer Portal</a>
+              <Link href="/sitemap" className="block text-muted-foreground hover:text-primary transition-colors">All website pages</Link>
             </div>
           </div>
 
