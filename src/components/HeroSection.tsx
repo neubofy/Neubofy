@@ -32,7 +32,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <Shield className="w-5 h-5 text-foreground" />
-            <span className="text-sm font-semibold tracking-wide uppercase">Your Technology Department, Without Building One</span>
+            <span className="text-sm font-semibold tracking-wide uppercase">Technology, Without the Guesswork.</span>
           </motion.div>
 
           {/* Main Headline */}

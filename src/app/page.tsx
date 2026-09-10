@@ -9,11 +9,13 @@ import CTASection from "@/components/CTASection";
 
 import Reveal from "@/components/Reveal";
 import PageTransition from "@/components/PageTransition";
+import ServicePausePopup from "@/components/ServicePausePopup";
 
 export default function Home() {
   return (
     <PageTransition>
       <div className="min-h-screen relative">
+        <ServicePausePopup />
         <div className="relative z-10">
           <HeroSection />
           <WhatWeBuildSection />
