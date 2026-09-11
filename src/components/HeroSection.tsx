@@ -55,14 +55,14 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-light leading-relaxed mb-8">
-              Tell Neubofy what your business needs. We determine what should be built, assemble the right independent specialists, coordinate the work, and verify the result before delivery.
+              Tell Neubofy what your business needs to accomplish. We determine the right technology approach — whether that means configuring existing tools, integrating systems, building something custom, improving what you already have, or securing and maintaining it.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/order"
                 className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors bg-white text-black shadow hover:bg-white/90 rounded-full"
               >
-                Start a Project
+                Discuss Your Requirement
               </a>
               <a
                 href="#workflow"

@@ -64,10 +64,10 @@ const TheProblemSection = () => {
           >
             <CheckCircle className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">
-              Developer Selection
+              Capability Selection
             </h3>
             <p className="text-sm text-muted-foreground">
-              Customers should not have to determine which developer is capable of handling their particular project. Neubofy evaluates the project and selects an appropriate builder.
+              The requirement determines the capability. Neubofy identifies the specialists, technology or combination of capabilities needed for the work.
             </p>
           </motion.div>
 
@@ -80,10 +80,10 @@ const TheProblemSection = () => {
           >
             <CheckCircle className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">
-              Why not just hire an AI developer?
+              Why start with a technology?
             </h3>
             <p className="text-sm text-muted-foreground">
-              Because the hardest part is increasingly not writing code. The difficult questions are what should be built, who is qualified, and who verifies the result.
+              The technology you think you need may not be the technology your business actually needs. Neubofy helps determine the appropriate approach before execution.
             </p>
           </motion.div>
 
