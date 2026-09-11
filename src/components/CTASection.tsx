@@ -25,7 +25,7 @@ const CTASection = () => {
               href="/order"
               className="inline-flex items-center justify-center gap-2 px-10 py-5 text-lg font-medium transition-transform hover:scale-105 bg-white text-black shadow-xl hover:shadow-2xl hover:shadow-white/20 rounded-full"
             >
-              Start a Project <ArrowRight className="w-5 h-5" />
+              Discuss Your Requirement <ArrowRight className="w-5 h-5" />
             </a>
             <a
               href="https://neubofy.zohodesk.in/portal"

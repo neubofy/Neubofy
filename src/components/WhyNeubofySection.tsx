@@ -1,35 +1,40 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Briefcase, BrainCircuit, ShieldCheck, UserCog, PiggyBank } from "lucide-react";
+import { Target, Shuffle, Crosshair, Users, ShieldCheck, RefreshCcw } from "lucide-react";
 import OrchestrationDimensions from "./OrchestrationDimensions";
 
 const WhyNeubofySection = () => {
   const advantages = [
     {
-      icon: Briefcase,
-      title: "Business expertise",
-      desc: "You explain the problem. We understand the technology."
+      icon: Target,
+      title: "PROBLEM-FIRST",
+      desc: "We begin with the business requirement, not a predetermined technology."
     },
     {
-      icon: BrainCircuit,
-      title: "Builder intelligence",
-      desc: "We don't simply give your project to whoever is available."
+      icon: Shuffle,
+      title: "TECHNOLOGY-NEUTRAL",
+      desc: "We can recommend using what already exists when that is the better choice."
+    },
+    {
+      icon: Crosshair,
+      title: "RIGHT CAPABILITY",
+      desc: "The requirement determines the capabilities needed."
+    },
+    {
+      icon: Users,
+      title: "ONE ACCOUNTABLE RELATIONSHIP",
+      desc: "The client should not have to coordinate multiple technical specialists themselves."
     },
     {
       icon: ShieldCheck,
-      title: "Independent verification",
-      desc: "The person building your software isn't the only person deciding whether it's ready."
+      title: "INDEPENDENT VERIFICATION",
+      desc: "Execution and verification can be separated according to project risk."
     },
     {
-      icon: UserCog,
-      title: "Real People Between You and the Technology",
-      desc: "Tell Neubofy what your business needs. Our team helps turn that requirement into a practical technology plan."
-    },
-    {
-      icon: PiggyBank,
-      title: "Right-sized technology, not unnecessary technology.",
-      desc: "Neubofy evaluates scope, complexity, and risk before determining an appropriate delivery structure, creating a stronger cost narrative than simply promising cheaper development."
+      icon: RefreshCcw,
+      title: "LIFECYCLE",
+      desc: "Technology can be supported, improved and evolved after delivery."
     }
   ];
 

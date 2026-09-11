@@ -46,14 +46,15 @@ const WorkflowStep = ({ step, index, totalSteps }: { step: any; index: number; t
 
 const WorkflowSection = () => {
   const steps = [
-    { num: "01", title: "Understand", desc: "You explain your business problem in normal language." },
-    { num: "02", title: "Translate", desc: "Neubofy converts the business problem into structured technical requirements." },
-    { num: "03", title: "Architect", desc: "We determine what should actually be built and how it should work." },
-    { num: "04", title: "Orchestrate", desc: "Neubofy determines which specialists are required and how their responsibilities fit together." },
-    { num: "05", title: "Build", desc: "Independent Neubofy partners execute their assigned responsibilities." },
-    { num: "06", title: "Verify", desc: "The work is reviewed against requirements, quality expectations and project-specific risk." },
-    { num: "07", title: "Deliver", desc: "Neubofy coordinates the final handover." },
-    { num: "08", title: "Support / Evolve", desc: "Where applicable, Neubofy can coordinate future improvements, maintenance and additional technology work." }
+    { num: "01", title: "Understand", desc: "Understand the business problem, current situation and desired outcome." },
+    { num: "02", title: "Evaluate", desc: "Assess possible approaches, constraints, risks and existing technology." },
+    { num: "03", title: "Decide", desc: "Determine whether to configure, integrate, build, improve, secure, audit or use another approach." },
+    { num: "04", title: "Architect", desc: "Define the technical approach and requirements." },
+    { num: "05", title: "Assemble", desc: "Bring together the appropriate capabilities/specialists." },
+    { num: "06", title: "Execute", desc: "Coordinate implementation, configuration, integration, development or other required work." },
+    { num: "07", title: "Verify", desc: "Independently evaluate the result against agreed requirements and relevant risks." },
+    { num: "08", title: "Deliver", desc: "Coordinate handover and documentation." },
+    { num: "09", title: "Support / Evolve", desc: "Where appropriate, coordinate maintenance, improvements and future technology needs." }
   ];
 
   return (

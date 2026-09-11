@@ -23,7 +23,7 @@ const TrustVerificationSection = () => {
             The person who builds it shouldn't be the only person who decides it's ready.
           </h2>
           <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-16">
-            Verification is structured according to the risk and requirements of each project.
+            The person executing the work is not necessarily the only person evaluating whether the result satisfies the agreed requirements. Verification is structured according to the risk and requirements of each project.
           </p>
 
           <div className="w-full relative py-8 hidden md:block mb-10">

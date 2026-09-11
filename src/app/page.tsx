@@ -1,4 +1,6 @@
 import HeroSection from "@/components/HeroSection";
+import ConceptSection from "@/components/ConceptSection";
+import CustomerCoverageSection from "@/components/CustomerCoverageSection";
 import WhatWeBuildSection from "@/components/WhatWeBuildSection";
 import TheProblemSection from "@/components/TheProblemSection";
 import WorkflowSection from "@/components/WorkflowSection";
@@ -18,12 +20,14 @@ export default function Home() {
         <ServicePausePopup />
         <div className="relative z-10">
           <HeroSection />
+          <ConceptSection />
+          <CustomerCoverageSection />
           <WhatWeBuildSection />
           <TheProblemSection />
           <WorkflowSection />
+          <TrustVerificationSection />
           <WhyNeubofySection />
           <TargetAudienceSection />
-          <TrustVerificationSection />
           <CTASection />
         </div>
       </div>
