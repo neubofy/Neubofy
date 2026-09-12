@@ -40,6 +40,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4 text-foreground">Portals</h3>
             <div className="space-y-3">
+              <Link href="/consultation" className="block text-muted-foreground hover:text-primary transition-colors">
+                <div className="font-medium">Consultation</div>
+                <div className="text-xs opacity-75">Book a Consultation</div>
+              </Link>
               <a href="https://neubofy.zohodesk.in/portal" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Help Desk</a>
               <a href="https://neubofy.zohorecruit.in/" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Career</a>
               <a href="https://books.zohosecure.in/portal/neubofy" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Customer Portal</a>
