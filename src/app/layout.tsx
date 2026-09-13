@@ -22,6 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://neubofy.in"),
   title: {
     default: "Your Technology Department, Without Building One | Neubofy",
     template: "%s | Neubofy",
@@ -37,6 +38,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Neubofy" }],
   creator: "Neubofy",
+  alternates: {
+    canonical: "https://neubofy.in"
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

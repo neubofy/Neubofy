@@ -35,17 +35,16 @@ const Footer = () => {
               <Link href="/" className="block text-muted-foreground hover:text-primary transition-colors">Home</Link>
               <Link href="/developers" className="block text-muted-foreground hover:text-primary transition-colors">Partners</Link>
               <Link href="/order" className="block text-muted-foreground hover:text-primary transition-colors">Start a project</Link>
-              <Link href="/consultation" className="block text-muted-foreground hover:text-primary transition-colors">Consultation</Link>
             </div>
           </div>
 
           <div>
             <h3 className="text-lg font-bold mb-4 text-foreground">Portals</h3>
             <div className="space-y-3">
-              <a href="https://neubofy.zohobookings.in/neubofy" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Book Consultation</a>
-              <a href="https://neubofy.zohodesk.in/portal" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Help Desk</a>
-              <a href="https://neubofy.zohorecruit.in/" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Career</a>
-              <a href="https://books.zohosecure.in/portal/neubofy" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">Customer Portal</a>
+              <a href="https://booking.neubofy.in" target="_blank" rel="noopener noreferrer" aria-label="Book a Neubofy Consultation (Opens in new tab)" title="Book a Strategy Consultation with Neubofy" className="block text-muted-foreground hover:text-primary transition-colors">Book Consultation</a>
+              <a href="https://neubofy.zohodesk.in/portal" target="_blank" rel="noopener noreferrer" aria-label="Visit Neubofy Help Centre (Opens in new tab)" title="Neubofy Help Centre Support Portal" className="block text-muted-foreground hover:text-primary transition-colors">Help Desk</a>
+              <a href="https://neubofy.zohorecruit.in/" target="_blank" rel="noopener noreferrer" aria-label="Visit Neubofy Careers Portal (Opens in new tab)" title="Neubofy Career Opportunities" className="block text-muted-foreground hover:text-primary transition-colors">Career</a>
+              <a href="https://books.zohosecure.in/portal/neubofy" target="_blank" rel="noopener noreferrer" aria-label="Visit Neubofy Customer Portal (Opens in new tab)" title="Neubofy Secure Customer Portal" className="block text-muted-foreground hover:text-primary transition-colors">Customer Portal</a>
             </div>
           </div>
 

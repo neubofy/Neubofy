@@ -1,4 +1,14 @@
 import PageTransition from "@/components/PageTransition";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Read Neubofy's Terms of Service. Learn about our technology orchestration agreement and delivery management terms.",
+  keywords: ["terms of service", "tos", "neubofy terms", "technology orchestration agreement"],
+  alternates: {
+    canonical: "https://neubofy.in/terms"
+  }
+};
 
 export default function TermsOfService() {
   return (
