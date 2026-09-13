@@ -59,10 +59,10 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="/order"
+                href="https://neubofy.zohobookings.in/neubofy"
                 className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors bg-white text-black shadow hover:bg-white/90 rounded-full"
               >
-                Discuss Your Requirement
+                Consult with our expert
               </a>
               <a
                 href="#workflow"
