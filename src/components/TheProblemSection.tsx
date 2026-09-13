@@ -5,7 +5,7 @@ import { Lightbulb, Users, CheckCircle } from "lucide-react";
 
 const TheProblemSection = () => {
   return (
-    <section className="py-24 bg-black/50 border-y border-white/5">
+    <section className="py-16 md:py-24 bg-black/50 border-y border-white/5">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -22,13 +22,13 @@ const TheProblemSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
-            className="glass-card p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors"
+            className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors"
           >
             <Lightbulb className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -44,7 +44,7 @@ const TheProblemSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="glass-card p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors"
+            className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors"
           >
             <Users className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -60,7 +60,7 @@ const TheProblemSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
-            className="glass-card p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors"
+            className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors"
           >
             <CheckCircle className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -76,7 +76,7 @@ const TheProblemSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
-            className="glass-card p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors lg:col-span-1"
+            className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors lg:col-span-1"
           >
             <CheckCircle className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -92,7 +92,7 @@ const TheProblemSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
             viewport={{ once: true }}
-            className="glass-card p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors lg:col-span-1"
+            className="glass-card p-6 md:p-8 rounded-2xl border border-white/10 hover:border-white/20 transition-colors lg:col-span-1"
           >
             <CheckCircle className="w-8 h-8 text-white mb-6 opacity-80" />
             <h3 className="text-lg font-medium text-white mb-2">

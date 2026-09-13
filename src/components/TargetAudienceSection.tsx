@@ -6,16 +6,16 @@ import Link from "next/link";
 
 const TargetAudienceSection = () => {
   return (
-    <section className="py-24">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {/* For Businesses */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="glass-card p-10 rounded-3xl border border-white/10 flex flex-col h-full bg-gradient-to-br from-black/60 to-black/20"
+            className="glass-card p-6 md:p-10 rounded-3xl border border-white/10 flex flex-col h-full bg-gradient-to-br from-black/60 to-black/20"
           >
             <Building2 className="w-12 h-12 text-white/80 mb-6" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">For Businesses</h2>
@@ -41,7 +41,7 @@ const TargetAudienceSection = () => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="glass-card p-10 rounded-3xl border border-white/10 flex flex-col h-full bg-gradient-to-br from-black/60 to-black/20"
+            className="glass-card p-6 md:p-10 rounded-3xl border border-white/10 flex flex-col h-full bg-gradient-to-br from-black/60 to-black/20"
           >
             <Code2 className="w-12 h-12 text-white/80 mb-6" />
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">For Partners</h2>

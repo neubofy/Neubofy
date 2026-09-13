@@ -6,7 +6,7 @@ import VerificationGate from "./VerificationGate";
 
 const TrustVerificationSection = () => {
   return (
-    <section className="py-24 border-y border-white/5 bg-black/30">
+    <section className="py-16 md:py-24 border-y border-white/5 bg-black/30">
       <div className="container mx-auto px-4 max-w-5xl text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -37,7 +37,7 @@ const TrustVerificationSection = () => {
 
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:p-6 md:gap-8 text-left">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

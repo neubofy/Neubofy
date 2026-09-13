@@ -33,7 +33,7 @@ const WhatWeBuildSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-black/50 border-y border-white/5 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-black/50 border-y border-white/5 relative overflow-hidden">
       <div className="container mx-auto px-4 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -50,7 +50,7 @@ const WhatWeBuildSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-4 md:p-6 max-w-7xl mx-auto">
           {categories.map((cat, index) => (
             <motion.div
               key={index}
@@ -58,7 +58,7 @@ const WhatWeBuildSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="glass-card p-6 rounded-2xl border border-white/10 flex flex-col gap-4 hover:border-white/30 transition-all"
+              className="glass-card p-4 md:p-6 rounded-2xl border border-white/10 flex flex-col gap-4 hover:border-white/30 transition-all"
             >
               <div className="flex items-center gap-3 mb-2">
                 <cat.icon className="w-6 h-6 text-primary/80" />

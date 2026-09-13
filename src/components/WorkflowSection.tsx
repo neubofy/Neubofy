@@ -21,7 +21,7 @@ const WorkflowStep = ({ step, index, totalSteps }: { step: any; index: number; t
       <motion.div
         ref={ref}
         style={{ opacity, scale, borderColor }}
-        className="w-full glass-card p-6 md:p-8 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 md:gap-8 border transition-all bg-black/60 backdrop-blur-md"
+        className="w-full glass-card p-4 md:p-8 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 md:gap-8 border transition-all bg-black/60 backdrop-blur-md"
       >
         <motion.div style={{ color: numColor }} className="text-4xl font-light shrink-0">
           {step.num}
@@ -58,7 +58,7 @@ const WorkflowSection = () => {
   ];
 
   return (
-    <section id="workflow" className="py-24 relative overflow-hidden">
+    <section id="workflow" className="py-16 md:py-24 relative overflow-hidden">
       <div className="container mx-auto px-4 max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
