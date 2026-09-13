@@ -59,7 +59,7 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://neubofy.zohobookings.in/neubofy"
+                href="/consultation"
                 className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium transition-colors bg-white text-black shadow hover:bg-white/90 rounded-full"
               >
                 Consult with our expert
