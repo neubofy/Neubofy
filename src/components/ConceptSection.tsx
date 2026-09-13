@@ -5,7 +5,7 @@ import { ArrowDown } from "lucide-react";
 
 const ConceptSection = () => {
   return (
-    <section className="py-24 bg-black/50 border-y border-white/5 overflow-hidden">
+    <section className="py-16 md:py-24 bg-black/50 border-y border-white/5 overflow-hidden">
       <div className="container mx-auto px-4 max-w-4xl text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -22,14 +22,14 @@ const ConceptSection = () => {
           </p>
         </motion.div>
 
-        <div className="flex flex-col items-center gap-6 max-w-2xl mx-auto">
+        <div className="flex flex-col items-center gap-4 md:gap-4 md:p-6 max-w-2xl mx-auto">
           {/* Step 1 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
-            className="w-full glass-card p-6 md:p-8 rounded-2xl border border-white/10"
+            className="w-full glass-card p-4 md:p-6 md:p-8 rounded-2xl border border-white/10"
           >
             <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">You Bring</h3>
             <p className="text-xl font-medium text-white">"Here's what our business needs."</p>
@@ -50,7 +50,7 @@ const ConceptSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
-            className="w-full glass-card p-6 md:p-8 rounded-2xl border border-white/10"
+            className="w-full glass-card p-4 md:p-6 md:p-8 rounded-2xl border border-white/10"
           >
             <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">Neubofy Figures Out</h3>
             <p className="text-xl font-medium text-white">"What technology approach actually makes sense?"</p>
@@ -71,7 +71,7 @@ const ConceptSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
             viewport={{ once: true }}
-            className="w-full glass-card p-6 md:p-8 rounded-2xl border border-white/10"
+            className="w-full glass-card p-4 md:p-6 md:p-8 rounded-2xl border border-white/10"
           >
             <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">Execution</h3>
             <p className="text-xl font-medium text-white">"Right capabilities assembled around the requirement."</p>
@@ -92,7 +92,7 @@ const ConceptSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.7 }}
             viewport={{ once: true }}
-            className="w-full glass-card p-6 md:p-8 rounded-2xl border border-white/10"
+            className="w-full glass-card p-4 md:p-6 md:p-8 rounded-2xl border border-white/10"
           >
             <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">Verification</h3>
             <p className="text-xl font-medium text-white">"Work evaluated against the agreed requirements."</p>
