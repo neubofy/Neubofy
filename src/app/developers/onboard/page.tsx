@@ -22,17 +22,14 @@ function OnboardForm() {
     name: "",
     email: "",
     password: "",
-    bio: "",
-    portfolioUrl: "",
-    specialization: "",
-    experienceLevel: "",
+    category: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleNext = () => setStep((prev) => Math.min(prev + 1, 3));
+  const handleNext = () => setStep((prev) => Math.min(prev + 1, 2));
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,12 +53,11 @@ function OnboardForm() {
 
       await setDoc(doc(getFirebaseDb(), "users", user.uid), {
         name: form.name,
-        bio: form.bio,
-        portfolioUrl: form.portfolioUrl,
-        specialization: form.specialization,
-        experienceLevel: form.experienceLevel,
-        verified: true, // We auto-verify them so they show on the list for this demo
-        projects: [],
+        category: form.category,
+        bio: "",
+        portfolioUrl: "",
+        status: "pending",
+        verified: false,
         contacts: {
           email: form.email,
           telegram: "",
@@ -73,12 +69,20 @@ function OnboardForm() {
 
       const profileObj = {
         name: form.name,
-        bio: form.bio,
-        portfolioUrl: form.portfolioUrl,
+        category: form.category,
+        bio: "",
+        portfolioUrl: "",
         contacts: { email: form.email },
-        verified: true
+        status: "pending",
+        verified: false
       };
       localStorage.setItem(`developerProfile_${user.uid}`, JSON.stringify(profileObj));
+
+      // Trigger server action for welcome email
+      const { sendOnboardingEmail } = await import('@/app/actions/emailActions');
+      const currentAuth = getFirebaseAuth();
+      const idToken = currentAuth.currentUser ? await currentAuth.currentUser.getIdToken() : '';
+      await sendOnboardingEmail({ email: form.email, name: form.name, idToken });
 
       router.push("/developers");
     } catch (err: unknown) {
@@ -113,10 +117,11 @@ function OnboardForm() {
         await setDoc(docRef, {
           name: user.displayName || "New Developer",
           photoURL: user.photoURL || "",
-          bio: "I just joined!",
+          category: "",
+          bio: "",
           portfolioUrl: "",
-          verified: true,
-          projects: [],
+          status: "pending",
+          verified: false,
           contacts: {
             email: user.email || "",
             telegram: "",
@@ -125,14 +130,21 @@ function OnboardForm() {
           },
           createdAt: new Date().toISOString()
         });
+
+        // Trigger server action for welcome email
+        const { sendOnboardingEmail } = await import('@/app/actions/emailActions');
+        const idToken = await user.getIdToken();
+        await sendOnboardingEmail({ email: user.email || "", name: user.displayName || "New Developer", idToken });
       }
 
       const profileObj = {
         name: user.displayName || "New Developer",
-        bio: "I just joined!",
+        category: "",
+        bio: "",
         portfolioUrl: "",
         contacts: { email: user.email || "" },
-        verified: true
+        status: "pending",
+        verified: false
       };
       localStorage.setItem(`developerProfile_${user.uid}`, JSON.stringify(profileObj));
 
@@ -162,12 +174,10 @@ function OnboardForm() {
         )}
 
         {/* Stepper */}
-        <div className="flex items-center justify-between mb-8 max-w-[200px] mx-auto">
+        <div className="flex items-center justify-between mb-8 max-w-[100px] mx-auto">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-white/10 text-white/40'}`}>1</div>
           <div className={`flex-1 h-px ${step >= 2 ? 'bg-primary' : 'bg-white/10'} mx-2`}></div>
           <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-white/10 text-white/40'}`}>2</div>
-          <div className={`flex-1 h-px ${step >= 3 ? 'bg-primary' : 'bg-white/10'} mx-2`}></div>
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${step >= 3 ? 'bg-primary text-primary-foreground' : 'bg-white/10 text-white/40'}`}>3</div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -235,77 +245,30 @@ function OnboardForm() {
             </div>
           </div>
 
-          {/* Step 2: Expertise */}
+          {/* Step 2: Category & Password */}
           <div className={step === 2 ? 'block space-y-4' : 'hidden'}>
             <div>
-              <label className="block text-sm font-medium mb-1 text-muted-foreground">Primary Specialization</label>
+              <label className="block text-sm font-medium mb-1 text-muted-foreground">Category</label>
               <select
-                name="specialization"
-                value={form.specialization}
+                name="category"
+                value={form.category}
                 onChange={handleChange}
+                required={step === 2}
                 className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-foreground"
               >
-                <option value="">Select Specialization</option>
-                <option value="Frontend Development">Frontend Development</option>
-                <option value="Backend Development">Backend Development</option>
-                <option value="Full-Stack Development">Full-Stack Development</option>
-                <option value="AI / ML Engineering">AI / ML Engineering</option>
-                <option value="Security Auditing">Security Auditing</option>
-                <option value="QA / Testing">QA / Testing</option>
-                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="">Select Category</option>
+                <option value="AI Architect">AI Architect</option>
+                <option value="Security Analyst">Security Analyst</option>
+                <option value="Software Engineer">Software Engineer</option>
+                <option value="Data Scientist">Data Scientist</option>
+                <option value="UI/UX Designer">UI/UX Designer</option>
                 <option value="DevOps & Cloud">DevOps & Cloud</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-muted-foreground">Experience Level</label>
-              <select
-                name="experienceLevel"
-                value={form.experienceLevel}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-foreground"
-              >
-                <option value="">Select Level</option>
-                <option value="Junior (1-3 yrs)">Junior (1-3 yrs)</option>
-                <option value="Mid-Level (3-5 yrs)">Mid-Level (3-5 yrs)</option>
-                <option value="Senior (5-8 yrs)">Senior (5-8 yrs)</option>
-                <option value="Expert (8+ yrs)">Expert (8+ yrs)</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-muted-foreground">Portfolio / GitHub Link</label>
-              <input
-                type="url"
-                name="portfolioUrl"
-                value={form.portfolioUrl}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                placeholder="https://"
-              />
-            </div>
-            <div className="flex gap-3 pt-4">
-              <Button type="button" onClick={handleBack} className="w-1/3 h-12 bg-white/10 text-white hover:bg-white/20 rounded-full font-medium">Back</Button>
-              <Button type="button" onClick={handleNext} className="w-2/3 h-12 bg-white text-black hover:bg-white/90 rounded-full font-medium">Next</Button>
-            </div>
-          </div>
-
-          {/* Step 3: Security & Final */}
-          <div className={step === 3 ? 'block space-y-4' : 'hidden'}>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-muted-foreground">Short Bio</label>
-              <textarea
-                required={step === 3}
-                name="bio"
-                value={form.bio}
-                onChange={handleChange}
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                rows={3}
-                placeholder="Briefly describe your approach to development..."
-              />
-            </div>
-            <div>
               <label className="block text-sm font-medium mb-1 text-muted-foreground">Password</label>
               <input
-                required={step === 3}
+                required={step === 2}
                 type="password"
                 name="password"
                 value={form.password}

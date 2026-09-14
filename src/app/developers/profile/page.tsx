@@ -9,20 +9,6 @@ import { LogOut, Plus, Trash2, Save, AlertTriangle, Github, Loader2, ArrowLeft }
 import Link from "next/link";
 import { signOut, User, updateEmail, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser, GithubAuthProvider, linkWithPopup, GoogleAuthProvider, OAuthProvider } from "firebase/auth";
 
-interface Project {
-  title: string;
-  description: string;
-  link: string;
-  stars?: number;
-}
-
-interface GithubRepo {
-  id: number;
-  name: string;
-  description: string;
-  html_url: string;
-  stargazers_count: number;
-}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -40,21 +26,15 @@ export default function ProfilePage() {
 
   const [profileData, setProfileData] = useState({
     name: "",
+    category: "",
     bio: "",
     portfolioUrl: "",
-    projects: [] as Project[],
     contacts: {
       email: "",
-      telegram: "",
-      whatsapp: "",
+      secondaryEmail: "",
       socialUrl: "",
     },
   });
-
-  const [githubUsername, setGithubUsername] = useState("");
-  const [isFetchingGithub, setIsFetchingGithub] = useState(false);
-  const [githubRepos, setGithubRepos] = useState<GithubRepo[]>([]);
-  const [githubError, setGithubError] = useState("");
 
   useEffect(() => {
     let unsubscribe: () => void;
@@ -88,13 +68,12 @@ export default function ProfilePage() {
           const data = docSnap.data();
           setProfileData({
             name: data.name || "",
+            category: data.category || "",
             bio: data.bio || "",
             portfolioUrl: data.portfolioUrl || "",
-            projects: data.projects || [],
             contacts: {
               email: data.contacts?.email || "",
-              telegram: data.contacts?.telegram || "",
-              whatsapp: data.contacts?.whatsapp || "",
+              secondaryEmail: data.contacts?.secondaryEmail || "",
               socialUrl: data.contacts?.socialUrl || "",
             }
           });
@@ -107,7 +86,7 @@ export default function ProfilePage() {
     };
   }, [user, loading, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
   };
 
@@ -121,45 +100,6 @@ export default function ProfilePage() {
     });
   };
 
-  const handleProjectChange = (index: number, field: keyof Project, value: string) => {
-    const newProjects = [...profileData.projects];
-    newProjects[index] = { ...newProjects[index], [field]: value };
-    setProfileData({ ...profileData, projects: newProjects });
-  };
-
-  const addProject = () => {
-    setProfileData({
-      ...profileData,
-      projects: [...profileData.projects, { title: "", description: "", link: "" }],
-    });
-  };
-
-  const removeProject = (index: number) => {
-    const newProjects = [...profileData.projects];
-    newProjects.splice(index, 1);
-    setProfileData({ ...profileData, projects: newProjects });
-  };
-
-  const fetchGithubRepos = async () => {
-    if (!githubUsername) return;
-    setIsFetchingGithub(true);
-    setGithubError("");
-
-    try {
-      const res = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=10`);
-
-      if (!res.ok) {
-        throw new Error("User not found or API limit reached.");
-      }
-
-      const data = await res.json();
-      setGithubRepos(data);
-    } catch (err: any) {
-      setGithubError(err.message || "Error fetching repos. Please try again.");
-    } finally {
-      setIsFetchingGithub(false);
-    }
-  };
 
   const handleAuthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAuthData({ ...authData, [e.target.name]: e.target.value });
@@ -247,19 +187,18 @@ export default function ProfilePage() {
       const docRef = doc(getFirebaseDb(), "users", user.uid);
       await setDoc(docRef, {
         name: profileData.name,
+        category: profileData.category,
         bio: profileData.bio,
         portfolioUrl: profileData.portfolioUrl,
-        projects: profileData.projects,
         contacts: profileData.contacts,
-        verified: true,
       }, { merge: true });
 
       const profileObj = {
         name: profileData.name,
+        category: profileData.category,
         bio: profileData.bio,
         portfolioUrl: profileData.portfolioUrl,
         contacts: { email: profileData.contacts.email },
-        verified: true
       };
       localStorage.setItem(`developerProfile_${user.uid}`, JSON.stringify(profileObj));
 
@@ -433,6 +372,24 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
+                <label className="block text-sm font-medium mb-1">Category</label>
+                <select
+                  name="category"
+                  value={profileData.category}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-foreground"
+                >
+                  <option value="">Select Category</option>
+                  <option value="AI Architect">AI Architect</option>
+                  <option value="Security Analyst">Security Analyst</option>
+                  <option value="Software Engineer">Software Engineer</option>
+                  <option value="Data Scientist">Data Scientist</option>
+                  <option value="UI/UX Designer">UI/UX Designer</option>
+                  <option value="DevOps & Cloud">DevOps & Cloud</option>
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium mb-1">Bio</label>
                 <textarea
                   required
@@ -443,56 +400,47 @@ export default function ProfilePage() {
                   className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Portfolio Link (Optional)</label>
-                <input
-                  type="url"
-                  name="portfolioUrl"
-                  value={profileData.portfolioUrl}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                />
-              </div>
             </div>
 
             {/* Contacts & Socials */}
             <div className="space-y-4 pt-6">
-              <h2 className="text-2xl font-bold tracking-tight border-b border-border/50 pb-3 mb-4 text-foreground/90">Contact & Social Links</h2>
+              <h2 className="text-2xl font-bold tracking-tight border-b border-border/50 pb-3 mb-4 text-foreground/90">Contact & Links</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Contact Email</label>
+                  <label className="block text-sm font-medium mb-1">Primary Email</label>
                   <input
                     type="email"
                     name="email"
                     value={profileData.contacts.email}
                     onChange={handleContactChange}
                     className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                    disabled
                   />
+                  <p className="text-xs text-muted-foreground mt-1">To change, update in Account Credentials.</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Telegram Handle</label>
+                  <label className="block text-sm font-medium mb-1">Secondary Contact Email (Optional)</label>
                   <input
-                    type="text"
-                    name="telegram"
-                    placeholder="@username"
-                    value={profileData.contacts.telegram}
+                    type="email"
+                    name="secondaryEmail"
+                    placeholder="example@gmail.com"
+                    value={profileData.contacts.secondaryEmail}
                     onChange={handleContactChange}
                     className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">WhatsApp Number</label>
+                  <label className="block text-sm font-medium mb-1">Portfolio Link</label>
                   <input
-                    type="text"
-                    name="whatsapp"
-                    placeholder="+1234567890"
-                    value={profileData.contacts.whatsapp}
-                    onChange={handleContactChange}
+                    type="url"
+                    name="portfolioUrl"
+                    value={profileData.portfolioUrl}
+                    onChange={handleChange}
                     className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Social Profile URL (Twitter/LinkedIn)</label>
+                  <label className="block text-sm font-medium mb-1">Social Profile URL (GitHub/LinkedIn/Twitter)</label>
                   <input
                     type="url"
                     name="socialUrl"
@@ -502,119 +450,6 @@ export default function ProfilePage() {
                   />
                 </div>
               </div>
-            </div>
-
-            {/* Projects */}
-            <div className="space-y-4 pt-6">
-              <div className="flex justify-between items-center border-b border-border/50 pb-3 mb-4">
-                <h2 className="text-2xl font-bold tracking-tight text-foreground/90">Featured Projects</h2>
-                <div className="flex gap-2">
-                  <Button type="button" variant="secondary" size="sm" onClick={addProject} className="gap-1">
-                    <Plus size={14} /> Add Manual
-                  </Button>
-                </div>
-              </div>
-
-              {/* GitHub Import Section */}
-              <div className="bg-background/30 p-4 rounded-xl border border-border/50">
-                <div className="flex flex-col sm:flex-row gap-3 items-end">
-                  <div className="flex-1 w-full">
-                    <label className="block text-sm font-medium mb-1 flex items-center gap-1">
-                      <Github size={14} /> Import from GitHub
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="GitHub Username"
-                      value={githubUsername}
-                      onChange={(e) => setGithubUsername(e.target.value)}
-                      className="w-full px-4 py-2 bg-background/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                    />
-                  </div>
-                  <Button type="button" onClick={fetchGithubRepos} disabled={isFetchingGithub || !githubUsername} className="w-full sm:w-auto">
-                    {isFetchingGithub ? <Loader2 size={16} className="animate-spin" /> : "Fetch Repos"}
-                  </Button>
-                </div>
-
-                {githubError && (
-                   <p className="text-destructive text-sm mt-2">{githubError}</p>
-                )}
-
-                {githubRepos.length > 0 && (
-                  <div className="mt-4 max-h-48 overflow-y-auto pr-2 space-y-2">
-                    <p className="text-xs text-muted-foreground mb-2">Select repositories to add as projects:</p>
-                    {githubRepos.map(repo => (
-                      <div key={repo.id} className="flex items-center justify-between p-2 bg-background/50 rounded border border-border/50 hover:border-primary/30 transition-colors">
-                         <div className="flex-1 min-w-0 pr-4">
-                           <p className="text-sm font-medium truncate">{repo.name}</p>
-                           {repo.description && <p className="text-xs text-muted-foreground truncate">{repo.description}</p>}
-                         </div>
-                         <Button
-                           type="button"
-                           size="sm"
-                           variant="outline"
-                           className="shrink-0"
-                           onClick={() => {
-                             setProfileData(prev => ({
-                               ...prev,
-                               projects: [...prev.projects, { title: repo.name, description: repo.description || "", link: repo.html_url, stars: repo.stargazers_count }]
-                             }));
-                             setGithubRepos(prev => prev.filter(r => r.id !== repo.id)); // Remove from list once added
-                           }}
-                         >
-                           Add
-                         </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {profileData.projects.map((proj, idx) => (
-                <div key={idx} className="bg-background/40 p-4 rounded-xl border border-border relative group">
-                  <button
-                    type="button"
-                    onClick={() => removeProject(idx)}
-                    className="absolute top-4 right-4 text-muted-foreground hover:text-destructive transition-colors"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-
-                  <div className="grid gap-4 pr-8">
-                    <div>
-                      <label className="block text-xs font-medium mb-1">Project Title</label>
-                      <input
-                        required
-                        type="text"
-                        value={proj.title}
-                        onChange={(e) => handleProjectChange(idx, "title", e.target.value)}
-                        className="w-full px-3 py-1.5 bg-background border border-input rounded focus:ring-1 focus:ring-primary focus:outline-none text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium mb-1">Description</label>
-                      <input
-                        type="text"
-                        value={proj.description}
-                        onChange={(e) => handleProjectChange(idx, "description", e.target.value)}
-                        className="w-full px-3 py-1.5 bg-background border border-input rounded focus:ring-1 focus:ring-primary focus:outline-none text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium mb-1">Link (URL)</label>
-                      <input
-                        type="url"
-                        value={proj.link}
-                        onChange={(e) => handleProjectChange(idx, "link", e.target.value)}
-                        className="w-full px-3 py-1.5 bg-background border border-input rounded focus:ring-1 focus:ring-primary focus:outline-none text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {profileData.projects.length === 0 && (
-                <p className="text-sm text-muted-foreground italic text-center py-4">No projects added yet.</p>
-              )}
             </div>
 
             <div className="pt-6">
