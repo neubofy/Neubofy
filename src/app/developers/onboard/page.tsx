@@ -80,7 +80,9 @@ function OnboardForm() {
 
       // Trigger server action for welcome email
       const { sendOnboardingEmail } = await import('@/app/actions/emailActions');
-      await sendOnboardingEmail({ email: form.email, name: form.name });
+      const currentAuth = getFirebaseAuth();
+      const idToken = currentAuth.currentUser ? await currentAuth.currentUser.getIdToken() : '';
+      await sendOnboardingEmail({ email: form.email, name: form.name, idToken });
 
       router.push("/developers");
     } catch (err: unknown) {
@@ -131,7 +133,8 @@ function OnboardForm() {
 
         // Trigger server action for welcome email
         const { sendOnboardingEmail } = await import('@/app/actions/emailActions');
-        await sendOnboardingEmail({ email: user.email || "", name: user.displayName || "New Developer" });
+        const idToken = await user.getIdToken();
+        await sendOnboardingEmail({ email: user.email || "", name: user.displayName || "New Developer", idToken });
       }
 
       const profileObj = {

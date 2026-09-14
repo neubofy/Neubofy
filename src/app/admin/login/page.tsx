@@ -33,7 +33,8 @@ export default function AdminLogin() {
       if (user.email && ownerEmail && user.email.toLowerCase() === ownerEmail.toLowerCase()) {
         authorized = true;
         // Bootstrap super admin to ensure their UID is in the admins collection for Firestore rules
-        await bootstrapSuperAdmin(user.email, user.uid);
+        const idToken = await user.getIdToken();
+        await bootstrapSuperAdmin(idToken);
       } else {
         const adminDocRef = doc(getFirebaseDb(), 'admins', user.uid);
         const adminDoc = await getDoc(adminDocRef);

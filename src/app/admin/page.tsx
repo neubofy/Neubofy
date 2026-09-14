@@ -102,7 +102,9 @@ export default function AdminDashboard() {
       setProfiles(profiles.map(p => p.id === profileId ? { ...p, status: newStatus } : p));
 
       // Send email notification
-      await sendStatusUpdateEmail({ email, name, status: newStatus });
+      const auth = getFirebaseAuth();
+      const idToken = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      await sendStatusUpdateEmail({ email, name, status: newStatus, idToken });
       alert(`Status updated and email sent to ${email}`);
     } catch (error) {
       console.error("Error updating status:", error);
