@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, OAuthProvider, getAdditionalUserInfo } from "firebase/auth";
-import { getFirebaseAuth } from "@/lib/firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { X, Apple, Github } from "lucide-react";
@@ -27,7 +28,17 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await signInWithEmailAndPassword(getFirebaseAuth(), form.email, form.password);
+      const userCredential = await signInWithEmailAndPassword(getFirebaseAuth(), form.email, form.password);
+      const user = userCredential.user;
+
+      const updateData: any = {};
+      if (user.displayName) updateData.name = user.displayName;
+      if (user.photoURL) updateData.photoURL = user.photoURL;
+
+      if (Object.keys(updateData).length > 0) {
+        await setDoc(doc(getFirebaseDb(), "users", user.uid), updateData, { merge: true });
+      }
+
       router.push("/developers/profile");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Invalid email or password.");
@@ -59,6 +70,14 @@ export default function LoginPage() {
         // Delete the newly auto-created Auth record so they can onboard properly.
         await result.user.delete();
         throw new Error("We can't find your account. Please join as a developer first.");
+      }
+
+      const updateData: any = {};
+      if (result.user.displayName) updateData.name = result.user.displayName;
+      if (result.user.photoURL) updateData.photoURL = result.user.photoURL;
+
+      if (Object.keys(updateData).length > 0) {
+        await setDoc(doc(getFirebaseDb(), "users", result.user.uid), updateData, { merge: true });
       }
 
       router.push("/developers/profile");

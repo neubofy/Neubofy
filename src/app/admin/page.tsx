@@ -68,7 +68,16 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchProfiles();
+    const auth = getFirebaseAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        fetchProfiles();
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   // Filtering logic
