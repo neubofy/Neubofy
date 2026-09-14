@@ -1,13 +1,26 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { getFirebaseDb, getFirebaseAuth } from '@/lib/firebase/firebase';
-import { collection, query, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
-import { sendStatusUpdateEmail } from '@/app/actions/emailActions';
-import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { signOut } from 'firebase/auth';
+import React, { useEffect, useState } from "react";
+import { getFirebaseDb, getFirebaseAuth } from "@/lib/firebase/firebase";
+import {
+  collection,
+  query,
+  getDocs,
+  doc,
+  updateDoc,
+  setDoc,
+  limit,
+  startAfter,
+  QueryDocumentSnapshot,
+  DocumentData,
+  where,
+  orderBy,
+} from "firebase/firestore";
+import { sendStatusUpdateEmail } from "@/app/actions/emailActions";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
 
 interface DeveloperProfile {
   id: string;
@@ -24,44 +37,91 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [profiles, setProfiles] = useState<DeveloperProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
 
   // Search and filter state
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [lastVisibleDocs, setLastVisibleDocs] = useState<
+    QueryDocumentSnapshot<DocumentData, DocumentData>[]
+  >([]);
+  const [isLastPage, setIsLastPage] = useState(false);
 
   // Admin Management State
-  const [newAdminEmail, setNewAdminEmail] = useState('');
-  const [newAdminUid, setNewAdminUid] = useState('');
-  const [adminMgmtMessage, setAdminMgmtMessage] = useState('');
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [newAdminUid, setNewAdminUid] = useState("");
+  const [adminMgmtMessage, setAdminMgmtMessage] = useState("");
 
-  const fetchProfiles = async () => {
+  const fetchProfiles = async (page: number, reset: boolean = false) => {
     setLoading(true);
+    setFetchError("");
     try {
       const db = getFirebaseDb();
-      const q = query(collection(db, 'users'));
+      let q = query(collection(db, "users"));
+
+      if (categoryFilter) {
+        q = query(q, where("category", "==", categoryFilter));
+      }
+      if (statusFilter) {
+        q = query(q, where("status", "==", statusFilter));
+      }
+
+      // Order is necessary for pagination
+      q = query(q, orderBy("createdAt", "desc"));
+
+      if (!reset && page > 1 && lastVisibleDocs[page - 2]) {
+        q = query(q, startAfter(lastVisibleDocs[page - 2]));
+      }
+
+      q = query(q, limit(itemsPerPage));
+
       const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        if (reset) setProfiles([]);
+        setIsLastPage(true);
+        setLoading(false);
+        return;
+      }
+
+      setIsLastPage(querySnapshot.docs.length < itemsPerPage);
+
+      if (reset) {
+        setLastVisibleDocs([querySnapshot.docs[querySnapshot.docs.length - 1]]);
+      } else {
+        const newLastVisibleDocs = [...lastVisibleDocs];
+        newLastVisibleDocs[page - 1] =
+          querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisibleDocs(newLastVisibleDocs);
+      }
 
       const loadedProfiles: DeveloperProfile[] = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         loadedProfiles.push({
           id: doc.id,
-          name: data.name || 'Unknown',
-          category: data.category || 'None',
-          status: data.status || 'pending',
-          contacts: data.contacts || { email: 'None' },
-          createdAt: data.createdAt || new Date().toISOString()
+          name: data.name || "Unknown",
+          category: data.category || "None",
+          status: data.status || "pending",
+          contacts: data.contacts || { email: "None" },
+          createdAt: data.createdAt || new Date().toISOString(),
         });
       });
 
       setProfiles(loadedProfiles);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching profiles:", error);
+      if (error.code === "permission-denied") {
+        setFetchError(
+          "Permission denied. You must be an administrator to view this data.",
+        );
+      } else {
+        setFetchError(error.message || "Failed to fetch profiles.");
+      }
     } finally {
       setLoading(false);
     }
@@ -71,48 +131,51 @@ export default function AdminDashboard() {
     const auth = getFirebaseAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        fetchProfiles();
+        setCurrentPage(1);
+        fetchProfiles(1, true);
       } else {
         setLoading(false);
+        setFetchError("You must be logged in as an administrator.");
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [categoryFilter, statusFilter]);
 
-  // Filtering logic
-  const filteredProfiles = profiles.filter(profile => {
-    const matchesSearch =
-      profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      profile.contacts.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter ? profile.category === categoryFilter : true;
-    const matchesStatus = statusFilter ? profile.status === statusFilter : true;
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+  const currentProfiles = profiles;
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredProfiles.length / itemsPerPage);
-  const currentProfiles = filteredProfiles.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handleStatusChange = async (profileId: string, newStatus: string, email: string, name: string) => {
-    if (!window.confirm(`Are you sure you want to change ${name}'s status to ${newStatus}?`)) return;
+  const handleStatusChange = async (
+    profileId: string,
+    newStatus: string,
+    email: string,
+    name: string,
+  ) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to change ${name}'s status to ${newStatus}?`,
+      )
+    )
+      return;
 
     try {
       const db = getFirebaseDb();
-      await updateDoc(doc(db, 'users', profileId), {
+      await updateDoc(doc(db, "users", profileId), {
         status: newStatus,
-        verified: newStatus === 'approved' // Example logic: only verified if approved
+        verified: newStatus === "approved", // Example logic: only verified if approved
       });
 
       // Update local state instantly
-      setProfiles(profiles.map(p => p.id === profileId ? { ...p, status: newStatus } : p));
+      setProfiles(
+        profiles.map((p) =>
+          p.id === profileId ? { ...p, status: newStatus } : p,
+        ),
+      );
 
       // Send email notification
       const auth = getFirebaseAuth();
-      const idToken = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      const idToken = auth.currentUser
+        ? await auth.currentUser.getIdToken()
+        : "";
       await sendStatusUpdateEmail({ email, name, status: newStatus, idToken });
       alert(`Status updated and email sent to ${email}`);
     } catch (error) {
@@ -123,20 +186,20 @@ export default function AdminDashboard() {
 
   const handleAddAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setAdminMgmtMessage('');
+    setAdminMgmtMessage("");
     if (!newAdminUid || !newAdminEmail) return;
 
     try {
       const db = getFirebaseDb();
       // We assume the owner knows the UID of the user they want to make an admin.
       // In a real app, you might want to look this up via a Cloud Function.
-      await setDoc(doc(db, 'admins', newAdminUid), {
+      await setDoc(doc(db, "admins", newAdminUid), {
         email: newAdminEmail,
-        addedAt: new Date().toISOString()
+        addedAt: new Date().toISOString(),
       });
       setAdminMgmtMessage(`Successfully added ${newAdminEmail} as admin.`);
-      setNewAdminUid('');
-      setNewAdminEmail('');
+      setNewAdminUid("");
+      setNewAdminEmail("");
     } catch (error: any) {
       console.error("Error adding admin:", error);
       setAdminMgmtMessage(error.message || "Failed to add admin.");
@@ -146,7 +209,7 @@ export default function AdminDashboard() {
   const handleLogout = async () => {
     try {
       await signOut(getFirebaseAuth());
-      router.push('/admin/login');
+      router.push("/admin/login");
     } catch (e) {
       console.error("Logout error", e);
     }
@@ -166,17 +229,9 @@ export default function AdminDashboard() {
           <h2 className="text-xl font-semibold">Developer Network</h2>
 
           <div className="flex flex-wrap gap-3 w-full md:w-auto">
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-              className="px-3 py-1.5 bg-background/50 border border-input rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary flex-1 min-w-[200px]"
-            />
-
             <select
               value={categoryFilter}
-              onChange={(e) => { setCategoryFilter(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => setCategoryFilter(e.target.value)}
               className="px-3 py-1.5 bg-background/50 border border-input rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             >
               <option value="">All Categories</option>
@@ -190,7 +245,7 @@ export default function AdminDashboard() {
 
             <select
               value={statusFilter}
-              onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-1.5 bg-background/50 border border-input rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             >
               <option value="">All Statuses</option>
@@ -200,91 +255,132 @@ export default function AdminDashboard() {
               <option value="rejected">Rejected</option>
             </select>
 
-            <Button onClick={fetchProfiles} disabled={loading} variant="secondary" size="sm">
+            <Button
+              onClick={() => fetchProfiles(1, true)}
+              disabled={loading}
+              variant="secondary"
+              size="sm"
+            >
               Refresh
             </Button>
           </div>
         </div>
 
+        {fetchError && (
+          <div className="mb-6 p-4 bg-destructive/10 text-destructive rounded-lg border border-destructive/20 text-sm">
+            {fetchError}
+          </div>
+        )}
+
         {loading ? (
-          <div className="py-12 text-center text-muted-foreground">Loading profiles...</div>
+          <div className="py-12 text-center text-muted-foreground">
+            Loading profiles...
+          </div>
         ) : (
           <>
             <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm border-collapse">
-              <thead>
-                <tr className="border-b border-border/50 bg-background/50">
-                  <th className="p-3 font-medium">Name</th>
-                  <th className="p-3 font-medium">Email</th>
-                  <th className="p-3 font-medium">Category</th>
-                  <th className="p-3 font-medium">Status</th>
-                  <th className="p-3 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentProfiles.map(profile => (
-                  <tr key={profile.id} className="border-b border-border/10 hover:bg-background/30 transition-colors">
-                    <td className="p-3 font-medium">{profile.name}</td>
-                    <td className="p-3 text-muted-foreground">{profile.contacts.email}</td>
-                    <td className="p-3">{profile.category}</td>
-                    <td className="p-3">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        profile.status === 'approved' ? 'bg-green-500/20 text-green-400' :
-                        profile.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
-                        profile.status === 'screening' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-blue-500/20 text-blue-400'
-                      }`}>
-                        {profile.status.toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      <select
-                        value={profile.status}
-                        onChange={(e) => handleStatusChange(profile.id, e.target.value, profile.contacts.email, profile.name)}
-                        className="px-2 py-1 bg-background/50 border border-input rounded text-xs focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="screening">Screening</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                      </select>
-                    </td>
+              <table className="w-full text-left text-sm border-collapse">
+                <thead>
+                  <tr className="border-b border-border/50 bg-background/50">
+                    <th className="p-3 font-medium">Name</th>
+                    <th className="p-3 font-medium">Email</th>
+                    <th className="p-3 font-medium">Category</th>
+                    <th className="p-3 font-medium">Status</th>
+                    <th className="p-3 font-medium">Actions</th>
                   </tr>
-                ))}
-                {currentProfiles.length === 0 && (
-                   <tr>
-                     <td colSpan={5} className="p-6 text-center text-muted-foreground">No partners found.</td>
-                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {currentProfiles.map((profile) => (
+                    <tr
+                      key={profile.id}
+                      className="border-b border-border/10 hover:bg-background/30 transition-colors"
+                    >
+                      <td className="p-3 font-medium">{profile.name}</td>
+                      <td className="p-3 text-muted-foreground">
+                        {profile.contacts.email}
+                      </td>
+                      <td className="p-3">{profile.category}</td>
+                      <td className="p-3">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            profile.status === "approved"
+                              ? "bg-green-500/20 text-green-400"
+                              : profile.status === "rejected"
+                                ? "bg-red-500/20 text-red-400"
+                                : profile.status === "screening"
+                                  ? "bg-yellow-500/20 text-yellow-400"
+                                  : "bg-blue-500/20 text-blue-400"
+                          }`}
+                        >
+                          {profile.status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <select
+                          value={profile.status}
+                          onChange={(e) =>
+                            handleStatusChange(
+                              profile.id,
+                              e.target.value,
+                              profile.contacts.email,
+                              profile.name,
+                            )
+                          }
+                          className="px-2 py-1 bg-background/50 border border-input rounded text-xs focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="screening">Screening</option>
+                          <option value="approved">Approved</option>
+                          <option value="rejected">Rejected</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                  {currentProfiles.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="p-6 text-center text-muted-foreground"
+                      >
+                        No partners found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
 
-            {totalPages > 1 && (
-              <div className="flex justify-between items-center mt-6">
-                <span className="text-sm text-muted-foreground">
-                  Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredProfiles.length)} of {filteredProfiles.length} entries
-                </span>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(prev => prev - 1)}
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(prev => prev + 1)}
-                  >
-                    Next
-                  </Button>
-                </div>
+            <div className="flex justify-between items-center mt-6">
+              <span className="text-sm text-muted-foreground">
+                Page {currentPage}
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={currentPage === 1 || loading}
+                  onClick={() => {
+                    const prevPage = currentPage - 1;
+                    setCurrentPage(prevPage);
+                    fetchProfiles(prevPage);
+                  }}
+                >
+                  Previous
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={isLastPage || loading}
+                  onClick={() => {
+                    const nextPage = currentPage + 1;
+                    setCurrentPage(nextPage);
+                    fetchProfiles(nextPage);
+                  }}
+                >
+                  Next
+                </Button>
               </div>
-            )}
+            </div>
           </>
         )}
       </div>
@@ -296,12 +392,17 @@ export default function AdminDashboard() {
         </p>
 
         {adminMgmtMessage && (
-          <div className={`mb-4 p-3 text-sm rounded-lg ${adminMgmtMessage.includes('Success') ? 'bg-green-500/10 text-green-500' : 'bg-destructive/10 text-destructive'}`}>
+          <div
+            className={`mb-4 p-3 text-sm rounded-lg ${adminMgmtMessage.includes("Success") ? "bg-green-500/10 text-green-500" : "bg-destructive/10 text-destructive"}`}
+          >
             {adminMgmtMessage}
           </div>
         )}
 
-        <form onSubmit={handleAddAdmin} className="flex flex-col md:flex-row gap-4">
+        <form
+          onSubmit={handleAddAdmin}
+          className="flex flex-col md:flex-row gap-4"
+        >
           <input
             type="text"
             placeholder="User UID"
@@ -318,7 +419,9 @@ export default function AdminDashboard() {
             required
             className="px-4 py-2 bg-background/50 border border-input rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary flex-1"
           />
-          <Button type="submit" variant="secondary">Add Admin</Button>
+          <Button type="submit" variant="secondary">
+            Add Admin
+          </Button>
         </form>
       </div>
     </div>
