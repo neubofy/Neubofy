@@ -1,7 +1,7 @@
 'use server';
 
 import { Resend } from 'resend';
-import { adminAuth } from '@/lib/firebase/firebaseAdmin';
+import { adminAuth, adminDb } from '@/lib/firebase/firebaseAdmin';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -59,10 +59,18 @@ export async function sendOnboardingEmail({ email, name, idToken }: { email: str
 
 export async function sendStatusUpdateEmail({ email, name, status, idToken }: { email: string; name: string; status: string, idToken: string }) {
   const user = await authenticateRequest(idToken);
-  // Optional: You could additionally verify if user is an admin by querying Firestore here,
-  // but for MVP, assuming the client (Admin Portal) provides a valid idToken is a good start.
   if (!user) {
       throw new Error("Unauthorized");
+  }
+
+  const ownerEmail = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+  if (user.email?.toLowerCase() !== ownerEmail?.toLowerCase()) {
+      // It's not the owner, check admins collection
+      const adminDoc = await adminDb.collection('admins').doc(user.uid).get();
+      if (!adminDoc.exists) {
+          throw new Error("Unauthorized: Only admins can send status updates.");
+      }
   }
 
   let subject = `Update on your ${BRAND_NAME} Partner Application`;

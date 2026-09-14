@@ -21,9 +21,9 @@ service cloud.firestore {
       // The user can read and write their own top-level document
       allow read: if isOwner(userId) || isAdmin();
 
-      // Allow creation by owner. When creating, status and verified must be pending/false or not set. (Simplified for MVP, usually we'd enforce this on create too).
-      // Let's just prevent update of sensitive fields.
-      allow create: if isOwner(userId) || isAdmin();
+      // Allow creation by owner. Ensure status is 'pending' and verified is false on create.
+      allow create: if isOwner(userId) || isAdmin() ||
+        (isOwner(userId) && request.resource.data.status == 'pending' && request.resource.data.verified == false);
 
       // Prevent owner from updating status and verified
       allow update: if isAdmin() || (isOwner(userId) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'verified'])));
