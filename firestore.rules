@@ -7,16 +7,25 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /admins/{adminId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
     // Match all documents under a specific user ID
     match /users/{userId} {
       // The user can read and write their own top-level document
       // Developer profiles are private and only the owner can read or write
-      allow read, write: if isOwner(userId);
+      allow read, write: if isOwner(userId) || isAdmin();
 
       // Match any subcollections under the user's document
       match /{subcollection}/{document=**} {
         // The user can read and write all their subcollections
-        allow read, write: if isOwner(userId);
+        allow read, write: if isOwner(userId) || isAdmin();
       }
     }
 
