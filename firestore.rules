@@ -8,7 +8,7 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+      return request.auth != null && (request.auth.token.admin == true || exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
     }
 
     match /admins/{adminId} {

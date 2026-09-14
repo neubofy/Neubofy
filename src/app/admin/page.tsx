@@ -17,6 +17,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { sendStatusUpdateEmail } from "@/app/actions/emailActions";
+import { grantAdminAccessByEmail } from "@/app/actions/adminActions";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -57,8 +58,8 @@ export default function AdminDashboard() {
 
   // Admin Management State
   const [newAdminEmail, setNewAdminEmail] = useState("");
-  const [newAdminUid, setNewAdminUid] = useState("");
   const [adminMgmtMessage, setAdminMgmtMessage] = useState("");
+  const [isAddingAdmin, setIsAddingAdmin] = useState(false);
 
   const fetchProfiles = async (page: number, reset: boolean = false) => {
     setLoading(true);
@@ -193,22 +194,34 @@ export default function AdminDashboard() {
   const handleAddAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAdminMgmtMessage("");
-    if (!newAdminUid || !newAdminEmail) return;
+    if (!newAdminEmail) return;
 
+    setIsAddingAdmin(true);
     try {
-      const db = getFirebaseDb();
-      // We assume the owner knows the UID of the user they want to make an admin.
-      // In a real app, you might want to look this up via a Cloud Function.
-      await setDoc(doc(db, "admins", newAdminUid), {
-        email: newAdminEmail,
-        addedAt: new Date().toISOString(),
-      });
-      setAdminMgmtMessage(`Successfully added ${newAdminEmail} as admin.`);
-      setNewAdminUid("");
-      setNewAdminEmail("");
+      const auth = getFirebaseAuth();
+      const idToken = auth.currentUser
+        ? await auth.currentUser.getIdToken()
+        : "";
+
+      if (!idToken) {
+        throw new Error("You are not authenticated.");
+      }
+
+      const result = await grantAdminAccessByEmail(newAdminEmail, idToken);
+
+      if (result.success) {
+        setAdminMgmtMessage(
+          result.message || `Successfully invited ${newAdminEmail} as admin.`,
+        );
+        setNewAdminEmail("");
+      } else {
+        setAdminMgmtMessage(result.message || "Failed to add admin.");
+      }
     } catch (error: any) {
       console.error("Error adding admin:", error);
       setAdminMgmtMessage(error.message || "Failed to add admin.");
+    } finally {
+      setIsAddingAdmin(false);
     }
   };
 
@@ -411,7 +424,8 @@ export default function AdminDashboard() {
       <div className="glass-card p-6 rounded-2xl border border-border/50 mt-8">
         <h2 className="text-xl font-semibold mb-4">Admin Management</h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Add new administrators by entering their Firebase Auth UID and Email.
+          Invite new administrators by their email address. They can sign in
+          with any compatible provider using this email.
         </p>
 
         {adminMgmtMessage && (
@@ -427,23 +441,15 @@ export default function AdminDashboard() {
           className="flex flex-col md:flex-row gap-4"
         >
           <input
-            type="text"
-            placeholder="User UID"
-            value={newAdminUid}
-            onChange={(e) => setNewAdminUid(e.target.value)}
-            required
-            className="px-4 py-2 bg-background/50 border border-input rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary flex-1"
-          />
-          <input
             type="email"
-            placeholder="User Email"
+            placeholder="Administrator Email"
             value={newAdminEmail}
             onChange={(e) => setNewAdminEmail(e.target.value)}
             required
             className="px-4 py-2 bg-background/50 border border-input rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary flex-1"
           />
-          <Button type="submit" variant="secondary">
-            Add Admin
+          <Button type="submit" variant="secondary" disabled={isAddingAdmin}>
+            {isAddingAdmin ? "Inviting..." : "Invite Admin"}
           </Button>
         </form>
       </div>
