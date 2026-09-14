@@ -38,6 +38,10 @@ export default function AdminDashboard() {
   const [profiles, setProfiles] = useState<DeveloperProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
+  const [currentUserInfo, setCurrentUserInfo] = useState<{
+    uid: string;
+    email: string;
+  } | null>(null);
 
   // Search and filter state
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -131,9 +135,11 @@ export default function AdminDashboard() {
     const auth = getFirebaseAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        setCurrentUserInfo({ uid: user.uid, email: user.email || "Unknown" });
         setCurrentPage(1);
         fetchProfiles(1, true);
       } else {
+        setCurrentUserInfo(null);
         setLoading(false);
         setFetchError("You must be logged in as an administrator.");
       }
@@ -268,7 +274,24 @@ export default function AdminDashboard() {
 
         {fetchError && (
           <div className="mb-6 p-4 bg-destructive/10 text-destructive rounded-lg border border-destructive/20 text-sm">
-            {fetchError}
+            <p className="font-semibold mb-2">{fetchError}</p>
+            {currentUserInfo && (
+              <div className="mt-2 p-3 bg-black/20 rounded border border-destructive/10 font-mono text-xs">
+                <p className="mb-1 text-muted-foreground/80">
+                  Diagnostic Info (To add to Firestore 'admins' collection):
+                </p>
+                <p>
+                  UID:{" "}
+                  <span className="text-foreground">{currentUserInfo.uid}</span>
+                </p>
+                <p>
+                  Email:{" "}
+                  <span className="text-foreground">
+                    {currentUserInfo.email}
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
         )}
 
