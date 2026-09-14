@@ -1,4 +1,14 @@
 import PageTransition from "@/components/PageTransition";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Read Neubofy's privacy policy. Learn how we collect, use, and protect your data as an independent partner or a business client.",
+  keywords: ["privacy policy", "data protection", "neubofy privacy", "gdpr"],
+  alternates: {
+    canonical: "https://neubofy.in/privacy"
+  }
+};
 
 export default function PrivacyPolicy() {
   return (

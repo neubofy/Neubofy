@@ -24,8 +24,8 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Partners", path: "/developers" },
-    { name: "Help Centre", path: "https://neubofy.zohodesk.in/portal" },
-    { name: "Consultation", path: "/consultation" }
+    { name: "Help Centre", path: "https://neubofy.zohodesk.in/portal", ariaLabel: "Visit Neubofy Help Centre (Opens in new tab)", title: "Neubofy Help Centre Support Portal" },
+    { name: "Consultation", path: "https://booking.neubofy.in", ariaLabel: "Book a Neubofy Consultation (Opens in new tab)", title: "Book a Strategy Consultation with Neubofy" }
   ];
 
   return (
@@ -62,6 +62,8 @@ const Navbar = () => {
                   href={item.path}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={item.ariaLabel}
+                  title={item.title}
                   className="font-medium transition-colors duration-300 relative group text-muted-foreground hover:text-foreground"
                 >
                   {item.name}
@@ -111,6 +113,8 @@ const Navbar = () => {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={item.ariaLabel}
+                    title={item.title}
                     className="px-4 py-3 font-medium transition-all duration-300 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
