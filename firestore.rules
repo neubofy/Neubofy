@@ -28,7 +28,7 @@ service cloud.firestore {
       // Prevent owner from updating status and verified
       allow update: if isAdmin() || (isOwner(userId) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'verified'])));
 
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || isOwner(userId);
 
       // Match any subcollections under the user's document
       match /{subcollection}/{document=**} {
