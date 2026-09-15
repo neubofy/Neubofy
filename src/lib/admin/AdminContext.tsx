@@ -9,6 +9,8 @@ export interface AdminContextType {
   role: AdminRole | null;
   isSuperAdmin: boolean;
   isAdmin: boolean;
+  communicationEmail?: string;
+  updateCommunicationEmail?: (email: string) => Promise<boolean>;
 }
 
 export const AdminContext = createContext<AdminContextType>({
@@ -16,6 +18,7 @@ export const AdminContext = createContext<AdminContextType>({
   role: null,
   isSuperAdmin: false,
   isAdmin: false,
+  communicationEmail: "",
 });
 
 export const useAdmin = () => useContext(AdminContext);

@@ -11,7 +11,8 @@ export type EmailSenderType =
 export type ReplyToType = 
   | 'careers@neubofy.in'
   | 'contact@neubofy.in' 
-  | 'support@neubofy.in';
+  | 'support@neubofy.in'
+  | (string & {});
 
 export interface SendEmailOptions {
   to: string | string[];

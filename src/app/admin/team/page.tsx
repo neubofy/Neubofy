@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { getFirebaseDb } from "@/lib/firebase/firebase";
-import { collection, onSnapshot, doc, setDoc, deleteDoc } from "firebase/firestore";
-import { AdminRole, canManageAdminRoles } from "@/lib/admin/rbac";
+import { collection, onSnapshot, doc, setDoc } from "firebase/firestore";
+import { AdminRole, canManageAdminRoles, canRemoveAdmin, canExportData } from "@/lib/admin/rbac";
 import { useAdmin } from "@/lib/admin/AdminContext";
-import { recordAdminActivity, getNeubofianId } from "@/lib/admin/team";
+import { recordAdminActivity, getNeubofianId, removeAdminMember } from "@/lib/admin/team";
+import { adminCache, exportToCsv, exportToJson } from "@/lib/admin/dataCache";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { 
@@ -19,7 +20,9 @@ import {
   RefreshCw,
   ArrowRight,
   ShieldAlert,
-  UserCheck
+  UserCheck,
+  Download,
+  AlertTriangle
 } from "lucide-react";
 
 interface AdminTeamMember {
@@ -41,10 +44,20 @@ export default function NeubofianTeamPage() {
   const [adminTeamSuccess, setAdminTeamSuccess] = useState("");
   const [adminTeamError, setAdminTeamError] = useState("");
 
-  // Real-time listener for admins collection
+  // Remove Modal State
+  const [removeTarget, setRemoveTarget] = useState<AdminTeamMember | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  // Real-time listener for admins collection with cache
   useEffect(() => {
     let unsubscribe: () => void;
     try {
+      const cached = adminCache.get<AdminTeamMember[]>("admin_team");
+      if (cached) {
+        setAdminTeam(cached);
+        setLoading(false);
+      }
+
       const adminsRef = collection(getFirebaseDb(), "admins");
       unsubscribe = onSnapshot(adminsRef, (snapshot) => {
         const team: AdminTeamMember[] = [];
@@ -58,6 +71,7 @@ export default function NeubofianTeamPage() {
             createdAt: data.createdAt || new Date().toISOString(),
           });
         });
+        adminCache.set("admin_team", team);
         setAdminTeam(team);
         setLoading(false);
       }, (err) => {
@@ -113,6 +127,7 @@ export default function NeubofianTeamPage() {
         details: `Granted ${newAdminRole.toUpperCase()} privilege to ${cleanEmail}`,
       });
 
+      adminCache.invalidate("admin_team");
       setAdminTeamSuccess(`Successfully authorized ${cleanEmail} as ${newAdminRole.toUpperCase()}.`);
       setNewAdminEmail("");
     } catch (err) {
@@ -124,39 +139,49 @@ export default function NeubofianTeamPage() {
   };
 
   // Revoke administrator role
-  const handleRevokeRole = async (adminId: string, email: string) => {
-    if (!isSuperAdmin) return;
-    if (email === currentUser?.email) {
-      alert("You cannot revoke your own Super Administrator role.");
+  const handleConfirmRevoke = async () => {
+    if (!removeTarget || !isSuperAdmin) return;
+    if (removeTarget.email === currentUser?.email) {
+      alert("You cannot revoke your own Super Administrator privileges.");
       return;
     }
 
-    if (!confirm(`Are you sure you want to revoke admin portal access for ${email}?`)) {
-      return;
-    }
+    setIsRemoving(true);
+    const res = await removeAdminMember(
+      removeTarget.id,
+      currentUser?.email || "Super Administrator",
+      currentUser?.uid || "",
+      removeTarget.email
+    );
 
-    try {
-      const docRef = doc(getFirebaseDb(), "admins", adminId);
-      await deleteDoc(docRef);
-
-      await recordAdminActivity({
-        actorEmail: currentUser?.email || "Super Administrator",
-        actorUid: currentUser?.uid || "",
-        action: "REVOKE_ROLE",
-        targetId: adminId,
-        targetName: email,
-        details: `Revoked admin portal permissions from ${email}`,
-      });
-
-      setAdminTeamSuccess(`Revoked administrative access for ${email}.`);
-    } catch (err) {
-      console.error("Error revoking admin:", err);
-      setAdminTeamError("Failed to revoke administrator role.");
+    setIsRemoving(false);
+    if (res.success) {
+      adminCache.invalidate("admin_team");
+      setAdminTeamSuccess(`Revoked administrative access and removed ${removeTarget.email}.`);
+      setRemoveTarget(null);
+    } else {
+      setAdminTeamError(res.error || "Failed to revoke administrator role.");
     }
   };
 
+  // Export Team Directory
+  const handleExportTeamCsv = () => {
+    const data = adminTeam.map((m) => ({
+      NeubofianID: getNeubofianId(m.id, m.email),
+      Email: m.email,
+      Role: m.role.toUpperCase(),
+      AddedBy: m.addedBy,
+      CreatedAt: m.createdAt,
+    }));
+    exportToCsv(data, `neubofian_team_${new Date().toISOString().slice(0, 10)}`);
+  };
+
+  const handleExportTeamJson = () => {
+    exportToJson(adminTeam, `neubofian_team_${new Date().toISOString().slice(0, 10)}`);
+  };
+
   return (
-    <div className="space-y-6 max-w-5xl mx-auto animate-fade-in">
+    <div className="space-y-6 max-w-5xl mx-auto animate-fade-in pb-16">
       
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-4">
@@ -169,16 +194,39 @@ export default function NeubofianTeamPage() {
             <span className="text-xs text-primary font-semibold">Neubofian Team</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Users size={24} className="text-amber-400" /> Neubofian Team & Access Control
+            <Users size={24} className="text-amber-400" /> Neubofian Team & Access Governance
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
             Internal recruitment staff directory with assigned Neubofian IDs and role-based permissions.
           </p>
         </div>
 
-        <span className="text-xs font-mono bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 text-muted-foreground">
-          {adminTeam.length} authorized personnel
-        </span>
+        <div className="flex items-center gap-2">
+          {canExportData(currentRole) && (
+            <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-xl p-1">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleExportTeamCsv}
+                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground gap-1"
+              >
+                <Download size={12} /> CSV
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleExportTeamJson}
+                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground gap-1"
+              >
+                <Download size={12} /> JSON
+              </Button>
+            </div>
+          )}
+
+          <span className="text-xs font-mono bg-white/5 px-3 py-1.5 rounded-xl border border-white/10 text-muted-foreground">
+            {adminTeam.length} personnel
+          </span>
+        </div>
       </div>
 
       {/* Success / Error Banners */}
@@ -251,61 +299,54 @@ export default function NeubofianTeamPage() {
         </div>
 
         {loading ? (
-          <div className="p-8 text-center text-muted-foreground text-xs flex items-center justify-center gap-2">
-            <RefreshCw className="animate-spin w-4 h-4 text-primary" /> Loading team directory...
-          </div>
-        ) : adminTeam.length === 0 ? (
-          <p className="text-xs text-muted-foreground text-center py-6">
-            No team administrators listed in Firestore yet.
-          </p>
+          <div className="p-8 text-center text-xs text-muted-foreground">Loading team records...</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          <div className="divide-y divide-white/5">
             {adminTeam.map((member) => {
               const neubofianId = getNeubofianId(member.id, member.email);
-              const isOwner = member.role === "super_admin";
+              const isSuper = member.role === "super_admin";
+
               return (
-                <div
-                  key={member.id}
-                  className="p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-white/15 transition-all flex flex-col justify-between space-y-3"
-                >
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-[11px] px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary font-semibold">
-                        {neubofianId}
-                      </span>
-                      <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
-                        isOwner ? "bg-amber-400/10 text-amber-400 border-amber-400/30" : "bg-primary/10 text-primary border-primary/30"
-                      }`}>
-                        {isOwner ? "Super Administrator" : "Administrator"}
-                      </span>
+                <div key={member.id} className="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs ${
+                      isSuper ? "bg-amber-400/10 text-amber-400 border border-amber-400/30" : "bg-primary/10 text-primary border border-primary/30"
+                    }`}>
+                      {neubofianId}
                     </div>
-
-                    <Link href={`/admin/team/${member.id}`} className="hover:text-primary transition-colors block">
-                      <span className="font-semibold text-sm text-foreground">{member.email}</span>
-                    </Link>
-
-                    <div className="text-[11px] text-muted-foreground space-y-0.5 pt-1">
-                      <p>Authorized by: <strong className="text-foreground">{member.addedBy || "Owner"}</strong></p>
-                      <p>Created: <span className="font-mono">{new Date(member.createdAt).toLocaleDateString()}</span></p>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Link href={`/admin/team/${member.id}`} className="font-semibold text-sm hover:text-primary transition-colors">
+                          {member.email}
+                        </Link>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${
+                          isSuper ? "bg-amber-400/15 text-amber-400 border border-amber-400/30" : "bg-primary/15 text-primary border border-primary/30"
+                        }`}>
+                          {isSuper ? "Super Administrator" : "Administrator"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Added by: <span className="text-foreground/80">{member.addedBy || "System"}</span> • Authorized: {new Date(member.createdAt).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                  <div className="flex items-center gap-2 self-end sm:self-center">
                     <Link href={`/admin/team/${member.id}`}>
-                      <Button size="sm" variant="outline" className="h-7 px-2.5 text-xs rounded-lg border-white/10 hover:bg-white/10 gap-1">
-                        View Profile & Activity <ArrowRight size={11} />
+                      <Button variant="outline" size="sm" className="h-8 px-3 rounded-xl border-white/10 text-xs gap-1 hover:bg-white/10">
+                        View Track Record <ArrowRight size={12} />
                       </Button>
                     </Link>
 
-                    {isSuperAdmin && member.email !== currentUser?.email && (
+                    {isSuperAdmin && canRemoveAdmin(currentRole) && !isSuper && (
                       <Button
-                        size="sm"
                         variant="outline"
-                        onClick={() => handleRevokeRole(member.id, member.email)}
-                        className="h-7 px-2 text-xs rounded-lg border-rose-500/30 text-rose-400 hover:bg-rose-500/15 gap-1"
-                        title="Revoke admin access"
+                        size="sm"
+                        onClick={() => setRemoveTarget(member)}
+                        className="h-8 px-2.5 rounded-xl border-rose-500/30 text-rose-400 hover:bg-rose-500/15 text-xs gap-1"
+                        title="Revoke Admin Role"
                       >
-                        <Trash2 size={12} /> Revoke
+                        <Trash2 size={13} /> Revoke
                       </Button>
                     )}
                   </div>
@@ -315,6 +356,47 @@ export default function NeubofianTeamPage() {
           </div>
         )}
       </div>
+
+      {/* CONFIRM REVOCATION MODAL */}
+      {removeTarget && (
+        <div className="fixed inset-0 z-50 overflow-hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="w-full max-w-md bg-[#0e1017] border border-rose-500/30 rounded-3xl p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center gap-3 text-rose-400">
+              <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
+                <AlertTriangle size={18} />
+              </div>
+              <div>
+                <h3 className="font-bold text-base text-foreground">Revoke Administrator Privileges</h3>
+                <p className="text-xs text-muted-foreground">High-Stakes Super Admin Action</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Are you sure you want to revoke administrative access for <strong className="text-foreground">{removeTarget.email}</strong> ({getNeubofianId(removeTarget.id, removeTarget.email)})?
+              They will immediately lose access to all candidate records and administrative portals.
+            </p>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setRemoveTarget(null)}
+                className="rounded-xl border-white/10 text-xs"
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                disabled={isRemoving}
+                onClick={handleConfirmRevoke}
+                className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold"
+              >
+                {isRemoving ? "Revoking..." : "Confirm Revocation"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

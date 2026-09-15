@@ -6,7 +6,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { User, signOut, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { resolveAdminRole, AdminRole } from "@/lib/admin/rbac";
 import { AdminContext } from "@/lib/admin/AdminContext";
-import { ensureOwnerAdminProfile } from "@/lib/admin/team";
+import { ensureOwnerAdminProfile, updateAdminCommunicationEmail } from "@/lib/admin/team";
 import { 
   ShieldAlert, 
   Lock, 
@@ -22,7 +22,9 @@ import {
   LayoutDashboard,
   UserCheck,
   BarChart3,
-  Activity
+  Activity,
+  Mail,
+  Settings
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -45,6 +47,12 @@ export default function AdminLayout({
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
+  const [communicationEmail, setCommunicationEmail] = useState<string>("");
+  const [commModalOpen, setCommModalOpen] = useState(false);
+  const [commInput, setCommInput] = useState("");
+  const [isSavingComm, setIsSavingComm] = useState(false);
+  const [commFeedback, setCommFeedback] = useState<string | null>(null);
+
   useEffect(() => {
     let unsubscribe: () => void;
     let isMounted = true;
@@ -64,18 +72,27 @@ export default function AdminLayout({
               const adminDoc = await getDoc(doc(getFirebaseDb(), "admins", currentUser.uid));
               if (adminDoc.exists()) {
                 firestoreRole = adminDoc.data().role as AdminRole;
+                if (adminDoc.data().communicationEmail) {
+                  setCommunicationEmail(adminDoc.data().communicationEmail);
+                  setCommInput(adminDoc.data().communicationEmail);
+                }
               } else {
                 // 2. Check if invited by email in /admins/{sanitizedEmail}
                 const emailDocId = cleanEmail.replace(/[^a-zA-Z0-9]/g, "_");
                 const emailDoc = await getDoc(doc(getFirebaseDb(), "admins", emailDocId));
                 if (emailDoc.exists()) {
                   firestoreRole = emailDoc.data().role as AdminRole;
+                  if (emailDoc.data().communicationEmail) {
+                    setCommunicationEmail(emailDoc.data().communicationEmail);
+                    setCommInput(emailDoc.data().communicationEmail);
+                  }
                   // Auto-claim and link invitation directly to UID for Firestore security rules
                   await setDoc(doc(getFirebaseDb(), "admins", currentUser.uid), {
                     uid: currentUser.uid,
                     email: cleanEmail,
                     displayName: currentUser.displayName || "Administrator",
                     role: firestoreRole,
+                    communicationEmail: emailDoc.data().communicationEmail || cleanEmail,
                     invitedBy: emailDoc.data().addedBy || "Super Administrator",
                     createdAt: emailDoc.data().createdAt || new Date().toISOString(),
                     lastActive: new Date().toISOString(),
@@ -353,9 +370,23 @@ export default function AdminLayout({
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="flex flex-col text-right">
               <span className="text-xs font-medium text-foreground truncate max-w-[130px] sm:max-w-[200px]">{user.email}</span>
-              <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border inline-block ml-auto mt-0.5 ${currentRoleInfo.bg} ${currentRoleInfo.color}`}>
-                {currentRoleInfo.title}
-              </span>
+              <div className="flex items-center gap-1.5 ml-auto mt-0.5">
+                <button
+                  onClick={() => {
+                    setCommInput(communicationEmail || user.email || "");
+                    setCommModalOpen(true);
+                  }}
+                  className="text-[10px] text-primary/80 hover:text-primary flex items-center gap-1 transition-colors px-1.5 py-0.2 rounded-md bg-primary/10 border border-primary/20"
+                  title="Configure Personal Reply-To Email for Applicant Review"
+                >
+                  <Mail size={10} />
+                  <span className="truncate max-w-[90px]">{communicationEmail ? communicationEmail.split("@")[0] : "Reply-To"}</span>
+                </button>
+
+                <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border inline-block ${currentRoleInfo.bg} ${currentRoleInfo.color}`}>
+                  {currentRoleInfo.title}
+                </span>
+              </div>
             </div>
 
             <Button
@@ -433,6 +464,82 @@ export default function AdminLayout({
         )}
       </header>
 
+      {/* Member Communication Email Settings Modal */}
+      {commModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="w-full max-w-md bg-[#0c0e15] border border-white/10 rounded-3xl p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <Mail size={16} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-foreground">Personal Communication Email</h3>
+                  <p className="text-[11px] text-muted-foreground">Used as Reply-To when reviewing applicants</p>
+                </div>
+              </div>
+              <button onClick={() => setCommModalOpen(false)} className="p-1 text-muted-foreground hover:text-foreground">
+                <X size={16} />
+              </button>
+            </div>
+
+            {commFeedback && (
+              <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs">
+                {commFeedback}
+              </div>
+            )}
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!user) return;
+                setIsSavingComm(true);
+                setCommFeedback(null);
+                const res = await updateAdminCommunicationEmail(user.uid, commInput);
+                setIsSavingComm(false);
+                if (res.success) {
+                  setCommunicationEmail(commInput.trim().toLowerCase());
+                  setCommFeedback("Communication email saved successfully!");
+                  setTimeout(() => {
+                    setCommModalOpen(false);
+                    setCommFeedback(null);
+                  }, 1200);
+                } else {
+                  alert("Failed to update communication email.");
+                }
+              }}
+              className="space-y-3 text-xs"
+            >
+              <div>
+                <label className="block font-medium text-muted-foreground mb-1">
+                  Your Preferred Contact / Reply-To Email
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={commInput}
+                  onChange={(e) => setCommInput(e.target.value)}
+                  placeholder={user?.email || "name@neubofy.in"}
+                  className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-xl text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  When you dispatch emails to candidates, they can reply directly to this address.
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button variant="outline" size="sm" type="button" onClick={() => setCommModalOpen(false)} className="rounded-xl border-white/10 text-xs">
+                  Cancel
+                </Button>
+                <Button size="sm" type="submit" disabled={isSavingComm} className="btn-electric rounded-xl text-xs font-semibold">
+                  {isSavingComm ? "Saving..." : "Save Reply-To Email"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Main Admin Content Container */}
       <AdminContext.Provider
         value={{
@@ -440,6 +547,16 @@ export default function AdminLayout({
           role,
           isSuperAdmin: role === 'super_admin',
           isAdmin: role === 'admin',
+          communicationEmail,
+          updateCommunicationEmail: async (newEmail: string) => {
+            if (!user) return false;
+            const res = await updateAdminCommunicationEmail(user.uid, newEmail);
+            if (res.success) {
+              setCommunicationEmail(newEmail);
+              return true;
+            }
+            return false;
+          }
         }}
       >
         <main className="container mx-auto px-4 md:px-6 lg:px-8 py-8">

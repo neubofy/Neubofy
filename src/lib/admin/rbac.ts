@@ -63,3 +63,23 @@ export function canManageAdminRoles(role: AdminRole | null): boolean {
 export function canViewDossiers(role: AdminRole | null): boolean {
   return role === 'super_admin' || role === 'admin';
 }
+
+export function canDeleteApplicant(role: AdminRole | null): boolean {
+  return role === 'super_admin';
+}
+
+export function canRemoveAdmin(role: AdminRole | null): boolean {
+  return role === 'super_admin';
+}
+
+export function canPurgeLogs(role: AdminRole | null): boolean {
+  return role === 'super_admin';
+}
+
+export function canExportData(role: AdminRole | null): boolean {
+  return role === 'super_admin' || role === 'admin';
+}
+
+export function canScheduleInterviews(role: AdminRole | null): boolean {
+  return role === 'super_admin' || role === 'admin';
+}

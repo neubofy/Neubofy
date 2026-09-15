@@ -8,6 +8,9 @@ import {
   getPartnerVerifiedTemplate,
   getApplicationUpdateTemplate,
   getCustomMessageTemplate,
+  getRawHtmlTemplate,
+  InterviewMeetingDetails,
+  ScreeningEmailDetails,
 } from "@/lib/email/templates";
 import { PartnerStatus } from "@/lib/partner/types";
 
@@ -15,11 +18,15 @@ export interface SendPartnerNotificationParams {
   partnerEmail: string;
   partnerName: string;
   category?: string;
-  type: 'welcome' | 'status_change' | 'custom';
+  type: 'welcome' | 'status_change' | 'custom' | 'raw_html';
   newStatus?: PartnerStatus;
-  bookingUrl?: string;
+  meetingDetails?: InterviewMeetingDetails;
+  screeningDetails?: ScreeningEmailDetails;
+  customNote?: string;
+  bookingUrl?: string; // Legacy fallback
   customSubject?: string;
   customMessage?: string;
+  customHtml?: string;
   replyTo?: ReplyToType;
 }
 
@@ -37,9 +44,13 @@ export async function sendPartnerNotification({
   category = "Technology Specialist",
   type,
   newStatus,
+  meetingDetails,
+  screeningDetails,
+  customNote,
   bookingUrl,
   customSubject,
   customMessage,
+  customHtml,
   replyTo = "careers@neubofy.in",
 }: SendPartnerNotificationParams): Promise<SendPartnerNotificationResult> {
   if (!partnerEmail) {
@@ -51,25 +62,33 @@ export async function sendPartnerNotification({
     let sender: EmailSenderType = "careers";
 
     if (type === "welcome") {
-      template = getApplicationReceivedTemplate(partnerName, category);
+      template = getApplicationReceivedTemplate(partnerName, category, customNote);
       sender = "careers";
     } else if (type === "status_change") {
       switch (newStatus) {
         case "screening":
-          template = getScreeningTemplate(partnerName);
+          template = getScreeningTemplate(partnerName, {
+            category,
+            requestDocs: screeningDetails?.requestDocs ?? true,
+            docChecklist: screeningDetails?.docChecklist,
+            customNote: screeningDetails?.customNote || customNote,
+          });
           sender = "careers";
           break;
         case "shortlisted":
         case "interview":
-          template = getInterviewInvitationTemplate(partnerName, bookingUrl);
+          template = getInterviewInvitationTemplate(
+            partnerName, 
+            meetingDetails ? { ...meetingDetails, customNote: meetingDetails.customNote || customNote } : (bookingUrl ? { meetingUrl: bookingUrl } : undefined)
+          );
           sender = "specialists";
           break;
         case "onboarded":
-          template = getPartnerVerifiedTemplate(partnerName, category);
+          template = getPartnerVerifiedTemplate(partnerName, category, customNote);
           sender = "onboarding";
           break;
         case "archived":
-          template = getApplicationUpdateTemplate(partnerName);
+          template = getApplicationUpdateTemplate(partnerName, customNote);
           sender = "careers";
           break;
         default:
@@ -81,6 +100,12 @@ export async function sendPartnerNotification({
       }
       template = getCustomMessageTemplate(partnerName, customSubject, customMessage);
       sender = "specialists";
+    } else if (type === "raw_html") {
+      if (!customSubject || !customHtml) {
+        return { success: false, error: "Subject and HTML content are required for raw HTML emails" };
+      }
+      template = getRawHtmlTemplate(customHtml, customSubject);
+      sender = "specialists";
     }
 
     if (!template) {
@@ -89,7 +114,7 @@ export async function sendPartnerNotification({
 
     const result = await sendEmail({
       to: partnerEmail,
-      subject: template.subject,
+      subject: customSubject || template.subject,
       html: template.html,
       text: template.text,
       sender,
