@@ -306,9 +306,17 @@ export default function AdminDashboard() {
     <div className="container mx-auto px-4 max-w-6xl relative z-10">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <Button variant="outline" onClick={handleLogout} className="gap-2">
-          <LogOut size={16} /> Logout
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/admin/profile")}
+          >
+            Manage Profile
+          </Button>
+          <Button variant="outline" onClick={handleLogout} className="gap-2">
+            <LogOut size={16} /> Logout
+          </Button>
+        </div>
       </div>
 
       <div className="glass-card p-6 rounded-2xl border border-border/50">
