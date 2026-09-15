@@ -25,13 +25,13 @@ export function resolveAdminRole(email: string | null | undefined, firestoreRole
     process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
     process.env.ADMIN_EMAIL ||
     process.env.OWNER_EMAIL ||
-    "founder@neubofy.in"
+    ""
   ).toLowerCase().trim();
 
-  // Support single or comma-separated emails configured by the owner
+  // Support single or comma-separated emails configured in Vercel secrets
   const ownerEmails = ownerEnvEmail.split(",").map((e) => e.trim()).filter(Boolean);
 
-  if (ownerEmails.includes(normalized) || normalized === "founder@neubofy.in") {
+  if (ownerEmails.length > 0 && ownerEmails.includes(normalized)) {
     return 'super_admin';
   }
 

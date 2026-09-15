@@ -749,7 +749,7 @@ function PartnerProfileContent() {
                       className="w-full px-4 py-2.5 bg-black/40 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:outline-none text-sm"
                     />
                     <p className="text-xs text-muted-foreground/70 mt-1 flex items-center gap-1">
-                      <HelpCircle size={12} /> Make sure link is public or shared with <code className="text-primary">partners@neubofy.in</code>
+                      <HelpCircle size={12} /> Make sure link is public or shared with <code className="text-primary">careers@neubofy.in</code>
                     </p>
                   </div>
 

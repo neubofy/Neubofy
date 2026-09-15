@@ -7,9 +7,26 @@ import { User, signOut, signInWithEmailAndPassword, signInWithPopup, GoogleAuthP
 import { resolveAdminRole, AdminRole } from "@/lib/admin/rbac";
 import { AdminContext } from "@/lib/admin/AdminContext";
 import { ensureOwnerAdminProfile } from "@/lib/admin/team";
-import { ShieldAlert, Lock, LogOut, ArrowLeft, KeyRound, Sparkles, Menu, X, ExternalLink, Layers, Users } from "lucide-react";
+import { 
+  ShieldAlert, 
+  Lock, 
+  LogOut, 
+  ArrowLeft, 
+  KeyRound, 
+  Sparkles, 
+  Menu, 
+  X, 
+  ExternalLink, 
+  Layers, 
+  Users,
+  LayoutDashboard,
+  UserCheck,
+  BarChart3,
+  Activity
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 export default function AdminLayout({
@@ -267,12 +284,21 @@ export default function AdminLayout({
     admin: { title: "Administrator", color: "text-primary", bg: "bg-primary/10 border-primary/30" },
   };
 
-  const currentRoleInfo = ROLE_DISPLAY[role] || ROLE_DISPLAY.admin;
+  const currentRoleInfo = (role && ROLE_DISPLAY[role]) || ROLE_DISPLAY.admin;
+  const pathname = usePathname();
+
+  const navLinks = [
+    { name: "Overview", href: "/admin", icon: LayoutDashboard, exact: true },
+    { name: "Applicants", href: "/admin/applicants", icon: UserCheck, exact: false },
+    { name: "Analytics", href: "/admin/analytics", icon: BarChart3, exact: false },
+    { name: "Track Record", href: "/admin/track-record", icon: Activity, exact: false },
+    { name: "Neubofian Team", href: "/admin/team", icon: Users, exact: false },
+  ];
 
   return (
     <div className="min-h-screen bg-[#07080c] text-foreground pt-20">
       
-      {/* Admin Top Navigation Bar (Consistent with Neubofy Brand Design) */}
+      {/* Admin Top Navigation Bar */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#07080c]/90 backdrop-blur-xl border-b border-white/10 h-20">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 h-full flex items-center justify-between">
           
@@ -290,24 +316,35 @@ export default function AdminLayout({
                 <span className="text-xl font-bold text-foreground flex items-center gap-2">
                   Neubofy™ <span className="text-primary text-[10px] font-semibold px-2 py-0.5 rounded bg-primary/10 border border-primary/20">TALENT ATS</span>
                 </span>
-                <span className="text-[10px] text-muted-foreground -mt-0.5">Specialist Operations</span>
+                <span className="text-[10px] text-muted-foreground -mt-0.5">Recruitment Portal</span>
               </div>
             </Link>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center space-x-4 text-xs font-medium pl-4 border-l border-white/10">
-              <Link
-                href="/admin"
-                className="text-foreground hover:text-primary transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-white/5"
-              >
-                <Layers size={13} /> Specialists Pipeline
-              </Link>
+            {/* Desktop Navigation Links to Sub-Pages */}
+            <nav className="hidden xl:flex items-center space-x-1.5 text-xs font-medium pl-4 border-l border-white/10">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = link.exact ? pathname === link.href : pathname?.startsWith(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`flex items-center gap-1.5 py-1.5 px-3 rounded-xl transition-all ${
+                      isActive
+                        ? "bg-primary text-primary-foreground font-semibold shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                    }`}
+                  >
+                    <Icon size={13} /> {link.name}
+                  </Link>
+                );
+              })}
               <Link
                 href="/career"
                 target="_blank"
-                className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-1 px-2.5 rounded-lg"
+                className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-1.5 px-2.5 rounded-xl hover:bg-white/5 ml-2"
               >
-                Live Specialist Hub <ExternalLink size={11} />
+                <ExternalLink size={11} /> Live Career Hub
               </Link>
             </nav>
           </div>
@@ -334,7 +371,7 @@ export default function AdminLayout({
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 rounded-lg text-foreground hover:bg-white/5 border border-white/10"
+            className="xl:hidden p-2 rounded-lg text-foreground hover:bg-white/5 border border-white/10"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle admin navigation menu"
           >
@@ -343,9 +380,9 @@ export default function AdminLayout({
 
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown Menu with Sub-Page Navigation */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 px-6 glass-card border-x-0 rounded-none absolute top-full left-0 w-full animate-fade-in-up backdrop-blur-3xl bg-[#07080c]/98 border-b border-white/10 space-y-4 shadow-2xl">
+          <div className="xl:hidden py-4 px-6 glass-card border-x-0 rounded-none absolute top-full left-0 w-full animate-fade-in-up backdrop-blur-3xl bg-[#07080c]/98 border-b border-white/10 space-y-4 shadow-2xl">
             <div className="p-3 rounded-2xl bg-black/50 border border-white/10">
               <span className="text-xs font-medium text-foreground block truncate">{user.email}</span>
               <span className={`text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border inline-block mt-1.5 ${currentRoleInfo.bg} ${currentRoleInfo.color}`}>
@@ -354,18 +391,29 @@ export default function AdminLayout({
             </div>
 
             <div className="space-y-1 text-xs">
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/5 text-foreground"
-              >
-                <Layers size={14} className="text-primary" /> Specialist Pipeline
-              </Link>
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = link.exact ? pathname === link.href : pathname?.startsWith(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-2.5 p-2.5 rounded-xl transition-colors ${
+                      isActive
+                        ? "bg-primary text-primary-foreground font-semibold"
+                        : "hover:bg-white/5 text-foreground"
+                    }`}
+                  >
+                    <Icon size={14} className={isActive ? "text-primary-foreground" : "text-primary"} /> {link.name}
+                  </Link>
+                );
+              })}
               <Link
                 href="/career"
                 target="_blank"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-foreground"
+                className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-foreground"
               >
                 <ExternalLink size={14} /> Public Specialist Hub
               </Link>

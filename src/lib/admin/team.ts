@@ -90,3 +90,27 @@ export async function ensureOwnerAdminProfile(uid: string, email: string, displa
     console.warn("Could not sync owner admin profile in Firestore:", err);
   }
 }
+
+/**
+ * Formats a consistent Neubofy Applicant ID: APP-XXXXXX
+ */
+export function getApplicantId(uid: string): string {
+  if (!uid) return "APP-000000";
+  const clean = uid.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+  return `APP-${clean.slice(0, 6).padEnd(6, "0")}`;
+}
+
+/**
+ * Formats a consistent Neubofian Team Member ID: NBF-XXX
+ */
+export function getNeubofianId(uid: string, email?: string): string {
+  const normEmail = (email || "").toLowerCase().trim();
+  const ownerEnv = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || "").toLowerCase().trim();
+  const ownerEmails = ownerEnv.split(",").map((e) => e.trim()).filter(Boolean);
+
+  if (ownerEmails.length > 0 && ownerEmails.includes(normEmail)) {
+    return "NBF-001";
+  }
+  const clean = uid.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+  return `NBF-${clean.slice(0, 4).padEnd(4, "X")}`;
+}
