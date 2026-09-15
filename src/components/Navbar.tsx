@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "Partners", path: "/developers" },
+    { name: "Partners", path: "/partner" },
     { name: "Help Centre", path: "https://neubofy.zohodesk.in/portal", ariaLabel: "Visit Neubofy Help Centre (Opens in new tab)", title: "Neubofy Help Centre Support Portal" },
     { name: "Consultation", path: "https://booking.neubofy.in", ariaLabel: "Book a Neubofy Consultation (Opens in new tab)", title: "Book a Strategy Consultation with Neubofy" }
   ];

@@ -11,19 +11,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/developers`,
+      url: `${baseUrl}/partner`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/developers/login`,
+      url: `${baseUrl}/partner/login`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/developers/onboard`,
+      url: `${baseUrl}/partner/onboard`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,

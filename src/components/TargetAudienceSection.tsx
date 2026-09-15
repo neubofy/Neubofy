@@ -52,7 +52,7 @@ const TargetAudienceSection = () => {
               Let Neubofy handle client acquisition, requirements coordination, project orchestration, and delivery accountability.
             </p>
             <Link
-              href="/developers/onboard"
+              href="/partner/onboard"
               className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium transition-colors bg-white/10 text-white shadow hover:bg-white/20 border border-white/20 rounded-full w-fit"
             >
               Become a Partner

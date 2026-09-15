@@ -33,7 +33,7 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-foreground">Pages</h3>
             <div className="space-y-3">
               <Link href="/" className="block text-muted-foreground hover:text-primary transition-colors">Home</Link>
-              <Link href="/developers" className="block text-muted-foreground hover:text-primary transition-colors">Partners</Link>
+              <Link href="/partner" className="block text-muted-foreground hover:text-primary transition-colors">Partners</Link>
               <Link href="/order" className="block text-muted-foreground hover:text-primary transition-colors">Start a project</Link>
             </div>
           </div>
