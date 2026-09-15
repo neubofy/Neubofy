@@ -325,10 +325,10 @@ export default function AdminLayout({
               variant="outline"
               size="sm"
               onClick={handleLogout}
-              className="border-white/10 hover:bg-destructive/10 hover:text-destructive rounded-xl text-xs gap-1.5 h-9 flex items-center"
+              className="border-rose-500/30 text-rose-400 hover:bg-rose-500/15 hover:text-rose-300 rounded-xl text-xs gap-1.5 h-9 flex items-center shrink-0"
               title="Sign Out of Admin Console"
             >
-              <LogOut size={14} /> <span className="hidden sm:inline">Sign Out</span>
+              <LogOut size={14} /> <span>Sign Out</span>
             </Button>
           </div>
 
