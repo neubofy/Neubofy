@@ -93,6 +93,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
     >
       <body className="flex flex-col relative bg-background text-foreground min-h-screen">
+        <script
+          id="firebase-pre-init"
+          dangerouslySetInnerHTML={{
+            __html: `window.__FIREBASE_CONFIG__ = ${JSON.stringify(firebaseConfig)};`,
+          }}
+        />
         <FirebaseInitializer config={firebaseConfig} />
         <SmoothScrolling>
           <LiquidThreeBackground />

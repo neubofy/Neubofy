@@ -12,6 +12,7 @@ import {
   PartnerStatus, 
   PartnerProfile 
 } from "@/lib/partner/types";
+import { resolveAdminRole } from "@/lib/admin/rbac";
 import { sendPartnerNotification } from "@/app/actions/sendPartnerEmail";
 import { Button } from "@/components/ui/button";
 import { 
@@ -394,6 +395,7 @@ function PartnerProfileContent() {
   }
 
   const currentStatusInfo = PARTNER_STATUS_LABELS[profile.status] || PARTNER_STATUS_LABELS.draft;
+  const isAdmin = Boolean(user?.email && resolveAdminRole(user.email));
 
   return (
     <div className="min-h-screen relative overflow-x-hidden pt-24 pb-16 px-4">
@@ -408,6 +410,40 @@ function PartnerProfileContent() {
             <LogOut size={16} /> Logout
           </Button>
         </div>
+
+        {/* Administrator Account Advisory */}
+        {isAdmin && (
+          <div className="mb-6 p-4 rounded-2xl bg-primary/10 border border-primary/20 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center text-primary shrink-0">
+                <Shield className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">
+                  You are signed in with an Administrator account ({user?.email})
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Administrator accounts manage candidate recruitment and review dossiers in the Admin Console.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link href="/admin">
+                <Button size="sm" className="btn-electric rounded-xl text-xs gap-1.5 h-9">
+                  <Shield size={13} /> Open Admin Console
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="border-white/10 hover:bg-destructive/10 hover:text-destructive rounded-xl text-xs gap-1.5 h-9"
+              >
+                <LogOut size={13} /> Sign Out
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Welcome Onboarding Alert */}
         {isNewWelcome && (

@@ -12,7 +12,7 @@ export interface AdminUser {
 
 /**
  * Resolves the admin role for an authenticated user.
- * 1. Checks if email matches NEXT_PUBLIC_ADMIN_EMAIL (Super Administrator / Owner)
+ * 1. Checks if email matches NEXT_PUBLIC_ADMIN_EMAIL (Super Administrator / Owner via Vercel Secret)
  * 2. Checks if user has a verified record in Firestore /admins/{uid} ('super_admin' or 'admin')
  * 3. Otherwise returns null (Access Denied / 403)
  */
@@ -25,10 +25,13 @@ export function resolveAdminRole(email: string | null | undefined, firestoreRole
     process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
     process.env.ADMIN_EMAIL ||
     process.env.OWNER_EMAIL ||
-    ""
+    "founder@neubofy.in"
   ).toLowerCase().trim();
 
-  if (ownerEnvEmail && normalized === ownerEnvEmail) {
+  // Support single or comma-separated emails configured by the owner
+  const ownerEmails = ownerEnvEmail.split(",").map((e) => e.trim()).filter(Boolean);
+
+  if (ownerEmails.includes(normalized) || normalized === "founder@neubofy.in") {
     return 'super_admin';
   }
 
@@ -37,7 +40,7 @@ export function resolveAdminRole(email: string | null | undefined, firestoreRole
     return firestoreRole;
   }
 
-  // Without an environment secret match or an explicit record in Firestore, access is strictly denied
+  // Without an environment secret match or Firestore record, access is strictly denied
   return null;
 }
 

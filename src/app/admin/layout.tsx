@@ -75,7 +75,9 @@ export default function AdminLayout({
 
             // If user is the Super Administrator (Owner), guarantee their document is updated in /admins
             if (resolved === "super_admin") {
-              await ensureOwnerAdminProfile(currentUser.uid, cleanEmail, currentUser.displayName || undefined);
+              ensureOwnerAdminProfile(currentUser.uid, cleanEmail, currentUser.displayName || undefined).catch((err) => {
+                console.warn("Owner admin profile sync warning:", err);
+              });
             }
           } else {
             setRole(null);
@@ -246,7 +248,7 @@ export default function AdminLayout({
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="outline" onClick={handleLogout} className="rounded-xl border-white/10 gap-2">
-              <LogOut size={14} /> Switch Account
+              <LogOut size={14} /> Sign Out of {user.email}
             </Button>
             <Link href="/career">
               <Button className="rounded-xl btn-electric w-full sm:w-auto">
@@ -310,11 +312,11 @@ export default function AdminLayout({
             </nav>
           </div>
 
-          {/* Desktop User Info & Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* User Info & Always-Visible Log Out Button */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="flex flex-col text-right">
-              <span className="text-xs font-medium text-foreground truncate max-w-[200px]">{user.email}</span>
-              <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border inline-block ml-auto mt-0.5 ${currentRoleInfo.bg} ${currentRoleInfo.color}`}>
+              <span className="text-xs font-medium text-foreground truncate max-w-[130px] sm:max-w-[200px]">{user.email}</span>
+              <span className={`text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border inline-block ml-auto mt-0.5 ${currentRoleInfo.bg} ${currentRoleInfo.color}`}>
                 {currentRoleInfo.title}
               </span>
             </div>
@@ -323,9 +325,10 @@ export default function AdminLayout({
               variant="outline"
               size="sm"
               onClick={handleLogout}
-              className="border-white/10 hover:bg-destructive/10 hover:text-destructive rounded-xl text-xs gap-1.5 h-9"
+              className="border-white/10 hover:bg-destructive/10 hover:text-destructive rounded-xl text-xs gap-1.5 h-9 flex items-center"
+              title="Sign Out of Admin Console"
             >
-              <LogOut size={14} /> Exit Admin
+              <LogOut size={14} /> <span className="hidden sm:inline">Sign Out</span>
             </Button>
           </div>
 

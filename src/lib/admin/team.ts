@@ -17,6 +17,8 @@ export interface NeubofyTeamMember {
 
 export type AuditLogAction = 
   | 'STATUS_CHANGE' 
+  | 'ACCEPT_APPLICANT'
+  | 'REJECT_APPLICANT'
   | 'ADD_NOTE' 
   | 'SEND_EMAIL' 
   | 'ASSIGN_ROLE' 

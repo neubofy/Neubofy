@@ -344,7 +344,38 @@ export default function SpecialistManagePage() {
           <ArrowLeft size={14} /> Back to ATS Pipeline
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            size="sm"
+            onClick={() => handleStatusChange("onboarded")}
+            disabled={changingStatus || specialist.status === "onboarded"}
+            className="rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 text-xs h-8 gap-1.5 font-semibold"
+          >
+            <Check size={13} /> {specialist.status === "onboarded" ? "Verified Specialist" : "Accept Candidate"}
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              if (confirm(`Decline and archive application for ${specialist.name}?`)) {
+                handleStatusChange("archived");
+              }
+            }}
+            disabled={changingStatus || specialist.status === "archived"}
+            className="rounded-xl border-rose-500/30 text-rose-400 hover:bg-rose-500/15 text-xs h-8 gap-1.5 font-medium"
+          >
+            <X size={13} /> Reject Candidate
+          </Button>
+
+          <Button
+            size="sm"
+            onClick={openEmailModal}
+            className="rounded-xl btn-electric text-xs h-8 gap-1.5"
+          >
+            <Mail size={12} /> Dispatch Email
+          </Button>
+
           <Button
             size="sm"
             variant="outline"
@@ -355,14 +386,6 @@ export default function SpecialistManagePage() {
             className="rounded-xl border-white/10 text-xs h-8"
           >
             Copy Link
-          </Button>
-
-          <Button
-            size="sm"
-            onClick={openEmailModal}
-            className="rounded-xl btn-electric text-xs h-8 gap-1.5"
-          >
-            <Mail size={12} /> Dispatch Email
           </Button>
         </div>
       </div>

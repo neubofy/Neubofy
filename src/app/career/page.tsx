@@ -14,16 +14,18 @@ import {
   Workflow, 
   Smartphone, 
   CheckCircle2, 
-  Sparkles 
+  Sparkles,
+  LogOut
 } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
-import { User as FirebaseUser } from "firebase/auth";
+import { User as FirebaseUser, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { PARTNER_CATEGORIES, PARTNER_STATUS_LABELS, PartnerStatus } from "@/lib/partner/types";
+import { resolveAdminRole } from "@/lib/admin/rbac";
 
 interface PartnerData {
   name: string;
@@ -53,7 +55,7 @@ export default function PartnerLandingPage() {
               if (docSnap.exists()) {
                 const data = docSnap.data();
                 setPartnerData({
-                  name: data.name || user.displayName || "Partner",
+                  name: data.name || user.displayName || "Specialist",
                   category: data.category || "Specialist",
                   capabilities: Array.isArray(data.capabilities) ? data.capabilities : [],
                   bio: data.bio || "",
@@ -63,7 +65,7 @@ export default function PartnerLandingPage() {
                 });
               }
             } catch (err) {
-              console.error("Error fetching partner profile", err);
+              console.error("Error fetching specialist profile", err);
             }
           } else {
             setPartnerData(null);
@@ -78,6 +80,18 @@ export default function PartnerLandingPage() {
     }
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(getFirebaseAuth());
+      setCurrentUser(null);
+      setPartnerData(null);
+    } catch (err) {
+      console.error("Logout error", err);
+    }
+  };
+
+  const isAdmin = Boolean(currentUser && resolveAdminRole(currentUser.email));
+
   return (
     <PageTransition>
       <div className="container mx-auto py-24 px-4 max-w-5xl">
@@ -85,11 +99,35 @@ export default function PartnerLandingPage() {
         {/* Top Action Bar */}
         <div className="flex justify-end mb-8 animate-fade-in-up">
           {currentUser ? (
-            <Link href="/career/profile">
-              <Button className="btn-electric gap-2 rounded-xl">
-                <User size={16} /> Specialist Dashboard
+            <div className="flex items-center gap-2 sm:gap-3">
+              {isAdmin ? (
+                <>
+                  <span className="text-xs text-muted-foreground hidden sm:inline">
+                    Admin: <strong className="text-foreground">{currentUser.email}</strong>
+                  </span>
+                  <Link href="/admin">
+                    <Button className="btn-electric gap-1.5 rounded-xl text-xs h-9">
+                      <Shield size={14} /> Open Admin Console
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <Link href="/career/profile">
+                  <Button className="btn-electric gap-1.5 rounded-xl text-xs h-9">
+                    <User size={14} /> Specialist Dashboard
+                  </Button>
+                </Link>
+              )}
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="border-white/10 hover:bg-destructive/10 hover:text-destructive rounded-xl text-xs gap-1.5 h-9"
+              >
+                <LogOut size={14} /> Sign Out
               </Button>
-            </Link>
+            </div>
           ) : (
             <div className="flex gap-3">
               <Link href="/career/login">
@@ -106,8 +144,42 @@ export default function PartnerLandingPage() {
           )}
         </div>
 
-        {/* Dynamic Logged-in Partner Summary Card */}
-        {currentUser && partnerData && !loading ? (
+        {/* Administrator Mode Banner */}
+        {currentUser && isAdmin && (
+          <div className="mb-10 p-4 rounded-2xl bg-primary/10 border border-primary/20 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sm animate-fade-in-up">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center text-primary shrink-0">
+                <Shield className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">
+                  Signed in as Administrator (<span className="text-primary">{currentUser.email}</span>)
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  You are viewing the Specialist Portal with administrative privileges. To review applications, open the Admin Console.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link href="/admin">
+                <Button size="sm" className="btn-electric rounded-xl text-xs gap-1.5 h-9">
+                  <Shield size={13} /> Open Admin Console
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="border-white/10 hover:bg-destructive/10 hover:text-destructive rounded-xl text-xs gap-1.5 h-9"
+              >
+                <LogOut size={13} /> Sign Out
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Dynamic Logged-in Specialist Summary Card (Only shown for non-admin specialist applicants) */}
+        {currentUser && partnerData && !isAdmin && !loading ? (
           <div className="mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

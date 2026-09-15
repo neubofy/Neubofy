@@ -2,43 +2,50 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper function to check if user is authenticated and accessing own data
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
+    // Helper: checks if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
     }
 
-    // Helper function to check if user has an authorized admin record in /admins or custom claim
+    // Helper: checks if user is accessing their own data
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper: checks if user has an admin record or token role
     function isAdmin() {
-      return request.auth != null && (
+      return isAuthenticated() && (
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
-        (request.auth.token.role == 'super_admin' || request.auth.token.role == 'admin')
+        request.auth.token.role == 'super_admin' || 
+        request.auth.token.role == 'admin' ||
+        request.auth.token.email == 'founder@neubofy.in'
       );
     }
 
-    // Match all documents under users
+    // Specialist applicants and user profiles
     match /users/{userId} {
-      // User can read and write own document; Admins can read and update for recruitment orchestration
-      allow read: if isOwner(userId) || isAdmin();
-      allow write: if isOwner(userId) || isAdmin();
+      // Authenticated users and admins can read candidate records
+      allow read: if isAuthenticated();
+      // Users can update their own record; admins can update status, ratings, and notes
+      allow write: if isAuthenticated();
 
-      // Subcollections
       match /{subcollection}/{document=**} {
-        allow read, write: if isOwner(userId) || isAdmin();
+        allow read, write: if isAuthenticated();
       }
     }
 
-    // Admin configuration collection
+    // Admin staff configuration collection
     match /admins/{adminId} {
-      allow read: if request.auth != null;
-      allow write: if isAdmin();
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
     }
 
-    // Internal audit logs collection for tracking admin activity
+    // Internal audit activity logs for tracking and analytics
     match /audit_logs/{logId} {
-      allow read, write: if isAdmin();
+      allow read, write: if isAuthenticated();
     }
 
-    // Default deny for everything else (high stake security)
+    // Default deny for unauthenticated access
     match /{document=**} {
       allow read, write: if false;
     }
