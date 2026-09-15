@@ -1,4 +1,5 @@
 // Neubofy Branded Email Templates
+// Specialist Network & Career Onboarding
 
 export interface EmailTemplateResult {
   subject: string;
@@ -15,7 +16,7 @@ const getBaseEmailLayout = (contentHtml: string, previewText: string) => `
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neubofy</title>
+  <title>Neubofy Specialist Network</title>
   <style>
     body {
       margin: 0;
@@ -117,7 +118,6 @@ const getBaseEmailLayout = (contentHtml: string, previewText: string) => `
       text-decoration: none;
       margin: 0 8px;
       font-size: 12px;
-      transition: color 0.2s ease;
     }
     .social-links a:hover {
       color: #00f0ff;
@@ -140,14 +140,14 @@ const getBaseEmailLayout = (contentHtml: string, previewText: string) => `
       <div class="header">
         <img src="${BRAND_LOGO_URL}" alt="Neubofy Logo" class="logo-img" width="48" height="48" />
         <span class="brand-name">Neubofy™</span>
-        <div class="tagline">Technology Department as a Service</div>
+        <div class="tagline">Specialist Network & Technology Department</div>
       </div>
       <div class="body">
         ${contentHtml}
       </div>
       <div class="footer">
         <p style="margin: 0 0 12px;">© ${new Date().getFullYear()} Neubofy Technologies. All rights reserved.</p>
-        <p style="margin: 0 0 12px;">Orchestrating qualified independent technology specialists for businesses worldwide.</p>
+        <p style="margin: 0 0 12px;">Connecting qualified independent technology specialists with orchestrated enterprise projects.</p>
         <div class="social-links">
           <a href="https://twitter.com/neubofy" target="_blank">Twitter / X</a> •
           <a href="https://t.me/neubofy" target="_blank">Telegram</a> •
@@ -156,7 +156,7 @@ const getBaseEmailLayout = (contentHtml: string, previewText: string) => `
           <a href="${WEBSITE_URL}" target="_blank">neubofy.in</a>
         </div>
         <p style="margin: 12px 0 0; color: #475569; font-size: 11px;">
-          Replies to this email are routed to Neubofy Partner Operations (<a href="mailto:partner@neubofy.in" style="color: #64748b;">partner@neubofy.in</a>).
+          Replies to this email are routed to Neubofy Talent Operations (<a href="mailto:careers@neubofy.in" style="color: #64748b;">careers@neubofy.in</a>).
         </p>
       </div>
     </div>
@@ -166,61 +166,61 @@ const getBaseEmailLayout = (contentHtml: string, previewText: string) => `
 `;
 
 export function getApplicationReceivedTemplate(name: string, category: string): EmailTemplateResult {
-  const subject = `Welcome to Neubofy Partner Network — Application Received, ${name}`;
-  const preview = `Your application for ${category} at Neubofy has been received.`;
+  const subject = `Welcome to Neubofy Specialist Network — Application Received, ${name}`;
+  const preview = `Your specialist onboarding for ${category} at Neubofy has been received.`;
   const content = `
     <div class="badge">Application Received</div>
     <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Welcome to Neubofy, ${name}!</h2>
-    <p>Thank you for submitting your partner profile. We have officially received your onboarding details for the <strong>${category}</strong> specialization.</p>
+    <p>Thank you for registering your profile with the Neubofy Specialist Network for the <strong>${category}</strong> focus area.</p>
     
     <div class="card">
-      <h4 style="margin: 0 0 8px; color: #00f0ff; font-size: 14px; text-transform: uppercase;">What Happens Next</h4>
+      <h4 style="margin: 0 0 8px; color: #00f0ff; font-size: 14px; text-transform: uppercase;">Next Steps in Orchestration</h4>
       <ol style="margin: 0; padding-left: 20px; color: #94a3b8; font-size: 14px;">
-        <li style="margin-bottom: 8px;"><strong style="color: #ffffff;">Specialist Screening:</strong> Our technical review committee evaluates your stated capabilities, portfolio, and experience against active client project requirements.</li>
-        <li style="margin-bottom: 8px;"><strong style="color: #ffffff;">Technical Verification:</strong> We conduct a short alignment discussion to verify code quality standards and execution timelines.</li>
-        <li><strong style="color: #ffffff;">Project Orchestration:</strong> Once verified, you receive high-value, pre-scoped project briefs matching your capabilities without needing to handle sales.</li>
+        <li style="margin-bottom: 8px;"><strong style="color: #ffffff;">Capability Assessment:</strong> Our technical coordinators evaluate your portfolio, stated deliverables, and experience against upcoming enterprise client requirements.</li>
+        <li style="margin-bottom: 8px;"><strong style="color: #ffffff;">Technical Verification:</strong> We conduct a focused alignment call to verify engineering standards and code delivery workflows.</li>
+        <li><strong style="color: #ffffff;">Project Routing:</strong> Once verified, you receive qualified project briefs matching your capabilities without bidding or marketing.</li>
       </ol>
     </div>
 
-    <p>You can update your portfolio, links, and contact information at any time from your partner profile.</p>
+    <p>You can update your stated capabilities, portfolio, and contact details at any time from your profile.</p>
     <div style="text-align: center;">
-      <a href="${WEBSITE_URL}/partner/profile" class="btn">Manage Partner Profile</a>
+      <a href="${WEBSITE_URL}/career/profile" class="btn">View Specialist Profile</a>
     </div>
   `;
 
   return {
     subject,
     html: getBaseEmailLayout(content, preview),
-    text: `Welcome to Neubofy Partner Network, ${name}!\n\nYour application for ${category} has been received and is being evaluated by our team. You can view or update your profile at ${WEBSITE_URL}/partner/profile.`,
+    text: `Welcome to Neubofy Specialist Network, ${name}!\n\nYour application for ${category} has been received. You can view or update your profile at ${WEBSITE_URL}/career/profile.`,
   };
 }
 
 export function getScreeningTemplate(name: string): EmailTemplateResult {
-  const subject = `Update on your Neubofy Partner Application — In Screening`;
+  const subject = `Update on your Neubofy Specialist Application — Under Screening`;
   const preview = `Your profile is now under active screening by Neubofy technical coordinators.`;
   const content = `
     <div class="badge" style="background-color: rgba(99, 102, 241, 0.1); color: #818cf8; border-color: rgba(99, 102, 241, 0.25);">Under Screening</div>
     <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Hi ${name},</h2>
-    <p>Good news! Your partner profile has been moved to our active <strong>Screening & Assessment</strong> stage.</p>
+    <p>Your profile has advanced to our active <strong>Screening & Assessment</strong> pipeline.</p>
     
-    <p>Our team is currently reviewing your portfolio, code repositories, and technical capabilities to match you with upcoming projects in our pipeline.</p>
+    <p>Our engineering coordinators are currently assessing your portfolio, code repositories, and specialized capabilities to match you with active and upcoming client requirements.</p>
 
     <div class="card">
       <p style="margin: 0; color: #cbd5e1; font-size: 14px;">
-        💡 <strong>Tip:</strong> If your CV/Resume is hosted on Google Drive, ensure link sharing permissions are set to public or granted to <code style="color: #00f0ff;">partners@neubofy.in</code>.
+        💡 <strong>Note:</strong> If your CV or portfolio is hosted on Google Drive, make sure public viewing is enabled or shared with <code style="color: #00f0ff;">careers@neubofy.in</code>.
       </p>
     </div>
 
-    <p>If our reviewers have any questions or require additional repository samples, we will reach out directly through this channel.</p>
+    <p>If our team requires additional repository walk-throughs or verified code samples, we will contact you directly.</p>
     <div style="text-align: center;">
-      <a href="${WEBSITE_URL}/partner/profile" class="btn">Check Profile Status</a>
+      <a href="${WEBSITE_URL}/career/profile" class="btn">Check Profile Status</a>
     </div>
   `;
 
   return {
     subject,
     html: getBaseEmailLayout(content, preview),
-    text: `Hi ${name},\n\nYour partner profile has advanced to the Screening stage at Neubofy. We are reviewing your technical background. Check status at ${WEBSITE_URL}/partner/profile.`,
+    text: `Hi ${name},\n\nYour specialist application has advanced to the Screening stage at Neubofy. Check status at ${WEBSITE_URL}/career/profile.`,
   };
 }
 
@@ -231,76 +231,76 @@ export function getInterviewInvitationTemplate(name: string, bookingUrl?: string
   const content = `
     <div class="badge" style="background-color: rgba(168, 85, 247, 0.1); color: #c084fc; border-color: rgba(168, 85, 247, 0.25);">Shortlisted for Interview</div>
     <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Congratulations ${name}!</h2>
-    <p>We were very impressed by your profile and stated capabilities. We would like to invite you for a <strong>Technical Alignment & Capability Verification</strong> session.</p>
+    <p>We are impressed by your background and stated capabilities. We would like to invite you for a <strong>Technical Alignment & Verification</strong> session.</p>
 
-    <p>This is a 20-30 minute focused conversation with our orchestration leads to discuss:</p>
+    <p>During this session, we will discuss:</p>
     <ul style="color: #94a3b8; font-size: 14px; margin: 12px 0 20px; padding-left: 20px;">
-      <li>Your core strengths, preferred tech stack, and delivery cadence</li>
-      <li>How Neubofy orchestrates requirements, milestones, and verified deliveries</li>
-      <li>Upcoming project engagements that match your capabilities</li>
+      <li>Your core strengths, preferred architecture, and delivery cadence</li>
+      <li>How Neubofy scopes and orchestrates requirements, milestones, and delivery verification</li>
+      <li>Immediate client project opportunities matching your capability profile</li>
     </ul>
 
     <div style="text-align: center; margin: 28px 0;">
-      <a href="${consultationUrl}" class="btn" target="_blank">Schedule Your Alignment Call</a>
+      <a href="${consultationUrl}" class="btn" target="_blank">Schedule Alignment Call</a>
     </div>
 
     <p style="font-size: 13px; color: #94a3b8; text-align: center;">
-      Can't find a time that works? Reply directly to this email at <a href="mailto:partner@neubofy.in" style="color: #00f0ff;">partner@neubofy.in</a>.
+      Need a different time? Reply directly to this email at <a href="mailto:careers@neubofy.in" style="color: #00f0ff;">careers@neubofy.in</a>.
     </p>
   `;
 
   return {
     subject,
     html: getBaseEmailLayout(content, preview),
-    text: `Congratulations ${name}!\n\nYou have been shortlisted for a Technical Alignment session with Neubofy. Please select a time slot at: ${consultationUrl}`,
+    text: `Congratulations ${name}!\n\nYou have been shortlisted for a Technical Alignment session with Neubofy. Schedule your call at: ${consultationUrl}`,
   };
 }
 
 export function getPartnerVerifiedTemplate(name: string, category: string): EmailTemplateResult {
-  const subject = `Welcome to the Neubofy Orchestration Network — Verified Partner`;
-  const preview = `Your profile has been verified as an official Neubofy Partner!`;
+  const subject = `Welcome to the Neubofy Specialist Network — Verified Specialist`;
+  const preview = `Your profile has been verified as an official Neubofy Network Specialist!`;
   const content = `
-    <div class="badge" style="background-color: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.25);">Verified Partner</div>
+    <div class="badge" style="background-color: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.25);">Verified Specialist</div>
     <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Official Welcome, ${name}!</h2>
-    <p>We are thrilled to officially welcome you as a <strong>Verified Partner</strong> in the Neubofy Orchestration Network for <strong>${category}</strong>.</p>
+    <p>We are pleased to formally welcome you as a <strong>Verified Specialist</strong> in the Neubofy Network for <strong>${category}</strong>.</p>
 
     <div class="card">
-      <h4 style="margin: 0 0 10px; color: #34d399; font-size: 15px;">Your Partner Privileges</h4>
-      <p style="margin: 0 0 8px; font-size: 14px; color: #e2e8f0;">✓ <strong>Pre-Scoped Requirements:</strong> Clients deal with Neubofy. You receive clear technical specs and acceptance criteria.</p>
-      <p style="margin: 0 0 8px; font-size: 14px; color: #e2e8f0;">✓ <strong>Independent Execution:</strong> Work flexibly and autonomously with clear milestone accountability.</p>
-      <p style="margin: 0; font-size: 14px; color: #e2e8f0;">✓ <strong>Direct Communication:</strong> Priority access to our project leads and engineering team.</p>
+      <h4 style="margin: 0 0 10px; color: #34d399; font-size: 15px;">Your Network Benefits</h4>
+      <p style="margin: 0 0 8px; font-size: 14px; color: #e2e8f0;">✓ <strong>Pre-Scoped Requirements:</strong> Clients interface with Neubofy. You receive concrete technical specs and unambiguous acceptance criteria.</p>
+      <p style="margin: 0 0 8px; font-size: 14px; color: #e2e8f0;">✓ <strong>Independent Execution:</strong> Work autonomously with milestone accountability.</p>
+      <p style="margin: 0; font-size: 14px; color: #e2e8f0;">✓ <strong>Direct Coordination:</strong> Dedicated communication channels with our project orchestrators.</p>
     </div>
 
-    <p>Keep your profile details up-to-date so we can route the best matching briefs to you as soon as they are scoped.</p>
+    <p>Keep your profile details and capability tags current so we can route matched opportunities as soon as they are scoped.</p>
     <div style="text-align: center;">
-      <a href="${WEBSITE_URL}/partner/profile" class="btn">View Partner Dashboard</a>
+      <a href="${WEBSITE_URL}/career/profile" class="btn">View Specialist Dashboard</a>
     </div>
   `;
 
   return {
     subject,
     html: getBaseEmailLayout(content, preview),
-    text: `Welcome ${name}!\n\nYou are now an official Verified Partner at Neubofy for ${category}. Access your dashboard at ${WEBSITE_URL}/partner/profile.`,
+    text: `Welcome ${name}!\n\nYou are now a Verified Specialist at Neubofy for ${category}. Access your dashboard at ${WEBSITE_URL}/career/profile.`,
   };
 }
 
 export function getApplicationUpdateTemplate(name: string): EmailTemplateResult {
-  const subject = `Update on your Neubofy Partner Application`;
-  const preview = `Status update regarding your Neubofy Partner profile.`;
+  const subject = `Update regarding your Neubofy Specialist Application`;
+  const preview = `Status update on your application to the Neubofy Specialist Network.`;
   const content = `
-    <div class="badge" style="background-color: rgba(148, 163, 184, 0.1); color: #94a3b8; border-color: rgba(148, 163, 184, 0.25);">Application Update</div>
+    <div class="badge" style="background-color: rgba(148, 163, 184, 0.1); color: #94a3b8; border-color: rgba(148, 163, 184, 0.25);">Application Status</div>
     <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Hello ${name},</h2>
-    <p>Thank you for your interest in joining the Neubofy Partner Network and for sharing your background with us.</p>
-    <p>At this time, we do not have an active client engagement that specifically matches your current profile and tech stack focus. As our orchestration projects evolve rapidly, we have archived your details in our talent database.</p>
-    <p>Should an opportunity arise that aligns with your specific expertise, our orchestration team will proactively reach back out to you.</p>
-    <p>We wish you continued success with your engineering endeavors.</p>
-    <p style="margin-top: 24px; color: #94a3b8; font-size: 14px;">Warm regards,<br><strong style="color: #ffffff;">Neubofy Partner Operations</strong></p>
+    <p>Thank you for your interest in joining the Neubofy Specialist Network and for sharing your background with our team.</p>
+    <p>At present, our active client pipelines do not have an engagement that aligns with your specific technical stack focus. We have retained your profile in our talent repository.</p>
+    <p>When an opportunity matching your capabilities opens up, our orchestration leads will reach back out to you directly.</p>
+    <p>We appreciate your time and wish you continued success.</p>
+    <p style="margin-top: 24px; color: #94a3b8; font-size: 14px;">Warm regards,<br><strong style="color: #ffffff;">Neubofy Talent Operations</strong></p>
   `;
 
   return {
     subject,
     html: getBaseEmailLayout(content, preview),
-    text: `Hello ${name},\n\nThank you for sharing your background with Neubofy. At this time, we do not have an active project matching your focus. We will keep your details on file for future opportunities.`,
+    text: `Hello ${name},\n\nThank you for sharing your background with Neubofy. At present, we do not have an engagement matching your focus. We have retained your profile for future opportunities.`,
   };
 }
 
@@ -308,19 +308,19 @@ export function getCustomMessageTemplate(name: string, subject: string, message:
   const formattedMessage = message.replace(/\n/g, '<br/>');
   const preview = message.slice(0, 100);
   const content = `
-    <div class="badge">Neubofy Partner Communication</div>
+    <div class="badge">Neubofy Specialist Communication</div>
     <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Hi ${name},</h2>
     <div style="font-size: 15px; line-height: 1.7; color: #cbd5e1; margin: 20px 0;">
       ${formattedMessage}
     </div>
     <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #1e2232; font-size: 13px; color: #94a3b8;">
-      You can reply directly to this email or reach us at <a href="mailto:partner@neubofy.in" style="color: #00f0ff;">partner@neubofy.in</a>.
+      You can reply directly to this email or reach us at <a href="mailto:careers@neubofy.in" style="color: #00f0ff;">careers@neubofy.in</a>.
     </div>
   `;
 
   return {
     subject: `${subject} — Neubofy`,
     html: getBaseEmailLayout(content, preview),
-    text: `Hi ${name},\n\n${message}\n\nNeubofy Partner Operations (partner@neubofy.in)`,
+    text: `Hi ${name},\n\n${message}\n\nNeubofy Talent Operations (careers@neubofy.in)`,
   };
 }

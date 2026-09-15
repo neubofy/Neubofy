@@ -85,21 +85,21 @@ export default function PartnerLandingPage() {
         {/* Top Action Bar */}
         <div className="flex justify-end mb-8 animate-fade-in-up">
           {currentUser ? (
-            <Link href="/partner/profile">
+            <Link href="/career/profile">
               <Button className="btn-electric gap-2 rounded-xl">
-                <User size={16} /> Partner Dashboard
+                <User size={16} /> Specialist Dashboard
               </Button>
             </Link>
           ) : (
             <div className="flex gap-3">
-              <Link href="/partner/login">
+              <Link href="/career/login">
                 <Button variant="outline" className="border-white/10 hover:bg-white/10 rounded-xl">
-                  Partner Login
+                  Specialist Login
                 </Button>
               </Link>
-              <Link href="/partner/onboard">
+              <Link href="/career/onboard">
                 <Button className="btn-electric rounded-xl">
-                  Become a Partner
+                  Join Specialist Network
                 </Button>
               </Link>
             </div>
@@ -155,7 +155,7 @@ export default function PartnerLandingPage() {
                   )}
 
                   <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                    <Link href="/partner/profile" className="flex items-center gap-2 text-sm text-primary hover:underline font-medium">
+                    <Link href="/career/profile" className="flex items-center gap-2 text-sm text-primary hover:underline font-medium">
                       Manage Profile & Capabilities <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -175,7 +175,7 @@ export default function PartnerLandingPage() {
                 <div className="inline-flex items-center gap-2 glass-card px-4 py-1.5 rounded-full mb-6 border border-white/10">
                   <Lock className="w-3.5 h-3.5 text-primary" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Orchestrated Partner Network
+                    Orchestrated Specialist Network
                   </span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
@@ -276,9 +276,9 @@ export default function PartnerLandingPage() {
               <p className="text-muted-foreground mb-8 max-w-xl mx-auto text-sm leading-relaxed">
                 No lengthy job interviews or bidding wars. Sign up with one click, register your capabilities, and join a private network of vetted specialists.
               </p>
-              <Link href="/partner/onboard">
+              <Link href="/career/onboard">
                 <Button className="btn-electric rounded-xl px-8 h-12 text-base font-semibold">
-                  Become a Neubofy Partner
+                  Join Specialist Network
                 </Button>
               </Link>
             </motion.div>

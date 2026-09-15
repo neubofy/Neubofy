@@ -35,7 +35,7 @@ const TargetAudienceSection = () => {
             </a>
           </motion.div>
 
-          {/* For Partners */}
+          {/* For Specialists & Careers */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -44,7 +44,7 @@ const TargetAudienceSection = () => {
             className="glass-card p-6 md:p-10 rounded-3xl border border-white/10 flex flex-col h-full bg-gradient-to-br from-black/60 to-black/20"
           >
             <Code2 className="w-12 h-12 text-white/80 mb-6" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">For Partners</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">Careers & Specialists</h2>
             <h3 className="text-3xl font-bold text-foreground mb-4">
               Work independently. Build with your expertise.
             </h3>
@@ -52,10 +52,10 @@ const TargetAudienceSection = () => {
               Let Neubofy handle client acquisition, requirements coordination, project orchestration, and delivery accountability.
             </p>
             <Link
-              href="/partner/onboard"
+              href="/career/onboard"
               className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium transition-colors bg-white/10 text-white shadow hover:bg-white/20 border border-white/20 rounded-full w-fit"
             >
-              Become a Partner
+              Join Network
             </Link>
           </motion.div>
         </div>

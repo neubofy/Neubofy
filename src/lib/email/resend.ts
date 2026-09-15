@@ -1,14 +1,15 @@
-// Resend Email Dispatcher for Neubofy
+// Resend Email Dispatcher for Neubofy Specialist Network & Careers
 // Powered by Resend REST API
 
 export type EmailSenderType = 
-  | 'partners'    // partners@updates.neubofy.in
-  | 'security'    // security@updates.neubofy.in
-  | 'onboarding'  // onboarding@updates.neubofy.in
-  | 'notifications'; // notifications@updates.neubofy.in
+  | 'careers'       // careers@updates.neubofy.in
+  | 'specialists'   // specialists@updates.neubofy.in
+  | 'onboarding'    // onboarding@updates.neubofy.in
+  | 'security'      // security@updates.neubofy.in
+  | 'notifications';// notifications@updates.neubofy.in
 
 export type ReplyToType = 
-  | 'partner@neubofy.in' 
+  | 'careers@neubofy.in'
   | 'contact@neubofy.in' 
   | 'support@neubofy.in';
 
@@ -29,9 +30,10 @@ export interface SendEmailResult {
 }
 
 const SENDER_MAP: Record<EmailSenderType, string> = {
-  partners: "Neubofy Partners <partners@updates.neubofy.in>",
-  security: "Neubofy Security <security@updates.neubofy.in>",
+  careers: "Neubofy Careers <careers@updates.neubofy.in>",
+  specialists: "Neubofy Specialist Network <specialists@updates.neubofy.in>",
   onboarding: "Neubofy Onboarding <onboarding@updates.neubofy.in>",
+  security: "Neubofy Security <security@updates.neubofy.in>",
   notifications: "Neubofy Updates <notifications@updates.neubofy.in>",
 };
 
@@ -40,17 +42,17 @@ export async function sendEmail({
   subject,
   html,
   text,
-  sender = 'partners',
-  replyTo = 'partner@neubofy.in',
+  sender = 'careers',
+  replyTo = 'careers@neubofy.in',
 }: SendEmailOptions): Promise<SendEmailResult> {
   const apiKey = process.env.RESEND_API_KEY || process.env.RESEND_KEY;
 
   const recipients = Array.isArray(to) ? to : [to];
-  const fromAddress = SENDER_MAP[sender] || SENDER_MAP.partners;
+  const fromAddress = SENDER_MAP[sender] || SENDER_MAP.careers;
 
   if (!apiKey) {
     console.warn(
-      `[Resend Simulated] RESEND_API_KEY is not set. Email simulated to: ${recipients.join(", ")} | Subject: "${subject}"`
+      `[Resend Simulated] RESEND_API_KEY not configured. Simulated dispatch to: ${recipients.join(", ")} | From: ${fromAddress} | Subject: "${subject}"`
     );
     return {
       success: true,

@@ -94,7 +94,7 @@ function OnboardContent() {
       await initializePartnerDoc(user.uid, form.email);
 
       // Instantly route to profile setup with onboarding parameter
-      router.push("/partner/profile?welcome=true");
+      router.push("/career/profile?welcome=true");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred during sign up.");
     } finally {
@@ -122,7 +122,7 @@ function OnboardContent() {
 
       await initializePartnerDoc(user.uid, user.email || "", user.displayName || undefined, user.photoURL || undefined);
 
-      router.push("/partner/profile?welcome=true");
+      router.push("/career/profile?welcome=true");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : `Failed to join with ${provider}.`);
     } finally {
@@ -133,17 +133,17 @@ function OnboardContent() {
   return (
     <div className="min-h-screen relative overflow-x-hidden flex flex-col items-center justify-center pt-24 pb-16 px-4">
       <div className="relative z-10 w-full max-w-md p-8 rounded-2xl glass-card card-3d border border-white/10 backdrop-blur-2xl">
-        <Link href="/partner" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
+        <Link href="/career" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
           <X size={20} />
         </Link>
         
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" /> Neubofy Partner Network
+            <Sparkles className="w-3.5 h-3.5" /> Specialist Careers
           </span>
         </div>
 
-        <h1 className="text-3xl font-bold text-center mb-2 card-3d-content">Join as a Partner</h1>
+        <h1 className="text-3xl font-bold text-center mb-2 card-3d-content">Join Specialist Network</h1>
         <p className="text-center text-muted-foreground mb-6 text-sm">
           Frictionless sign up. Complete your capabilities and portfolio in your profile next.
         </p>
@@ -258,8 +258,8 @@ function OnboardContent() {
 
           <div className="mt-6 text-center text-sm text-muted-foreground pt-2">
             Already have an account?{" "}
-            <Link href="/partner/login" className="text-primary hover:underline font-medium">
-              Partner Login
+            <Link href="/career/login" className="text-primary hover:underline font-medium">
+              Log In
             </Link>
           </div>
         </form>

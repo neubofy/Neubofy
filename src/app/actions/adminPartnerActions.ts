@@ -3,7 +3,6 @@
 import { PartnerStatus } from "@/lib/partner/types";
 import { sendPartnerNotification } from "./sendPartnerEmail";
 
-// Note: Server-side helper that can coordinate admin actions and notification triggers
 export interface UpdatePartnerStatusParams {
   partnerUid: string;
   partnerEmail: string;

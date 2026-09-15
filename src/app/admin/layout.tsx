@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { getFirebaseAuth, getFirebaseDb } from "@/lib/firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { User, signOut, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { resolveAdminRole, AdminRole } from "@/lib/admin/rbac";
 import { AdminContext } from "@/lib/admin/AdminContext";
-import { ShieldAlert, ShieldCheck, Lock, LogOut, ArrowLeft, KeyRound, Sparkles } from "lucide-react";
+import { ensureOwnerAdminProfile } from "@/lib/admin/team";
+import { ShieldAlert, Lock, LogOut, ArrowLeft, KeyRound, Sparkles, Menu, X, ExternalLink, Layers, Users } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function AdminLayout({
@@ -18,6 +20,7 @@ export default function AdminLayout({
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<AdminRole | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Login state if not authenticated
   const [loginEmail, setLoginEmail] = useState("");
@@ -35,19 +38,45 @@ export default function AdminLayout({
           if (!isMounted) return;
           setUser(currentUser);
 
-          if (currentUser) {
+          if (currentUser && currentUser.email) {
             let firestoreRole: AdminRole | undefined = undefined;
+            const cleanEmail = currentUser.email.toLowerCase().trim();
+
             try {
+              // 1. Check direct UID document in /admins/{uid}
               const adminDoc = await getDoc(doc(getFirebaseDb(), "admins", currentUser.uid));
               if (adminDoc.exists()) {
                 firestoreRole = adminDoc.data().role as AdminRole;
+              } else {
+                // 2. Check if invited by email in /admins/{sanitizedEmail}
+                const emailDocId = cleanEmail.replace(/[^a-zA-Z0-9]/g, "_");
+                const emailDoc = await getDoc(doc(getFirebaseDb(), "admins", emailDocId));
+                if (emailDoc.exists()) {
+                  firestoreRole = emailDoc.data().role as AdminRole;
+                  // Auto-claim and link invitation directly to UID for Firestore security rules
+                  await setDoc(doc(getFirebaseDb(), "admins", currentUser.uid), {
+                    uid: currentUser.uid,
+                    email: cleanEmail,
+                    displayName: currentUser.displayName || "Administrator",
+                    role: firestoreRole,
+                    invitedBy: emailDoc.data().addedBy || "Super Administrator",
+                    createdAt: emailDoc.data().createdAt || new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                  }, { merge: true });
+                }
               }
             } catch (err) {
-              console.warn("Could not fetch /admins/ document, using email role resolver:", err);
+              console.warn("Could not fetch /admins/ record:", err);
             }
 
+            // Resolve role (checks Vercel secret variable NEXT_PUBLIC_ADMIN_EMAIL first, then Firestore)
             const resolved = resolveAdminRole(currentUser.email, firestoreRole);
             setRole(resolved);
+
+            // If user is the Super Administrator (Owner), guarantee their document is updated in /admins
+            if (resolved === "super_admin") {
+              await ensureOwnerAdminProfile(currentUser.uid, cleanEmail, currentUser.displayName || undefined);
+            }
           } else {
             setRole(null);
           }
@@ -126,8 +155,8 @@ export default function AdminLayout({
           </div>
 
           <h1 className="text-2xl md:text-3xl font-bold text-center mb-2">Admin Portal Access</h1>
-          <p className="text-center text-muted-foreground mb-6 text-xs">
-            Restricted to Neubofy Super Administrators, Administrators, and Technical Reviewers.
+          <p className="text-center text-muted-foreground mb-6 text-xs leading-relaxed">
+            Restricted to Neubofy Super Administrators (Owner) and authorized Administrators.
           </p>
 
           {loginError && (
@@ -144,7 +173,7 @@ export default function AdminLayout({
                 type="email"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                placeholder="admin@neubofy.in"
+                placeholder="name@neubofy.in"
                 className="w-full px-4 py-2.5 bg-black/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:outline-none text-sm text-foreground"
               />
             </div>
@@ -206,21 +235,22 @@ export default function AdminLayout({
 
           <h1 className="text-2xl md:text-3xl font-bold mb-3 text-foreground">Unauthorized Access Attempt</h1>
           <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-            The account <strong className="text-foreground">{user.email}</strong> is not authorized to access the Neubofy Recruitment & Partner Operations Admin Portal.
+            The account <strong className="text-foreground">{user.email}</strong> is not an authorized administrator for the Neubofy Talent Operations Portal.
           </p>
 
-          <div className="p-4 rounded-xl bg-black/40 border border-white/10 text-left text-xs text-muted-foreground mb-6 space-y-1">
-            <p><strong>RBAC Requirement:</strong> Super Administrator (Owner), Administrator, or Reviewer role.</p>
-            <p>If you are a Neubofy team member, contact your system administrator to assign permissions.</p>
+          <div className="p-4 rounded-xl bg-black/40 border border-white/10 text-left text-xs text-muted-foreground mb-6 space-y-1.5">
+            <p><strong>RBAC Requirement:</strong> Super Administrator (Owner) or Administrator role.</p>
+            <p>Specialist applicants and network members manage their own profile from the Specialist Portal.</p>
+            <p>If you are a Neubofy staff member, your administrator must invite your email.</p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="outline" onClick={handleLogout} className="rounded-xl border-white/10 gap-2">
               <LogOut size={14} /> Switch Account
             </Button>
-            <Link href="/partner">
+            <Link href="/career">
               <Button className="rounded-xl btn-electric w-full sm:w-auto">
-                Go to Partner Portal
+                Go to Careers
               </Button>
             </Link>
           </div>
@@ -229,36 +259,60 @@ export default function AdminLayout({
     );
   }
 
-  // Case 3: Authorized Admin -> Render Top Nav & Children
+  // Case 3: Authorized Admin -> Strictly 2-post roles
   const ROLE_DISPLAY: Record<AdminRole, { title: string; color: string; bg: string }> = {
-    super_admin: { title: "Super Administrator (Owner)", color: "text-amber-400", bg: "bg-amber-400/10 border-amber-400/30" },
-    admin: { title: "Recruitment Administrator", color: "text-primary", bg: "bg-primary/10 border-primary/30" },
-    member: { title: "Technical Reviewer", color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/30" },
+    super_admin: { title: "Super Administrator", color: "text-amber-400", bg: "bg-amber-400/10 border-amber-400/30" },
+    admin: { title: "Administrator", color: "text-primary", bg: "bg-primary/10 border-primary/30" },
   };
 
-  const currentRoleInfo = ROLE_DISPLAY[role];
+  const currentRoleInfo = ROLE_DISPLAY[role] || ROLE_DISPLAY.admin;
 
   return (
     <div className="min-h-screen bg-[#07080c] text-foreground pt-20">
       
-      {/* Admin Top Navigation Bar */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0b0c13]/90 backdrop-blur-xl border-b border-white/10 h-20 px-4 md:px-8">
-        <div className="h-full flex items-center justify-between max-w-7xl mx-auto">
+      {/* Admin Top Navigation Bar (Consistent with Neubofy Brand Design) */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#07080c]/90 backdrop-blur-xl border-b border-white/10 h-20">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 h-full flex items-center justify-between">
           
-          <div className="flex items-center gap-4">
-            <Link href="/admin" className="flex items-center gap-3">
-              <img src="/neubofylogo.png" alt="Neubofy Logo" className="w-8 h-8 rounded-full border border-primary/40" />
-              <div>
-                <span className="font-bold text-lg tracking-tight flex items-center gap-2">
-                  Neubofy <span className="text-primary text-xs font-semibold px-2 py-0.5 rounded bg-primary/10 border border-primary/20">ATS PORTAL</span>
+          {/* Brand Logo & Title */}
+          <div className="flex items-center space-x-6">
+            <Link href="/admin" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
+              <Image
+                src="/neubofylogo.png"
+                alt="Neubofy Logo"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-foreground flex items-center gap-2">
+                  Neubofy™ <span className="text-primary text-[10px] font-semibold px-2 py-0.5 rounded bg-primary/10 border border-primary/20">TALENT ATS</span>
                 </span>
-                <span className="text-[10px] text-muted-foreground block -mt-1">Recruitment & Partner Management</span>
+                <span className="text-[10px] text-muted-foreground -mt-0.5">Specialist Operations</span>
               </div>
             </Link>
+
+            {/* Desktop Navigation Links */}
+            <nav className="hidden md:flex items-center space-x-4 text-xs font-medium pl-4 border-l border-white/10">
+              <Link
+                href="/admin"
+                className="text-foreground hover:text-primary transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-white/5"
+              >
+                <Layers size={13} /> Specialists Pipeline
+              </Link>
+              <Link
+                href="/career"
+                target="_blank"
+                className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-1 px-2.5 rounded-lg"
+              >
+                Live Careers Hub <ExternalLink size={11} />
+              </Link>
+            </nav>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex flex-col text-right">
+          {/* Desktop User Info & Actions */}
+          <div className="hidden lg:flex items-center gap-3">
+            <div className="flex flex-col text-right">
               <span className="text-xs font-medium text-foreground truncate max-w-[200px]">{user.email}</span>
               <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border inline-block ml-auto mt-0.5 ${currentRoleInfo.bg} ${currentRoleInfo.color}`}>
                 {currentRoleInfo.title}
@@ -275,23 +329,73 @@ export default function AdminLayout({
             </Button>
           </div>
 
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 rounded-lg text-foreground hover:bg-white/5 border border-white/10"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle admin navigation menu"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden py-4 px-6 glass-card border-x-0 rounded-none absolute top-full left-0 w-full animate-fade-in-up backdrop-blur-3xl bg-[#07080c]/98 border-b border-white/10 space-y-4 shadow-2xl">
+            <div className="p-3 rounded-2xl bg-black/50 border border-white/10">
+              <span className="text-xs font-medium text-foreground block truncate">{user.email}</span>
+              <span className={`text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full border inline-block mt-1.5 ${currentRoleInfo.bg} ${currentRoleInfo.color}`}>
+                {currentRoleInfo.title}
+              </span>
+            </div>
+
+            <div className="space-y-1 text-xs">
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/5 text-foreground"
+              >
+                <Layers size={14} className="text-primary" /> Specialist Pipeline
+              </Link>
+              <Link
+                href="/career"
+                target="_blank"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-foreground"
+              >
+                <ExternalLink size={14} /> Public Careers Hub
+              </Link>
+            </div>
+
+            <div className="pt-2 border-t border-white/10">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="w-full border-white/10 hover:bg-destructive/10 hover:text-destructive rounded-xl text-xs gap-1.5 h-9"
+              >
+                <LogOut size={14} /> Exit Admin
+              </Button>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Main Admin Content */}
+      {/* Main Admin Content Container */}
       <AdminContext.Provider
         value={{
           user,
           role,
           isSuperAdmin: role === 'super_admin',
           isAdmin: role === 'admin',
-          isMember: role === 'member',
         }}
       >
-        <main className="px-4 md:px-8 py-8 max-w-7xl mx-auto">
+        <main className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
           {children}
         </main>
       </AdminContext.Provider>
     </div>
   );
 }
+

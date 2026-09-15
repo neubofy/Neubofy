@@ -34,35 +34,35 @@ export interface SendPartnerNotificationResult {
 export async function sendPartnerNotification({
   partnerEmail,
   partnerName,
-  category = "General Specialist",
+  category = "Technology Specialist",
   type,
   newStatus,
   bookingUrl,
   customSubject,
   customMessage,
-  replyTo = "partner@neubofy.in",
+  replyTo = "careers@neubofy.in",
 }: SendPartnerNotificationParams): Promise<SendPartnerNotificationResult> {
   if (!partnerEmail) {
-    return { success: false, error: "Partner email is required" };
+    return { success: false, error: "Recipient email is required" };
   }
 
   try {
     let template;
-    let sender: EmailSenderType = "partners";
+    let sender: EmailSenderType = "careers";
 
     if (type === "welcome") {
       template = getApplicationReceivedTemplate(partnerName, category);
-      sender = "partners";
+      sender = "careers";
     } else if (type === "status_change") {
       switch (newStatus) {
         case "screening":
           template = getScreeningTemplate(partnerName);
-          sender = "partners";
+          sender = "careers";
           break;
         case "shortlisted":
         case "interview":
           template = getInterviewInvitationTemplate(partnerName, bookingUrl);
-          sender = "partners";
+          sender = "specialists";
           break;
         case "onboarded":
           template = getPartnerVerifiedTemplate(partnerName, category);
@@ -70,7 +70,7 @@ export async function sendPartnerNotification({
           break;
         case "archived":
           template = getApplicationUpdateTemplate(partnerName);
-          sender = "partners";
+          sender = "careers";
           break;
         default:
           return { success: true, skipped: true };
@@ -80,7 +80,7 @@ export async function sendPartnerNotification({
         return { success: false, error: "Subject and message are required for custom emails" };
       }
       template = getCustomMessageTemplate(partnerName, customSubject, customMessage);
-      sender = "partners";
+      sender = "specialists";
     }
 
     if (!template) {
@@ -98,7 +98,7 @@ export async function sendPartnerNotification({
 
     return result;
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : "Failed to send partner notification";
+    const errorMsg = err instanceof Error ? err.message : "Failed to send notification";
     console.error("[sendPartnerNotification Exception]", errorMsg);
     return { success: false, error: errorMsg };
   }

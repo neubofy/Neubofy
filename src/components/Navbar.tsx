@@ -23,10 +23,15 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "Partners", path: "/partner" },
+    { name: "Careers", path: "/career" },
     { name: "Help Centre", path: "https://neubofy.zohodesk.in/portal", ariaLabel: "Visit Neubofy Help Centre (Opens in new tab)", title: "Neubofy Help Centre Support Portal" },
     { name: "Consultation", path: "https://booking.neubofy.in", ariaLabel: "Book a Neubofy Consultation (Opens in new tab)", title: "Book a Strategy Consultation with Neubofy" }
   ];
+
+  // Do not render consumer site navbar on admin portal to prevent overlap
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <nav 

@@ -9,7 +9,6 @@ export interface AdminContextType {
   role: AdminRole | null;
   isSuperAdmin: boolean;
   isAdmin: boolean;
-  isMember: boolean;
 }
 
 export const AdminContext = createContext<AdminContextType>({
@@ -17,7 +16,6 @@ export const AdminContext = createContext<AdminContextType>({
   role: null,
   isSuperAdmin: false,
   isAdmin: false,
-  isMember: false,
 });
 
 export const useAdmin = () => useContext(AdminContext);
