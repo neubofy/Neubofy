@@ -13,10 +13,13 @@ import {
 } from "@/lib/partner/types";
 import { AdminRole, canManagePartners, canSendPartnerEmails, canManageAdminRoles } from "@/lib/admin/rbac";
 import { useAdmin } from "@/lib/admin/AdminContext";
+import { recordAdminActivity } from "@/lib/admin/team";
 import { processPartnerStatusChange } from "@/app/actions/adminPartnerActions";
 import { sendPartnerNotification } from "@/app/actions/sendPartnerEmail";
 import { EmailSenderType, ReplyToType } from "@/lib/email/resend";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { 
   Search, 
   Filter, 
@@ -56,6 +59,7 @@ interface AdminTeamMember {
 
 export default function AdminRecruitmentPage() {
   const { user: currentUser, role: currentRole, isSuperAdmin } = useAdmin();
+  const router = useRouter();
 
   // Navigation between ATS Recruitment and Team Access Management
   const [activeMainTab, setActiveMainTab] = useState<"recruitment" | "team">("recruitment");
@@ -83,8 +87,8 @@ export default function AdminRecruitmentPage() {
   const [emailModalPartner, setEmailModalPartner] = useState<PartnerProfile | null>(null);
   const [emailTemplateType, setEmailTemplateType] = useState<"welcome" | "status_change" | "custom">("custom");
   const [emailNewStatus, setEmailNewStatus] = useState<PartnerStatus>("screening");
-  const [emailSender, setEmailSender] = useState<EmailSenderType>("partners");
-  const [emailReplyTo, setEmailReplyTo] = useState<ReplyToType>("partner@neubofy.in");
+  const [emailSender, setEmailSender] = useState<EmailSenderType>("careers");
+  const [emailReplyTo, setEmailReplyTo] = useState<ReplyToType>("careers@neubofy.in");
   const [emailSubject, setEmailSubject] = useState("");
   const [emailBody, setEmailBody] = useState("");
   const [emailBookingUrl, setEmailBookingUrl] = useState("https://booking.neubofy.in");
@@ -94,7 +98,7 @@ export default function AdminRecruitmentPage() {
   // Super Admin Team Management State
   const [adminTeam, setAdminTeam] = useState<AdminTeamMember[]>([]);
   const [newAdminEmail, setNewAdminEmail] = useState("");
-  const [newAdminRole, setNewAdminRole] = useState<AdminRole>("member");
+  const [newAdminRole, setNewAdminRole] = useState<AdminRole>("admin");
   const [savingAdminRole, setSavingAdminRole] = useState(false);
   const [adminTeamSuccess, setAdminTeamSuccess] = useState("");
   const [adminTeamError, setAdminTeamError] = useState("");
@@ -299,10 +303,10 @@ export default function AdminRecruitmentPage() {
     setEmailModalPartner(partner);
     setEmailTemplateType(defaultType);
     setEmailFeedback(null);
-    setEmailSender("partners");
-    setEmailReplyTo("partner@neubofy.in");
-    setEmailSubject(`Neubofy Partner Opportunity — Update for ${partner.name}`);
-    setEmailBody(`Hi ${partner.name},\n\nWe are reaching out from Neubofy Partner Operations regarding upcoming client requirements matching your ${partner.category} capabilities.`);
+    setEmailSender("careers");
+    setEmailReplyTo("careers@neubofy.in");
+    setEmailSubject(`Neubofy Specialist Opportunity — Update for ${partner.name}`);
+    setEmailBody(`Hi ${partner.name},\n\nWe are reaching out from Neubofy Talent Operations regarding upcoming client requirements matching your ${partner.category} capabilities.`);
   };
 
   // Send Email via Resend
@@ -369,8 +373,17 @@ export default function AdminRecruitmentPage() {
       await setDoc(docRef, {
         email: cleanEmail,
         role: newAdminRole,
-        addedBy: currentUser?.email || "Super Admin",
+        addedBy: currentUser?.email || "Super Administrator",
         createdAt: new Date().toISOString(),
+      });
+
+      await recordAdminActivity({
+        actorEmail: currentUser?.email || "Super Administrator",
+        actorUid: currentUser?.uid || "",
+        action: "ASSIGN_ROLE",
+        targetId: docId,
+        targetName: cleanEmail,
+        details: `Assigned role '${newAdminRole}' to ${cleanEmail}`,
       });
 
       setAdminTeamSuccess(`Role '${newAdminRole}' successfully assigned to ${cleanEmail}.`);
@@ -396,6 +409,16 @@ export default function AdminRecruitmentPage() {
     try {
       const docRef = doc(getFirebaseDb(), "admins", adminId);
       await deleteDoc(docRef);
+
+      await recordAdminActivity({
+        actorEmail: currentUser?.email || "Super Administrator",
+        actorUid: currentUser?.uid || "",
+        action: "REVOKE_ROLE",
+        targetId: adminId,
+        targetName: email,
+        details: `Revoked admin permissions from ${email}`,
+      });
+
       setAdminTeamSuccess(`Revoked access for ${email}.`);
     } catch (err) {
       console.error("Error revoking admin", err);
@@ -586,7 +609,7 @@ export default function AdminRecruitmentPage() {
                         <tr 
                           key={partner.uid} 
                           className="hover:bg-white/[0.02] transition-colors cursor-pointer"
-                          onClick={() => setSelectedPartner(partner)}
+                          onClick={() => router.push(`/admin/specialists/${partner.uid}`)}
                         >
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-3">
@@ -647,14 +670,14 @@ export default function AdminRecruitmentPage() {
 
                           <td className="py-3.5 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                             <div className="flex items-center justify-end gap-1.5">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setSelectedPartner(partner)}
-                                className="h-7 px-2.5 text-xs rounded-lg border-white/10 hover:bg-white/10 gap-1"
-                              >
-                                <Eye size={12} /> Dossier
-                              </Button>
+                              <Link href={`/admin/specialists/${partner.uid}`}>
+                                <Button
+                                  size="sm"
+                                  className="h-7 px-2.5 text-xs rounded-lg btn-electric gap-1 font-medium shadow-sm"
+                                >
+                                  <Eye size={12} /> Manage Specialist
+                                </Button>
+                              </Link>
                               {canSendPartnerEmails(currentRole) && (
                                 <Button
                                   size="sm"
@@ -732,9 +755,8 @@ export default function AdminRecruitmentPage() {
                     onChange={(e) => setNewAdminRole(e.target.value as AdminRole)}
                     className="w-full px-3 py-2 bg-black/50 border border-white/10 rounded-xl text-xs focus:ring-1 focus:ring-primary focus:outline-none text-foreground"
                   >
-                    <option value="member">Member (Reviewer / Interviewer)</option>
-                    <option value="admin">Administrator (ATS & Recruitment)</option>
-                    <option value="super_admin">Super Administrator (Owner)</option>
+                    <option value="admin">Administrator (Talent Operations & Candidates)</option>
+                    <option value="super_admin">Super Administrator (Owner Level)</option>
                   </select>
                 </div>
               </div>
@@ -749,17 +771,21 @@ export default function AdminRecruitmentPage() {
             {/* Existing Admin Team List */}
             <div className="space-y-3 pt-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Active Staff & Role Directory ({adminTeam.length + 3})
+                Active Staff & Role Directory ({adminTeam.length + 1})
               </h3>
 
-              {/* Default built-in owners notice */}
-              <div className="p-3 rounded-xl bg-black/30 border border-white/10 text-xs flex items-center justify-between">
+              {/* Dynamic Owner Notice using Vercel Secret Variable */}
+              <div className="p-3.5 rounded-2xl bg-black/40 border border-amber-500/20 text-xs flex items-center justify-between">
                 <div>
-                  <span className="font-semibold text-foreground">pawan@neubofy.in / admin@neubofy.in</span>
-                  <span className="text-[11px] text-muted-foreground block">System Owner & Founder</span>
+                  <span className="font-semibold text-foreground">
+                    {process.env.NEXT_PUBLIC_ADMIN_EMAIL || currentUser?.email || "Configured via Vercel Secret"}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Owner / Super Administrator (Configured via Vercel Secret Variable)
+                  </span>
                 </div>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/10 text-amber-400 border border-amber-400/30">
-                  Super Administrator (Owner)
+                  Super Administrator
                 </span>
               </div>
 
@@ -775,11 +801,9 @@ export default function AdminRecruitmentPage() {
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
                       member.role === 'super_admin'
                         ? 'bg-amber-400/10 text-amber-400 border-amber-400/30'
-                        : member.role === 'admin'
-                        ? 'bg-primary/10 text-primary border-primary/30'
-                        : 'bg-purple-400/10 text-purple-400 border-purple-400/30'
+                        : 'bg-primary/10 text-primary border-primary/30'
                     }`}>
-                      {member.role === 'super_admin' ? 'Super Administrator' : member.role === 'admin' ? 'Administrator' : 'Technical Reviewer'}
+                      {member.role === 'super_admin' ? 'Super Administrator' : 'Administrator'}
                     </span>
 
                     <button
@@ -1112,10 +1136,10 @@ export default function AdminRecruitmentPage() {
                   onChange={(e) => setEmailSender(e.target.value as EmailSenderType)}
                   className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs focus:ring-1 focus:ring-primary focus:outline-none text-foreground"
                 >
-                  <option value="partners">partners@updates.neubofy.in</option>
-                  <option value="security">security@updates.neubofy.in</option>
+                  <option value="careers">careers@updates.neubofy.in</option>
+                  <option value="specialists">specialists@updates.neubofy.in</option>
                   <option value="onboarding">onboarding@updates.neubofy.in</option>
-                  <option value="notifications">notifications@updates.neubofy.in</option>
+                  <option value="security">security@updates.neubofy.in</option>
                 </select>
               </div>
 
@@ -1126,7 +1150,7 @@ export default function AdminRecruitmentPage() {
                   onChange={(e) => setEmailReplyTo(e.target.value as ReplyToType)}
                   className="w-full px-3 py-2 bg-black/40 border border-white/10 rounded-xl text-xs focus:ring-1 focus:ring-primary focus:outline-none text-foreground"
                 >
-                  <option value="partner@neubofy.in">partner@neubofy.in</option>
+                  <option value="careers@neubofy.in">careers@neubofy.in</option>
                   <option value="contact@neubofy.in">contact@neubofy.in</option>
                   <option value="support@neubofy.in">support@neubofy.in</option>
                 </select>

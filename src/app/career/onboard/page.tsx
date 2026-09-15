@@ -139,11 +139,11 @@ function OnboardContent() {
         
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" /> Specialist Careers
+            <Sparkles className="w-3.5 h-3.5" /> Neubofy Specialist Network
           </span>
         </div>
 
-        <h1 className="text-3xl font-bold text-center mb-2 card-3d-content">Join Specialist Network</h1>
+        <h1 className="text-3xl font-bold text-center mb-2 card-3d-content">Join as a Partner</h1>
         <p className="text-center text-muted-foreground mb-6 text-sm">
           Frictionless sign up. Complete your capabilities and portfolio in your profile next.
         </p>
@@ -259,7 +259,7 @@ function OnboardContent() {
           <div className="mt-6 text-center text-sm text-muted-foreground pt-2">
             Already have an account?{" "}
             <Link href="/career/login" className="text-primary hover:underline font-medium">
-              Log In
+              Specialist Login
             </Link>
           </div>
         </form>

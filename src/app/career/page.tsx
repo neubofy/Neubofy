@@ -99,7 +99,7 @@ export default function PartnerLandingPage() {
               </Link>
               <Link href="/career/onboard">
                 <Button className="btn-electric rounded-xl">
-                  Join Specialist Network
+                  Join Network
                 </Button>
               </Link>
             </div>
@@ -175,7 +175,7 @@ export default function PartnerLandingPage() {
                 <div className="inline-flex items-center gap-2 glass-card px-4 py-1.5 rounded-full mb-6 border border-white/10">
                   <Lock className="w-3.5 h-3.5 text-primary" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Orchestrated Specialist Network
+                    Orchestrated Partner Network
                   </span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
@@ -278,7 +278,7 @@ export default function PartnerLandingPage() {
               </p>
               <Link href="/career/onboard">
                 <Button className="btn-electric rounded-xl px-8 h-12 text-base font-semibold">
-                  Join Specialist Network
+                  Join Neubofy Network
                 </Button>
               </Link>
             </motion.div>

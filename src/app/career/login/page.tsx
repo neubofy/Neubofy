@@ -27,11 +27,10 @@ export default function PartnerLoginPage() {
     setError("");
 
     try {
-      const auth = getFirebaseAuth();
-      await signInWithEmailAndPassword(auth, form.email, form.password);
+      await signInWithEmailAndPassword(getFirebaseAuth(), form.email, form.password);
       router.push("/career/profile");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to sign in. Please verify your credentials.");
+      setError(err instanceof Error ? err.message : "Invalid email or password.");
     } finally {
       setLoading(false);
     }
@@ -70,11 +69,11 @@ export default function PartnerLoginPage() {
         
         <div className="flex items-center justify-center gap-2 mb-3">
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5" /> Secure Specialist Access
+            <Lock className="w-3.5 h-3.5" /> Specialist Access
           </span>
         </div>
 
-        <h1 className="text-3xl font-bold text-center mb-2 card-3d-content">Specialist Login</h1>
+        <h1 className="text-3xl font-bold text-center mb-2 card-3d-content">Partner Login</h1>
         <p className="text-center text-muted-foreground mb-6 text-sm">
           Access your orchestration profile, capability listings, and project statuses.
         </p>
@@ -114,7 +113,7 @@ export default function PartnerLoginPage() {
           <Button type="submit" disabled={loading} className="w-full h-12 btn-electric rounded-xl font-medium mt-2 gap-2">
             {loading ? "Logging in..." : (
               <>
-                Login to Specialist Dashboard <ArrowRight size={16} />
+                Login to Partner Portal <ArrowRight size={16} />
               </>
             )}
           </Button>

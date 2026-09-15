@@ -402,7 +402,7 @@ function PartnerProfileContent() {
         {/* Navigation & Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <Link href="/career" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft size={16} className="mr-1.5" /> Back to Careers
+            <ArrowLeft size={16} className="mr-1.5" /> Back to Career Hub
           </Link>
           <Button variant="outline" onClick={handleLogout} className="gap-2 border-white/10 hover:bg-destructive/10 hover:text-destructive">
             <LogOut size={16} /> Logout

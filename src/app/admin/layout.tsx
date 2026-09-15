@@ -250,7 +250,7 @@ export default function AdminLayout({
             </Button>
             <Link href="/career">
               <Button className="rounded-xl btn-electric w-full sm:w-auto">
-                Go to Careers
+                Go to Specialist Portal
               </Button>
             </Link>
           </div>
@@ -305,7 +305,7 @@ export default function AdminLayout({
                 target="_blank"
                 className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 py-1 px-2.5 rounded-lg"
               >
-                Live Careers Hub <ExternalLink size={11} />
+                Live Specialist Hub <ExternalLink size={11} />
               </Link>
             </nav>
           </div>
@@ -364,7 +364,7 @@ export default function AdminLayout({
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-foreground"
               >
-                <ExternalLink size={14} /> Public Careers Hub
+                <ExternalLink size={14} /> Public Specialist Hub
               </Link>
             </div>
 

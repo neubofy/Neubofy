@@ -229,34 +229,32 @@ export function getInterviewInvitationTemplate(name: string, bookingUrl?: string
   const subject = `Invitation: Technical Alignment & Screening with Neubofy`;
   const preview = `You have been shortlisted! Schedule your technical alignment call with Neubofy.`;
   const content = `
-    <div class="badge" style="background-color: rgba(168, 85, 247, 0.1); color: #c084fc; border-color: rgba(168, 85, 247, 0.25);">Shortlisted for Interview</div>
-    <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Congratulations ${name}!</h2>
-    <p>We are impressed by your background and stated capabilities. We would like to invite you for a <strong>Technical Alignment & Verification</strong> session.</p>
+    <div class="badge" style="background-color: rgba(168, 85, 247, 0.1); color: #c084fc; border-color: rgba(168, 85, 247, 0.25);">Shortlisted for Screening</div>
+    <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Great News, ${name}!</h2>
+    <p>Your technical qualifications and submitted capabilities have caught our review team's attention. We would like to invite you to an alignment call.</p>
 
-    <p>During this session, we will discuss:</p>
-    <ul style="color: #94a3b8; font-size: 14px; margin: 12px 0 20px; padding-left: 20px;">
-      <li>Your core strengths, preferred architecture, and delivery cadence</li>
-      <li>How Neubofy scopes and orchestrates requirements, milestones, and delivery verification</li>
-      <li>Immediate client project opportunities matching your capability profile</li>
-    </ul>
-
-    <div style="text-align: center; margin: 28px 0;">
-      <a href="${consultationUrl}" class="btn" target="_blank">Schedule Alignment Call</a>
+    <div class="card">
+      <h4 style="margin: 0 0 8px; color: #00f0ff; font-size: 15px;">Discussion Agenda</h4>
+      <p style="margin: 0 0 6px; font-size: 14px; color: #cbd5e1;">• Deep-dive into past architectural work and code repositories</p>
+      <p style="margin: 0 0 6px; font-size: 14px; color: #cbd5e1;">• Alignment on Neubofy project delivery & accountability standards</p>
+      <p style="margin: 0; font-size: 14px; color: #cbd5e1;">• Upcoming client projects matching your specializations</p>
     </div>
 
-    <p style="font-size: 13px; color: #94a3b8; text-align: center;">
-      Need a different time? Reply directly to this email at <a href="mailto:careers@neubofy.in" style="color: #00f0ff;">careers@neubofy.in</a>.
-    </p>
+    <p>Please select a convenient time on our consultation calendar using the link below:</p>
+    <div style="text-align: center;">
+      <a href="${consultationUrl}" class="btn">Schedule Alignment Call</a>
+    </div>
+    <p style="font-size: 12px; color: #64748b; text-align: center; margin-top: 12px;">Link: ${consultationUrl}</p>
   `;
 
   return {
     subject,
     html: getBaseEmailLayout(content, preview),
-    text: `Congratulations ${name}!\n\nYou have been shortlisted for a Technical Alignment session with Neubofy. Schedule your call at: ${consultationUrl}`,
+    text: `Hi ${name},\n\nYou have been shortlisted for an alignment call at Neubofy! Schedule your slot at: ${consultationUrl}`,
   };
 }
 
-export function getPartnerVerifiedTemplate(name: string, category: string): EmailTemplateResult {
+export function getVerifiedWelcomeTemplate(name: string, category: string): EmailTemplateResult {
   const subject = `Welcome to the Neubofy Specialist Network — Verified Specialist`;
   const preview = `Your profile has been verified as an official Neubofy Network Specialist!`;
   const content = `
@@ -283,6 +281,8 @@ export function getPartnerVerifiedTemplate(name: string, category: string): Emai
     text: `Welcome ${name}!\n\nYou are now a Verified Specialist at Neubofy for ${category}. Access your dashboard at ${WEBSITE_URL}/career/profile.`,
   };
 }
+
+export const getPartnerVerifiedTemplate = getVerifiedWelcomeTemplate;
 
 export function getApplicationUpdateTemplate(name: string): EmailTemplateResult {
   const subject = `Update regarding your Neubofy Specialist Application`;
