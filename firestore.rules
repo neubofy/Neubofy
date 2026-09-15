@@ -26,7 +26,7 @@ service cloud.firestore {
       allow read: if isOwner(userId) || isAdmin();
 
       // Allow creation by owner. Ensure status is 'pending' and verified is false on create.
-      allow create: if isOwner(userId) || isAdmin() ||
+      allow create: if isAdmin() ||
         (isOwner(userId) && request.resource.data.status == 'pending' && request.resource.data.verified == false);
 
       // Prevent owner from updating status and verified

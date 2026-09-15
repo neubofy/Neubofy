@@ -82,8 +82,7 @@ export default function AdminDashboard() {
         q = query(q, where("status", "==", statusFilter));
       }
 
-      // Order is necessary for pagination
-      q = query(q, orderBy("createdAt", "desc"));
+      // Order is removed to prevent excluding documents missing createdAt and avoiding composite index requirements
 
       if (!reset && page > 1 && lastVisibleDocs[page - 2]) {
         q = query(q, startAfter(lastVisibleDocs[page - 2]));
