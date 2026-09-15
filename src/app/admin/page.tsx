@@ -17,7 +17,10 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { sendStatusUpdateEmail } from "@/app/actions/emailActions";
-import { grantAdminAccessByEmail } from "@/app/actions/adminActions";
+import {
+  grantAdminAccessByEmail,
+  revokeAdminAccessByEmail,
+} from "@/app/actions/adminActions";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -60,6 +63,10 @@ export default function AdminDashboard() {
   const [newAdminEmail, setNewAdminEmail] = useState("");
   const [adminMgmtMessage, setAdminMgmtMessage] = useState("");
   const [isAddingAdmin, setIsAddingAdmin] = useState(false);
+  const [adminList, setAdminList] = useState<
+    { uid: string; email: string; role: string }[]
+  >([]);
+  const [loadingAdmins, setLoadingAdmins] = useState(false);
 
   const fetchProfiles = async (page: number, reset: boolean = false) => {
     setLoading(true);
@@ -139,6 +146,7 @@ export default function AdminDashboard() {
         setCurrentUserInfo({ uid: user.uid, email: user.email || "Unknown" });
         setCurrentPage(1);
         fetchProfiles(1, true);
+        fetchAdmins();
       } else {
         setCurrentUserInfo(null);
         setLoading(false);
@@ -148,6 +156,30 @@ export default function AdminDashboard() {
 
     return () => unsubscribe();
   }, [categoryFilter, statusFilter]);
+
+  const fetchAdmins = async () => {
+    setLoadingAdmins(true);
+    try {
+      const db = getFirebaseDb();
+      const q = query(collection(db, "admins"));
+      const querySnapshot = await getDocs(q);
+
+      const loadedAdmins: { uid: string; email: string; role: string }[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        loadedAdmins.push({
+          uid: doc.id,
+          email: data.email || "Unknown",
+          role: data.role || "admin", // Fallback for previously invited admins before role was enforced
+        });
+      });
+      setAdminList(loadedAdmins);
+    } catch (error) {
+      console.error("Error fetching admins list:", error);
+    } finally {
+      setLoadingAdmins(false);
+    }
+  };
 
   const currentProfiles = profiles;
 
@@ -214,6 +246,7 @@ export default function AdminDashboard() {
           result.message || `Successfully invited ${newAdminEmail} as admin.`,
         );
         setNewAdminEmail("");
+        fetchAdmins();
       } else {
         setAdminMgmtMessage(result.message || "Failed to add admin.");
       }
@@ -222,6 +255,41 @@ export default function AdminDashboard() {
       setAdminMgmtMessage(error.message || "Failed to add admin.");
     } finally {
       setIsAddingAdmin(false);
+    }
+  };
+
+  const handleRevokeAdmin = async (email: string) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to revoke admin access for ${email}?`,
+      )
+    )
+      return;
+
+    setAdminMgmtMessage("");
+    try {
+      const auth = getFirebaseAuth();
+      const idToken = auth.currentUser
+        ? await auth.currentUser.getIdToken()
+        : "";
+
+      if (!idToken) {
+        throw new Error("You are not authenticated.");
+      }
+
+      const result = await revokeAdminAccessByEmail(email, idToken);
+
+      if (result.success) {
+        setAdminMgmtMessage(
+          result.message || `Successfully revoked admin access for ${email}.`,
+        );
+        fetchAdmins();
+      } else {
+        setAdminMgmtMessage(result.message || "Failed to revoke admin.");
+      }
+    } catch (error: any) {
+      console.error("Error revoking admin:", error);
+      setAdminMgmtMessage(error.message || "Failed to revoke admin.");
     }
   };
 
@@ -452,6 +520,69 @@ export default function AdminDashboard() {
             {isAddingAdmin ? "Inviting..." : "Invite Admin"}
           </Button>
         </form>
+
+        <div className="mt-8 pt-6 border-t border-border/50">
+          <h3 className="text-lg font-semibold mb-4">Current Administrators</h3>
+          {loadingAdmins ? (
+            <p className="text-sm text-muted-foreground">Loading admins...</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm border-collapse">
+                <thead>
+                  <tr className="border-b border-border/50 bg-background/50">
+                    <th className="p-3 font-medium">Email</th>
+                    <th className="p-3 font-medium">Role</th>
+                    <th className="p-3 font-medium text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {adminList.map((admin) => (
+                    <tr
+                      key={admin.uid}
+                      className="border-b border-border/10 hover:bg-background/30 transition-colors"
+                    >
+                      <td className="p-3 font-medium">{admin.email}</td>
+                      <td className="p-3">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${admin.role === "superadmin" ? "bg-primary/20 text-primary" : "bg-blue-500/20 text-blue-400"}`}
+                        >
+                          {admin.role.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right">
+                        {/* Only the superadmin can revoke others, and cannot revoke themselves */}
+                        {currentUserInfo?.email?.toLowerCase() ===
+                          (
+                            process.env.NEXT_PUBLIC_ADMIN_EMAIL || ""
+                          ).toLowerCase() &&
+                          admin.role !== "superadmin" && (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleRevokeAdmin(admin.email)}
+                              className="text-xs py-1 h-auto"
+                            >
+                              Revoke
+                            </Button>
+                          )}
+                      </td>
+                    </tr>
+                  ))}
+                  {adminList.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className="p-3 text-center text-muted-foreground"
+                      >
+                        No administrators found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

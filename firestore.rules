@@ -8,7 +8,11 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return request.auth != null && (request.auth.token.admin == true || exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+      // Check custom claims or admins collection (strictly separate from standard users collection)
+      return request.auth != null && (
+        request.auth.token.admin == true ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
     }
 
     match /admins/{adminId} {
